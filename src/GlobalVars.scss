@@ -1,0 +1,19 @@
+$dark-gray: #1E1E1E;
+$gray: #292929;
+$light-gray: #3C3C3C;
+
+$yellow: #FFE16E;
+$orange: #FF9A6E;
+$pink: #FF6EE0;
+$purple: #BA68FF;
+$blue: #7A8FFF;
+
+$light-yellow: lighten($yellow, 15%);
+$light-orange: lighten($orange, 15%);
+$light-pink: lighten($pink, 15%);
+$light-purple: lighten($purple, 15%);
+$light-blue: lighten($blue, 15%);
+
+$purple-gradient: linear-gradient(#7C11FF, #A358FF);
+
+$box-shading: 2px 2px 10px rgba(0,0,0,.5);
