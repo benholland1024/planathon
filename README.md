@@ -1,4 +1,6 @@
-# planathon
+# Planathon
+
+Helping you organize your Hackathon!
 
 ## Project setup
 ```
