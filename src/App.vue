@@ -23,6 +23,26 @@
   </div>
 </template>
 
+<script>
+import config from '@/config/config.js';
+import * as firebase from 'firebase';
+
+firebase.initializeApp(config);
+var db = firebase.firestore();
+
+export default {
+  data() {
+    return {
+      db: db
+    }
+  },
+  mounted() {
+    
+  }
+}
+
+</script>
+
 <style lang="scss">
   
 @import '@/GlobalVars.scss';
