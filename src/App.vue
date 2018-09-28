@@ -108,6 +108,30 @@ export default {
     border: none;
     font-size: 20px;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: 200ms ease all;
+
+    
+    &:before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: 110%;
+      width: 30px;
+      height: 200%;
+      background: rgba(white, .3);
+      transform: rotate(20deg);
+    }
+  
+    &:hover {
+  
+      &:before {
+        right: -50%;
+        transition: 1s ease all;
+      }
+    }
+
   }
   .purple-gradient {
     background: $purple-gradient;
@@ -144,6 +168,7 @@ export default {
     align-items: center;
     text-align: right;
   }
+  
 </style>
 
 <style scoped lang="scss">
