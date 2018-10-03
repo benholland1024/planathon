@@ -1,4 +1,3 @@
-// CommitChart.js
 import { Line } from 'vue-chartjs'
 
 var data = {
