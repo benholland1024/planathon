@@ -168,6 +168,37 @@ export default {
     align-items: center;
     text-align: right;
   }
+  
+/*  ------------- */
+/*  AUTH STYLING: */
+/*  ------------- */
+
+  .auth-widget {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: $box-shading;
+  }
+  
+  .err-text {
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: $orange;
+  }
+  
+  .inline-link {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .auth-textbox {
+    border: solid $light-gray 1px;
+    background: rgba(0,0,0,.1);
+    padding: 5px;
+    color: white;
+    font-size: 16px;
+  }
 
 </style>
 

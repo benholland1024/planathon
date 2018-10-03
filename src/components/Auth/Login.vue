@@ -1,15 +1,17 @@
 <template>
-  <div class="auth-popup" id="login">
+  <div class="auth-widget purple-gradient" id="login">
     <h2>Login</h2>
     <p>Email:</p>
-    <input v-model="email" type="text" />
+    <input v-model="email" type="text" class="auth-textbox"/>
     <p>Password:</p>
-    <input v-model="password" type="password" /> <br><br>
-    <button @click="signIn()" class="material-button-large purple-gradient">Login</button> <br><br>
-    <p>Don't have an account yet?</p>
-    <router-link to="/register" tag="h2" class="link light-purple faded-link">
-      Register
-    </router-link>
+    <input v-model="password" type="password" class="auth-textbox"/> <br><br>
+    <button @click="signIn()" class="material-button-large ">Login!</button> <br><br>
+    <p>Don't have an account yet? 
+      <router-link to="/register" tag="span" class="inline-link">
+        Register!
+      </router-link>
+    </p>
+    
   </div>
 </template>
 
@@ -37,5 +39,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import '@/GlobalVars.scss';
 
+  #login {
+    
+  }
+  
+/*  Note that this only applies to this page's material button: */
+  .material-button-large {
+    background: $gray;
+    color: white;
+  }
 </style>

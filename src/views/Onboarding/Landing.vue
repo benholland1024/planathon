@@ -9,9 +9,10 @@
     <p class="light-pink bold title">Like A Pro.</p>
     <p style="opacity: .5;font-size:20px;">Running a hackathon is a herculean task. Organize your todo list, keep track of financial and development progress, see tips on running hackathons by people like you, and much more. </p>
     <div id="get-started">
-      <button class="material-button-large purple-gradient" >
+      <router-link tag="button" class="material-button-large purple-gradient" 
+                   :to="{name: 'register'}">
         GET STARTED
-      </button>
+      </router-link>
       <p class="under-button purple">Or, find your team!</p>
     </div>
   </div>
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-import LineGraph from '@/components/LineGraph.js';
+import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 export default {
   data() {

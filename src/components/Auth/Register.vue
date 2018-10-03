@@ -1,15 +1,19 @@
 <template>
-<div class="auth-popup" id="register">
+<div class="auth-widget purple-gradient" id="register">
   <h2>Register</h2>
   <p>Email:</p>
-  <input v-model="email" type="text" />
+  <input v-model="email" type="text" class="auth-textbox"/>
   <p>Password:</p>
-  <input v-model="password" type="password" /> <br><br>
-  <button @click="signIn()" class="material-button-large purple-gradient">Register</button> <br><br>
-  <p>Already have an account?</p>
-  <router-link to="/login" tag="h2" class="link light-purple faded-link">
-    Login
-  </router-link>
+  <input v-model="password" type="password" class="auth-textbox"/> <br><br>
+  <button @click="signIn()" class="material-button-large ">Let's Go!</button> <br><br>
+  
+  <p class="err-text">{{err}}</p>
+  
+  <p>Already have an account?
+    <router-link to="/login" tag="span" class="inline-link">
+      Login!
+    </router-link>
+  </p>
 </div>
 </template>
 
@@ -19,23 +23,32 @@ import * as firebase from 'firebase';
 export default {
     data() {
         return {
-            email: "",
-            password: ""
+          email: "",
+          password: "",
+          err: ''
         }
     },
     methods: {
-        signIn() {
-            firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-            .then((user) => {
-                console.log(user);
-            }).catch((error) => {
-                throw error;
-            });
-        }
+      signIn() {
+        this.err = '';
+        firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+          console.log(user);
+        }).catch((error) => {
+          this.err = error.message;
+          console.error("Error signing you in!")
+//            throw error;
+        });
+      }
     }
  }
 </script>
 
 <style scoped lang="scss">
+@import '@/GlobalVars.scss';
 
+  .material-button-large {
+    background: $gray;
+    color: white;
+  }
 </style>
