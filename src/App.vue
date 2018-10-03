@@ -15,6 +15,9 @@
       </div>
       <div id="nav-right">
         <router-link to="/" tag="h2" class="link light-pink faded-link">
+          Sign-Up
+        </router-link>
+        <router-link to="/" tag="h2" class="link light-pink faded-link">
           Log In
         </router-link>
       </div>
@@ -165,8 +168,10 @@ export default {
   }
   #nav-right {
     display: flex;
+    justify-content: space-around;
     align-items: center;
     text-align: right;
+    width: 15%;
   }
   
 </style>
