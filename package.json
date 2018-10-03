@@ -9,7 +9,9 @@
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
+    "@firebase/firestore": "^0.8.2",
     "chart.js": "^2.7.2",
+    "firebase": "^5.5.2",
     "vue": "^2.5.17",
     "vue-chartjs": "^3.4.0",
     "vue-router": "^3.0.1",

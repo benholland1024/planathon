@@ -1,11 +1,13 @@
 <template>
 <div id="landing">
   <div id="promo-container">
-    <bar-graph></bar-graph>
+    <line-graph class="small-graph"></line-graph>
+    <polar-graph class="small-graph" v-if="0"></polar-graph>
   </div>
   <div id="call-to-action">
-    <p class="light-blue">Organize Your Hackathon</p>
-    <p class="light-pink bold">Like A Pro.</p>
+    <p class="light-blue title">Organize Your Hackathon</p>
+    <p class="light-pink bold title">Like A Pro.</p>
+    <p style="opacity: .5;font-size:20px;">Running a hackathon is a herculean task. Organize your todo list, keep track of financial and development progress, see tips on running hackathons by people like you, and much more. </p>
     <div id="get-started">
       <button class="material-button-large purple-gradient" >
         GET STARTED
@@ -17,7 +19,8 @@
 </template>
 
 <script>
-import BarGraph from '@/components/BarGraph.js';
+import LineGraph from '@/components/LineGraph.js';
+import PolarGraph from '@/components/Charts/PolarGraph.js';
 export default {
   data() {
     return {
@@ -25,7 +28,8 @@ export default {
     }
   },
   components: {
-    BarGraph
+    LineGraph,
+    PolarGraph
   }
 }
 </script>
@@ -37,28 +41,49 @@ export default {
     padding: 50px;
     display: flex;
     justify-content: space-between;
+    align-items: stretch;
   }
   #promo-container {
     background: $dark-gray;
-    width: 40vw;
+    width: 45vw; 
+    flex-grow: 1;
     height: 70vh;
     box-shadow: $box-shading;
+    display: flex;
+    justify-content: space-between;
+    
+    @media screen and (max-width: 1000px) {
+      display: none;
+    }
   }
   #call-to-action {
     padding-top: 10vh;
     padding-right: 5vw;
-    width: 35vw;
+    margin-left: 5vw;
+    width: 40vw;
+    @media screen and (max-width: 1000px) {
+      width: 90vw;
+    }
+    flex-grow: 1;
     height: 60vh;
     text-align: right;
     p:not(.under-button) {
-      font-size: 50px;
       margin: 0px;
       margin-bottom: 10px;
-      text-shadow: 2px 2px 5px rgba(0,0,0,1);
+      text-shadow: 2px 2px 5px rgba(0,0,0,.5);
+    }
+    .title {
+      font-size: 50px;
     }
   }
   #get-started {
     text-align: center;
-    margin-top: 200px;
+    margin-top: 50px;
+    
+  }
+  
+  .small-graph {
+    width: 44%;
+    padding: 1%;
   }
 </style>
