@@ -5,8 +5,8 @@
         <router-link to="/" tag="h1" class="link">
           <span class="light-yellow">Hack</span>
           <span class="light-purple">Map</span>
-        </router-link> 
-        <router-link to="/" tag="h2" class="link light-blue faded-link">
+        </router-link>
+        <router-link to="/about" tag="h2" class="link light-blue faded-link">
           About
         </router-link>
         <router-link to="/" tag="h2" class="link light-purple faded-link">
@@ -14,7 +14,7 @@
         </router-link>
       </div>
       <div id="nav-right">
-        <router-link to="/" tag="h2" class="link light-pink faded-link">
+        <router-link to="/login" tag="h2" class="link light-pink faded-link">
           Log In
         </router-link>
       </div>
@@ -37,14 +37,14 @@ export default {
     }
   },
   mounted() {
-    
+
   }
 }
 
 </script>
 
 <style lang="scss">
-  
+
 @import '@/GlobalVars.scss';
 
   .full-page {
@@ -54,7 +54,7 @@ export default {
     width: 100%;
     min-height: 100%;
   }
-  
+
   .yellow {
     color: $yellow;
   }
@@ -85,7 +85,7 @@ export default {
   .light-blue {
     color: $light-blue;
   }
-  
+
   .link {
     cursor: pointer;
   }
@@ -96,11 +96,11 @@ export default {
   .faded-link:hover {
     opacity: 1;
   }
-  
+
   .bold {
     font-weight: bolder;
   }
-  
+
   .material-button-large {
     padding: 15px 50px;
     box-shadow: $box-shading;
@@ -112,7 +112,7 @@ export default {
     overflow: hidden;
     transition: 200ms ease all;
 
-    
+
     &:before {
       content: '';
       position: absolute;
@@ -123,9 +123,9 @@ export default {
       background: rgba(white, .3);
       transform: rotate(20deg);
     }
-  
+
     &:hover {
-  
+
       &:before {
         right: -50%;
         transition: 1s ease all;
@@ -137,7 +137,7 @@ export default {
     background: $purple-gradient;
     color: white;
   }
-  
+
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -151,7 +151,7 @@ export default {
     background: $dark-gray;
     display: flex;
     justify-content: space-between;
-    
+
     a {
       font-weight: bold;
       color: white;
@@ -168,7 +168,7 @@ export default {
     align-items: center;
     text-align: right;
   }
-  
+
 </style>
 
 <style scoped lang="scss">
