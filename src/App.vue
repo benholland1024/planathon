@@ -1,24 +1,6 @@
 <template>
   <div id="app" class="full-page">
-    <div id="nav">
-      <div id="nav-left">
-        <router-link to="/" tag="h1" class="link">
-          <span class="light-yellow">Hack</span>
-          <span class="light-purple">Map</span>
-        </router-link>
-        <router-link to="/about" tag="h2" class="link light-blue faded-link">
-          About
-        </router-link>
-        <router-link to="/" tag="h2" class="link light-purple faded-link">
-          Features
-        </router-link>
-      </div>
-      <div id="nav-right">
-        <router-link to="/login" tag="h2" class="link light-pink faded-link">
-          Log In
-        </router-link>
-      </div>
-    </div>
+    <menu-bar :user="user"></menu-bar>
     <router-view/>
   </div>
 </template>
@@ -26,6 +8,8 @@
 <script>
 import config from '@/config/config.js';
 import * as firebase from 'firebase';
+  
+import MenuBar from '@/components/MenuBars/LandingMenuBar.vue';
 
 firebase.initializeApp(config);
 var db = firebase.firestore();
@@ -33,10 +17,38 @@ var db = firebase.firestore();
 export default {
   data() {
     return {
-      db: db
+      db: db,
+      user: null
     }
   },
+  components: {
+    MenuBar
+  },
+  methods: {
+    loadUser(id) {
+      console.warn("This should ultimately get the user's DB info.");
+      this.user = {
+        name: 'joe schmoe',
+        email: 'joe@schmoe.com',
+        id: id
+      }
+    },
+    logout() {
+      firebase.auth().signOut();
+      this.user = null;
+    },
+  },
   mounted() {
+    
+    firebase.auth().onAuthStateChanged((user) => {
+      // This if statement will be true if the user is logged in
+      // when the page loads! :) 
+      if (user){
+        this.loadUser(user.uid);
+        this.loggedIn = true;
+        this.loginModule = false;
+      }
+    });
 
   }
 }
@@ -203,8 +215,5 @@ export default {
 </style>
 
 <style scoped lang="scss">
-  h1, h2 {
-    padding: 0px;
-    margin: 0px;
-  }
+  
 </style>

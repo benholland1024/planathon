@@ -6,6 +6,9 @@
     <p>Password:</p>
     <input v-model="password" type="password" class="auth-textbox"/> <br><br>
     <button @click="signIn()" class="material-button-large ">Login!</button> <br><br>
+    
+    <p class="err-text">{{err}}</p>
+    
     <p>Don't have an account yet? 
       <router-link to="/register" tag="span" class="inline-link">
         Register!
@@ -22,7 +25,8 @@ export default {
     data() {
         return {
             email: "",
-            password: ""
+            password: "",
+          err: ''
         }
     },
     methods: {
@@ -30,8 +34,10 @@ export default {
             firebase.auth().signInWithEmailAndPassword(this.email, this.password)
             .then((user) => {
                 console.log(user);
+              this.$router.push('/');
             }).catch((error) => {
-                throw error;
+                this.err = error.message;
+                console.error("Error signing you in!")
             });
         }
     }
