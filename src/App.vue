@@ -1,27 +1,6 @@
 <template>
   <div id="app" class="full-page">
-    <div id="nav">
-      <div id="nav-left">
-        <router-link to="/" tag="h1" class="link">
-          <span class="light-yellow">Hack</span>
-          <span class="light-purple">Map</span>
-        </router-link> 
-        <router-link to="/about" tag="h2" class="link light-blue faded-link">
-          About
-        </router-link>
-        <router-link to="/dne" tag="h2" class="link light-purple faded-link">
-          Features
-        </router-link>
-      </div>
-      <div id="nav-right">
-        <router-link to="/" tag="h2" class="link light-pink faded-link">
-          Sign-Up
-        </router-link>
-        <router-link to="/" tag="h2" class="link light-pink faded-link">
-          Log In
-        </router-link>
-      </div>
-    </div>
+    <menu-bar :user="user"></menu-bar>
     <router-view/>
   </div>
 </template>
@@ -29,6 +8,8 @@
 <script>
 import config from '@/config/config.js';
 import * as firebase from 'firebase';
+  
+import MenuBar from '@/components/MenuBars/LandingMenuBar.vue';
 
 firebase.initializeApp(config);
 var db = firebase.firestore();
@@ -36,18 +17,46 @@ var db = firebase.firestore();
 export default {
   data() {
     return {
-      db: db
+      db: db,
+      user: null
     }
+  },
+  components: {
+    MenuBar
+  },
+  methods: {
+    loadUser(id) {
+      console.warn("This should ultimately get the user's DB info.");
+      this.user = {
+        name: 'joe schmoe',
+        email: 'joe@schmoe.com',
+        id: id
+      }
+    },
+    logout() {
+      firebase.auth().signOut();
+      this.user = null;
+    },
   },
   mounted() {
     
+    firebase.auth().onAuthStateChanged((user) => {
+      // This if statement will be true if the user is logged in
+      // when the page loads! :) 
+      if (user){
+        this.loadUser(user.uid);
+        this.loggedIn = true;
+        this.loginModule = false;
+      }
+    });
+
   }
 }
 
 </script>
 
 <style lang="scss">
-  
+
 @import '@/GlobalVars.scss';
 
   .full-page {
@@ -57,7 +66,7 @@ export default {
     width: 100%;
     min-height: 100%;
   }
-  
+
   .yellow {
     color: $yellow;
   }
@@ -88,7 +97,7 @@ export default {
   .light-blue {
     color: $light-blue;
   }
-  
+
   .link {
     cursor: pointer;
   }
@@ -99,11 +108,11 @@ export default {
   .faded-link:hover {
     opacity: 1;
   }
-  
+
   .bold {
     font-weight: bolder;
   }
-  
+
   .material-button-large {
     padding: 15px 50px;
     box-shadow: $box-shading;
@@ -115,7 +124,7 @@ export default {
     overflow: hidden;
     transition: 200ms ease all;
 
-    
+
     &:before {
       content: '';
       position: absolute;
@@ -126,9 +135,9 @@ export default {
       background: rgba(white, .3);
       transform: rotate(20deg);
     }
-  
+
     &:hover {
-  
+
       &:before {
         right: -50%;
         transition: 1s ease all;
@@ -140,7 +149,7 @@ export default {
     background: $purple-gradient;
     color: white;
   }
-  
+
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -154,7 +163,7 @@ export default {
     background: $dark-gray;
     display: flex;
     justify-content: space-between;
-    
+
     a {
       font-weight: bold;
       color: white;
@@ -174,11 +183,39 @@ export default {
     width: 15%;
   }
   
+/*  ------------- */
+/*  AUTH STYLING: */
+/*  ------------- */
+
+  .auth-widget {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: $box-shading;
+  }
+  
+  .err-text {
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: $orange;
+  }
+  
+  .inline-link {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .auth-textbox {
+    border: solid $light-gray 1px;
+    background: rgba(0,0,0,.1);
+    padding: 5px;
+    color: white;
+    font-size: 16px;
+  }
+
 </style>
 
 <style scoped lang="scss">
-  h1, h2 {
-    padding: 0px;
-    margin: 0px;
-  }
+  
 </style>
