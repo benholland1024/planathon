@@ -20,11 +20,14 @@
 <div id="project-choice" v-else> 
   <h1 class="light-blue title">Welcome Back!</h1>
   <div class="dark-gray-widget" style="padding-bottom: 50px">
-    Below is a list of the hackathons you organize. Click on any of them to go to that hackathon's dashboard!
+    Below is a list of the organization. Click on any of them to go to that hackathon's dashboard!
   </div>
-  <button class="material-button-large orange-gradient">
-    + New Hackathon
-  </button>
+  <div class="material-button-large orange-gradient new-org">
+    <span v-if="!orgInput" @click="selectOrgInput()" ref="newOrg">
+      + New Organization
+    </span>
+    <input v-else v-model="orgName" @keyup.enter="addNewOrg()">
+  </div>
 </div>
 </template>
 
@@ -34,7 +37,20 @@ import PolarGraph from '@/components/Charts/PolarGraph.js';
 export default {
   data() {
     return {
-      
+      orgInput: false,
+      orgName: ''
+    }
+  },
+  methods: {
+    selectOrgInput() {
+      this.orgInput = true;
+//      var vm = this;
+//      setTimeout(() => {
+//        vm.$refs.newOrg.focus();
+//      }, 200);
+    },
+    addNewOrg() {
+      console.log(this.orgName);
     }
   },
   components: {
@@ -104,5 +120,20 @@ export default {
   button {
     margin-top: 20px;
     
+  }
+  
+  .new-org {
+    max-width: 200px;
+    margin-top: 20px;
+    
+    input {
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      border-bottom: solid white 2px;
+      width: 100%;
+      color: white;
+    }
   }
 </style>
