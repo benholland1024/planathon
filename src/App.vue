@@ -156,6 +156,10 @@ export default {
     background: $purple-gradient;
     color: white;
   }
+  .orange-gradient {
+    background: $orange-gradient;
+    color: white;
+  }
 
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;

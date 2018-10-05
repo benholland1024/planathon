@@ -22,6 +22,9 @@
   <div class="dark-gray-widget" style="padding-bottom: 50px">
     Below is a list of the hackathons you organize. Click on any of them to go to that hackathon's dashboard!
   </div>
+  <button class="material-button-large orange-gradient">
+    + New Hackathon
+  </button>
 </div>
 </template>
 
@@ -96,5 +99,10 @@ export default {
   .small-graph {
     width: 44%;
     padding: 1%;
+  }
+  
+  button {
+    margin-top: 20px;
+    
   }
 </style>
