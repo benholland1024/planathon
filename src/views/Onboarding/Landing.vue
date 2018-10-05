@@ -1,5 +1,5 @@
 <template>
-<div id="landing">
+<div id="landing" v-if="!$parent.user">
   <div id="promo-container">
     <line-graph class="small-graph"></line-graph>
     <polar-graph class="small-graph" v-if="0"></polar-graph>
@@ -15,6 +15,12 @@
       </router-link>
       <p class="under-button purple">Or, find your team!</p>
     </div>
+  </div>
+</div>
+<div id="project-choice" v-else> 
+  <h1 class="light-blue title">Welcome Back!</h1>
+  <div class="dark-gray-widget" style="padding-bottom: 50px">
+    Below is a list of the hackathons you organize. Click on any of them to go to that hackathon's dashboard!
   </div>
 </div>
 </template>
@@ -43,6 +49,10 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: stretch;
+  }
+  #project-choice {
+    text-align: left;
+    padding: 20px 10vw;
   }
   #promo-container {
     background: $dark-gray;

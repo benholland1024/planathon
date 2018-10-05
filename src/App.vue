@@ -108,6 +108,13 @@ export default {
   .faded-link:hover {
     opacity: 1;
   }
+  
+  .dark-gray-widget {
+    background: $dark-gray;
+    padding: 10px 20px;
+    color: white;
+    box-shadow: $box-shading;
+  }
 
   .bold {
     font-weight: bolder;
