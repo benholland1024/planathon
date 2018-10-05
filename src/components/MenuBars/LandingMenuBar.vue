@@ -2,13 +2,13 @@
 <div id="nav">
   <div id="nav-left">
     <router-link to="/" tag="h1" class="link">
-      <span class="light-yellow">Hack</span>
-      <span class="light-purple">Map</span>
+      <span class="light-yellow">Plan</span>
+      <span class="light-purple">athon</span>
     </router-link>
     <router-link to="/about" tag="h2" class="link light-blue faded-link">
       About
     </router-link>
-    <router-link to="/" tag="h2" class="link light-purple faded-link">
+    <router-link to="/dne" tag="h2" class="link light-purple faded-link">
       Features
     </router-link>
   </div>

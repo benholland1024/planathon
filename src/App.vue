@@ -177,8 +177,10 @@ export default {
   }
   #nav-right {
     display: flex;
+    justify-content: space-around;
     align-items: center;
     text-align: right;
+    width: 15%;
   }
   
 /*  ------------- */
