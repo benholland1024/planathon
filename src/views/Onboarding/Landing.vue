@@ -37,7 +37,6 @@ export default {
 
 <style scoped lang="scss">
 @import '@/GlobalVars.scss';
-
   #landing {
     padding: 50px;
     display: flex;
