@@ -23,10 +23,10 @@
     Below is a list of the organization. Click on any of them to go to that hackathon's dashboard!
   </div>
   <div class="material-button-large orange-gradient new-org">
-    <span v-if="!orgInput" @click="selectOrgInput()" ref="newOrg">
+    <span v-if="!orgInput" @click="selectOrgInput()">
       + New Organization
     </span>
-    <input v-else v-model="orgName" @keyup.enter="addNewOrg()">
+    <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
   </div>
 </div>
 </template>
@@ -44,10 +44,10 @@ export default {
   methods: {
     selectOrgInput() {
       this.orgInput = true;
-//      var vm = this;
-//      setTimeout(() => {
-//        vm.$refs.newOrg.focus();
-//      }, 200);
+      var vm = this;
+      setTimeout(() => {
+        vm.$refs.newOrg.focus();
+      }, 200);
     },
     addNewOrg() {
       console.log(this.orgName);
