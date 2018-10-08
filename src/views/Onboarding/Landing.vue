@@ -22,8 +22,9 @@
   <div class="dark-gray-widget" style="padding-bottom: 50px">
     Below is a list of the organization. Click on any of them to go to that hackathon's dashboard!
   </div>
-  <div class="material-button-large orange-gradient new-org">
-    <span v-if="!orgInput" @click="selectOrgInput()">
+  <div class="material-button-large orange-gradient new-org"
+        @click="selectOrgInput()">
+    <span v-if="!orgInput">
       + New Organization
     </span>
     <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
@@ -51,6 +52,13 @@ export default {
     },
     addNewOrg() {
       console.log(this.orgName);
+      this.$parent.db.collection('orgs').add({
+        name: this.orgName
+      }).then(() => {
+
+      }).catch((err) => {
+        console.error("Error submitting your org: ", err);
+      })
     }
   },
   components: {
