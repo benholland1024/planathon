@@ -8,17 +8,21 @@
 <script>
 import config from '@/config/config.js';
 import * as firebase from 'firebase';
+import VueFire from 'vuefire';
   
 import MenuBar from '@/components/MenuBars/LandingMenuBar.vue';
 
 firebase.initializeApp(config);
 var db = firebase.firestore();
+const settings = {/* your settings... */ timestampsInSnapshots: true};
+db.settings(settings);
 
 export default {
   data() {
     return {
       db: db,
-      user: null
+      user: null,
+      userOrgs: [],
     }
   },
   components: {
@@ -26,11 +30,28 @@ export default {
   },
   methods: {
     loadUser(id) {
-      console.warn("This should ultimately get the user's DB info.");
-      this.user = {
-        name: 'joe schmoe',
-        email: 'joe@schmoe.com',
-        id: id
+      // Getting the user's info from the User table (which is different from the Auth table!)
+      this.db.collection('users').doc(id)
+      .get().then((doc) => {
+        this.user = doc.data();
+        // Loading in the user's orgs now that we have the IDs from the user's table
+        this.loadOrgs();
+      }).catch((err) => {
+        console.error("Error getting the user's information: ", err);
+      })
+    },
+    loadOrgs() {
+      // Getting the data from each of the orgs based on the org's ID 
+      // (which was stored in the User's table)
+      for (let id in this.user.orgs) {
+        console.log("Hm.", this.user.orgs[id])
+        this.db.collection('orgs').doc(id)
+        .get().then((doc) => {
+          // console.log(doc.data());
+          this.userOrgs.push(doc.data());
+        }).catch((err) => {
+          console.error("Error in loadOrgs with the org ID " + id + ":", err);
+        })
       }
     },
     logout() {

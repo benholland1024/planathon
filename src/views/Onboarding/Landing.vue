@@ -22,13 +22,23 @@
   <div class="dark-gray-widget" style="padding-bottom: 50px">
     Below is a list of the organization. Click on any of them to go to that hackathon's dashboard!
   </div>
-  <div class="material-button-large orange-gradient new-org"
-        @click="selectOrgInput()">
-    <span v-if="!orgInput">
-      + New Organization
-    </span>
-    <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
+
+  <div id="orgList">
+    <div class="material-button-large orange-gradient new-org"
+          @click="selectOrgInput()" v-for="(org, orgIndex) in $parent.userOrgs"
+          :key="orgIndex">
+      {{org.name}}
+    </div>
+
+    <div class="material-button-large orange-gradient new-org"
+          @click="selectOrgInput()">
+      <span v-if="!orgInput">
+        + New Organization
+      </span>
+      <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
+    </div>
   </div>
+
 </div>
 </template>
 
@@ -52,9 +62,27 @@ export default {
     },
     addNewOrg() {
       console.log(this.orgName);
+      if (!this.$parent.user.id) {
+        console.error("We couldn't find your userID! This shouldn't be possible.");
+        return;
+      }
       this.$parent.db.collection('orgs').add({
         name: this.orgName
-      }).then(() => {
+      }).then((docRef) => {
+        
+        // Setting up an object to update the user's list of orgs
+        var updateObj = {
+          orgs: {}
+        }
+        updateObj.orgs[docRef.id] = {
+          role: 'admin'
+        }
+        this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
+        .then(() => {
+          console.log("Nice!")
+        }).catch(err => {
+          console.error("error: ", err);
+        })
 
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
@@ -129,10 +157,15 @@ export default {
     margin-top: 20px;
     
   }
+
+  #orgList {
+    display: flex;
+  }
   
   .new-org {
     max-width: 200px;
     margin-top: 20px;
+    margin-right: 20px;
     
     input {
       background: none;

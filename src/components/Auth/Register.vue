@@ -39,7 +39,8 @@ export default {
           // Registering the user in the database table:
           this.$parent.db.collection('users').doc(doc.user.uid)
           .set({
-            id: doc.user.uid
+            id: doc.user.uid,
+            email: doc.user.email
           })
           // Redirecting to the main from /register:
           this.$router.push('/');
