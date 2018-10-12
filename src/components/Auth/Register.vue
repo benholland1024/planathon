@@ -31,11 +31,21 @@ export default {
     methods: {
       signIn() {
         this.err = '';
+        // Registering the user in the AUTH table:
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-        .then((user) => {
-          console.log(user);
+        .then((doc) => {
+          console.log(doc.user);
+
+          // Registering the user in the database table:
+          this.$parent.db.collection('users').doc(doc.user.uid)
+          .set({
+            id: doc.user.uid,
+            email: doc.user.email
+          })
+          // Redirecting to the main from /register:
           this.$router.push('/');
         }).catch((error) => {
+          // Catching errors:
           this.err = error.message;
           console.error("Error signing you in!")
 //            throw error;
