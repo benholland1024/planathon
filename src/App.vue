@@ -60,10 +60,10 @@ export default {
     },
   },
   mounted() {
-    
+
     firebase.auth().onAuthStateChanged((user) => {
       // This if statement will be true if the user is logged in
-      // when the page loads! :) 
+      // when the page loads! :)
       if (user){
         this.loadUser(user.uid);
         this.loggedIn = true;
@@ -119,6 +119,22 @@ export default {
     color: $light-blue;
   }
 
+  .finance {
+    background-color: $yellow;
+  }
+  .development {
+    background-color: $orange;
+  }
+  .promotion {
+    background-color: $pink;
+  }
+  .design {
+    background-color: $purple;
+  }
+  .general {
+    background-color: $blue;
+  }
+
   .link {
     cursor: pointer;
   }
@@ -129,7 +145,7 @@ export default {
   .faded-link:hover {
     opacity: 1;
   }
-  
+
   .dark-gray-widget {
     background: $dark-gray;
     padding: 10px 20px;
@@ -214,7 +230,7 @@ export default {
     text-align: right;
     width: 15%;
   }
-  
+
 /*  ------------- */
 /*  AUTH STYLING: */
 /*  ------------- */
@@ -226,18 +242,18 @@ export default {
     margin-top: 30px;
     box-shadow: $box-shading;
   }
-  
+
   .err-text {
     color: white;
     text-decoration: underline;
     text-decoration-color: $orange;
   }
-  
+
   .inline-link {
     text-decoration: underline;
     cursor: pointer;
   }
-  
+
   .auth-textbox {
     border: solid $light-gray 1px;
     background: rgba(0,0,0,.1);
@@ -249,5 +265,5 @@ export default {
 </style>
 
 <style scoped lang="scss">
-  
+
 </style>
