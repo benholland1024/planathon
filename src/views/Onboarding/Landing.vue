@@ -25,7 +25,7 @@
 
   <div id="orgList">
     <div class="material-button-large orange-gradient new-org"
-          @click="selectOrgInput()" v-for="(org, orgIndex) in $parent.userOrgs"
+          @click="selectOrg(org)" v-for="(org, orgIndex) in $parent.userOrgs"
           :key="orgIndex">
       {{org.name}}
     </div>
@@ -87,6 +87,9 @@ export default {
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
+    },
+    selectOrg(org) {
+      console.log(org)
     }
   },
   components: {
