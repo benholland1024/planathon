@@ -23,6 +23,7 @@ export default {
       db: db,
       user: null,
       userOrgs: [],
+      loadingUser: true,
     }
   },
   components: {
@@ -36,8 +37,10 @@ export default {
         this.user = doc.data();
         // Loading in the user's orgs now that we have the IDs from the user's table
         this.loadOrgs();
+        this.loadingUser = false;
       }).catch((err) => {
         console.error("Error getting the user's information: ", err);
+        this.loadingUser = false;
       })
     },
     loadOrgs() {

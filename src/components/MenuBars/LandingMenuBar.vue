@@ -2,8 +2,9 @@
 <div id="nav">
   <div id="nav-left">
     <router-link to="/" tag="h1" class="link">
-      <span class="light-yellow">Plan</span>
-      <span class="light-purple">athon</span>
+      <span class="light-purple">Plan</span>
+      <span class="light-yellow">a</span>
+      <span class="light-purple">thon</span>
     </router-link>
     <router-link to="/about" tag="h2" class="link light-blue faded-link">
       About
