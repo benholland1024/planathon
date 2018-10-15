@@ -14,8 +14,11 @@
     </router-link>
   </div>
   <div id="nav-right">
+    <h2 class="link light-pink faded-link" v-if="$parent.loadingUser">
+      Loading...
+    </h2>
     <router-link to="/login" tag="h2" class="link light-pink faded-link"
-                 v-if="!user">
+                 v-else-if="!user">
       Log In
     </router-link>
     <h2 class="link light-pink faded-link" 
