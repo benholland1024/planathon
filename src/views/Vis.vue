@@ -73,7 +73,7 @@ export default {
     setTimeout(() => {
       this.container = document.getElementById('timeline');
       this.timeline = new vis.Timeline(this.container, this.items, this.groups, this.options);
-    }, 600);
+    }, 650);
     
   }
 }
