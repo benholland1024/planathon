@@ -40,7 +40,6 @@ export default {
         this.loadingUser = false;
       }).catch((err) => {
         console.error("Error getting the user's information: ", err);
-        this.loadingUser = false;
       })
     },
     loadOrgs() {
@@ -71,6 +70,8 @@ export default {
         this.loadUser(user.uid);
         this.loggedIn = true;
         this.loginModule = false;
+      } else {
+        this.loadingUser = false;
       }
     });
 
