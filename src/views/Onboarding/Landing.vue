@@ -78,16 +78,29 @@ export default {
         var updateObj = {
           orgs: {}
         }
-        updateObj.orgs[docRef.id] = {
-          role: 'admin'
-        }
-        this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
-        .then(() => {
-          console.log("Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
 
+        this.$parent.db.collection('users').doc(this.$parent.user.id).get()
+        .then((response) => {
+          var doc = response.data();
+          for (var org in doc.orgs) {
+            updateObj.orgs[org] = {role: 'admin'};
+          }
+          updateObj.orgs[docRef.id] = {
+            role: 'admin'
+          }
+          this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
+          .then(() => {
+            this.$parent.db.collection('orgs').doc(docRef.id).get()
+            .then((res) => {
+              this.$parent.userOrgs.push(res.data());
+            })
+
+          }).catch(err => {
+            console.error("error: ", err);
+          })
+
+        })
+        
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
@@ -101,7 +114,7 @@ export default {
     PolarGraph,
     Loading,
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
