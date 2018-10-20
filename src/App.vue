@@ -9,7 +9,7 @@
 import config from '@/config/config.js';
 import * as firebase from 'firebase';
 import VueFire from 'vuefire';
-  
+
 import MenuBar from '@/components/MenuBars/LandingMenuBar.vue';
 
 firebase.initializeApp(config);
@@ -24,6 +24,8 @@ export default {
       user: null,
       userOrgs: [],
       loadingUser: true,
+      org: null,
+      hackathon: null
     }
   },
   components: {
@@ -43,7 +45,7 @@ export default {
       })
     },
     loadOrgs() {
-      // Getting the data from each of the orgs based on the org's ID 
+      // Getting the data from each of the orgs based on the org's ID
       // (which was stored in the User's table)
       for (let id in this.user.orgs) {
         console.log("Hm.", this.user.orgs[id])

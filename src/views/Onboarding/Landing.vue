@@ -11,7 +11,7 @@
     <p class="light-pink bold title">Like A Pro.</p>
     <p style="opacity: .5;font-size:20px;">Running a hackathon is a herculean task. Organize your todo list, keep track of financial and development progress, see tips on running hackathons by people like you, and much more. </p>
     <div id="get-started">
-      <router-link tag="button" class="material-button-large purple-gradient" 
+      <router-link tag="button" class="material-button-large purple-gradient"
                    :to="{name: 'register'}">
         GET STARTED
       </router-link>
@@ -19,7 +19,7 @@
     </div>
   </div>
 </div>
-<div id="project-choice" v-else> 
+<div id="project-choice" v-else>
   <h1 class="light-blue title">Welcome Back!</h1>
   <div class="dark-gray-widget" style="padding-bottom: 50px">
     Below is a list of the organization. Click on any of them to go to that hackathon's dashboard!
@@ -39,6 +39,14 @@
       </span>
       <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
     </div>
+
+    <div class="material-button-large orange-gradient new-org"
+          @click="selectHackathonInput()">
+      <span v-if="!hackathonInput">
+        + New Hackathon
+      </span>
+      <input v-else v-model="hackathonName" @keyup.enter="addNewHackathon()" ref="newHackathon">
+    </div>
   </div>
 
 </div>
@@ -53,7 +61,9 @@ export default {
   data() {
     return {
       orgInput: false,
-      orgName: ''
+      orgName: '',
+      hackathonInput: false,
+      hackathonName: ''
     }
   },
   methods: {
@@ -73,11 +83,34 @@ export default {
       this.$parent.db.collection('orgs').add({
         name: this.orgName
       }).then((docRef) => {
-        
+
+        var updateOrgObj = {
+          id: docRef.id
+        }
+
+        this.$parent.db.collection('orgs').doc(docRef.id).update(updateOrgObj)
+        .then(() => {
+          console.log(" Id added to org! Nice!")
+        }).catch(err => {
+          console.error("error: ", err);
+        })
+
         // Setting up an object to update the user's list of orgs
         var updateObj = {
           orgs: {}
         }
+        if (this.$parent.user.orgs) {
+          updateObj.orgs = this.$parent.user.orgs;
+        }
+        updateObj.orgs[docRef.id] = {
+          role: 'admin'
+        }
+        this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
+        .then(() => {
+          console.log("Org added to user orgs! Nice!")
+        }).catch(err => {
+          console.error("error: ", err);
+        })
 
         this.$parent.db.collection('users').doc(this.$parent.user.id).get()
         .then((response) => {
@@ -107,6 +140,56 @@ export default {
     },
     selectOrg(org) {
       console.log(org)
+      this.$parent.org = org
+    },
+    selectHackathonInput() {
+      this.hackathonInput = true;
+      var vm = this;
+      setTimeout(() => {
+        vm.$refs.newHackathon.focus();
+      }, 200);
+    },
+    addNewHackathon() {
+      console.log(this.hackathonName);
+      if (!this.$parent.user.id) {
+        console.error("We couldn't find your userID! This shouldn't be possible.");
+        return;
+      }
+      this.$parent.db.collection('hackathons').add({
+        name: this.hackathonName
+      }).then((docRef) => {
+
+        var updateHackObj = {
+          id: docRef.id
+        }
+
+        this.$parent.db.collection('hackathons').doc(docRef.id).update(updateHackObj)
+        .then(() => {
+          console.log(" Id added to hackathon! Nice!")
+        }).catch(err => {
+          console.error("error: ", err);
+        })
+
+        // Setting up an object to update the user's list of orgs
+        var updateObj = {
+          hackathons: {}
+        }
+        if (this.$parent.org.hackathons) {
+          updateObj.hackathons = this.$parent.org.hackathons;
+        }
+        updateObj.hackathons[docRef.id] = {}
+        console.log("org.id:")
+        console.log(this.$parent.org)
+        this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
+        .then(() => {
+          console.log("Org added to user orgs! Nice!")
+        }).catch(err => {
+          console.error("error: ", err);
+        })
+
+      }).catch((err) => {
+        console.error("Error submitting your org: ", err);
+      })
     }
   },
   components: {
@@ -131,13 +214,13 @@ export default {
   }
   #promo-container {
     background: $dark-gray;
-    width: 45vw; 
+    width: 45vw;
     flex-grow: 1;
     height: 70vh;
     box-shadow: $box-shading;
     display: flex;
     justify-content: space-between;
-    
+
     @media screen and (max-width: 1000px) {
       display: none;
     }
@@ -165,28 +248,28 @@ export default {
   #get-started {
     text-align: center;
     margin-top: 50px;
-    
+
   }
-  
+
   .small-graph {
     width: 44%;
     padding: 1%;
   }
-  
+
   button {
     margin-top: 20px;
-    
+
   }
 
   #orgList {
     display: flex;
   }
-  
+
   .new-org {
     max-width: 200px;
     margin-top: 20px;
     margin-right: 20px;
-    
+
     input {
       background: none;
       border: none;
