@@ -99,6 +99,9 @@ export default {
         var updateObj = {
           orgs: {}
         }
+        if (this.$parent.user.orgs) {
+          updateObj.orgs = this.$parent.user.orgs;
+        }
         updateObj.orgs[docRef.id] = {
           role: 'admin'
         }
@@ -149,12 +152,15 @@ export default {
         var updateObj = {
           hackathons: {}
         }
+        if (this.$parent.org.hackathons) {
+          updateObj.hackathons = this.$parent.org.hackathons;
+        }
         updateObj.hackathons[docRef.id] = {}
         console.log("org.id:")
         console.log(this.$parent.org)
         this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
         .then(() => {
-          console.log("Org added to user ogrs! Nice!")
+          console.log("Org added to user orgs! Nice!")
         }).catch(err => {
           console.error("error: ", err);
         })
