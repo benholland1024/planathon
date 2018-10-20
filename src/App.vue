@@ -53,6 +53,7 @@ export default {
         .get().then((doc) => {
           // console.log(doc.data());
           this.userOrgs.push(doc.data());
+          //console.log(doc.data());
         }).catch((err) => {
           console.error("Error in loadOrgs with the org ID " + id + ":", err);
         })
