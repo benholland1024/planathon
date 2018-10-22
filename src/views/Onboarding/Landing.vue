@@ -22,17 +22,23 @@
 <div id="project-choice" v-else>
   <h1 class="light-blue title">Welcome Back!</h1>
   <div class="dark-gray-widget" style="padding-bottom: 50px">
-    Below is a list of the organization. Click on any of them to go to that hackathon's dashboard!
+    Below is a list of the organization. Click on any of them to see their details!
   </div>
 
   <div id="orgList">
     <div class="material-button-large orange-gradient new-org"
-          @click="selectOrg(org)" v-for="(org, orgIndex) in $parent.userOrgs" v-if="org"
-          :key="orgIndex">
-          <div v-if="" class="delete" @click="deleteOrg(org)">
-            x
-          </div>
-      {{org.name}}
+          @click="selectOrg(org, orgIndex)" v-for="(org, orgIndex) in $parent.userOrgs"
+          :key="orgIndex" :class="{
+            'expanded-org': selectedOrg === orgIndex
+          }">
+          <div @click="deleteOrg(org)">x</div>
+      <span>{{org.name}}</span>
+      <div style="text-align: left;" v-if="org.hackathons">
+        <h4 style="margin-left: -10px;">Hackathons:</h4>
+        <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons">
+          {{ hackathon.name }}
+        </router-link>
+      </div>
     </div>
 
     <div class="material-button-large orange-gradient new-org"
@@ -63,12 +69,15 @@ import Loading from '@/components/Loading.vue';
 import * as firebase from 'firebase';
 
 export default {
+  name: 'Landing',
   data() {
     return {
       orgInput: false,
       orgName: '',
       hackathonInput: false,
-      hackathonName: ''
+      hackathonName: '',
+
+      selectedOrg: '',
     }
   },
   methods: {
@@ -139,14 +148,15 @@ export default {
           })
 
         })
-        
+
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
     },
-    selectOrg(org) {
-      console.log(org)
-      this.$parent.org = org
+    selectOrg(org, index) {
+      console.log(org, index)
+      this.selectedOrg = index;
+      this.$parent.org = org;
     },
     selectHackathonInput() {
       this.hackathonInput = true;
@@ -162,7 +172,19 @@ export default {
         return;
       }
       this.$parent.db.collection('hackathons').add({
-        name: this.hackathonName
+        name: this.hackathonName,
+        timeline: [
+          {
+            description: "Design and order t-shirts for the event.",
+            tags: ["finance", "design"],
+            title: "Swag: T-shirts"
+          },
+          {
+            description: "Remind sponsors why you're worth it.",
+            tags: ["promotion"],
+            title: "Second Wave of Sponsor Emails"
+          }
+        ]
       }).then((docRef) => {
 
         var updateHackObj = {
@@ -172,13 +194,22 @@ export default {
         this.$parent.db.collection('hackathons').doc(docRef.id).update(updateHackObj)
         .then(() => {
           console.log(" Id added to hackathon! Nice!")
-          var updateObj = {
+        }).catch(err => {
+          console.error("error: ", err);
+        })
+
+        // Setting up an object to update the user's list of orgs
+        // A codepen explaining what's happening here:
+        //    https://codepen.io/bhollan5/pen/cf1fc208dea42754f87578a92f47121d?editors=0011
+        var updateObj = {
           hackathons: {}
         }
         if (this.$parent.org.hackathons) {
           updateObj.hackathons = this.$parent.org.hackathons;
         }
-        updateObj.hackathons[docRef.id] = {}
+        updateObj.hackathons[docRef.id] = {
+          id: docRef.id
+        }
         console.log("org.id:")
         console.log(this.$parent.org)
         this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
@@ -318,12 +349,18 @@ export default {
 
   #orgList {
     display: flex;
+    flex-flow: row wrap;
   }
 
   .new-org {
-    max-width: 200px;
+    // max-width: 200px;
+    min-width: 150px;
     margin-top: 20px;
     margin-right: 20px;
+    text-align: center;
+    transition-duration: .5s;
+    max-height: 25px;
+    overflow-y: hidden;
 
     input {
       background: none;
@@ -334,5 +371,10 @@ export default {
       width: 100%;
       color: white;
     }
+  }
+  .expanded-org {
+    transition-duration: 1s;
+    max-height: 500px;
+    background: $purple-gradient;
   }
 </style>

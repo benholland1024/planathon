@@ -9,6 +9,7 @@
 import config from '@/config/config.js';
 import * as firebase from 'firebase';
 import VueFire from 'vuefire';
+import Vue from 'vue';
 
 import MenuBar from '@/components/MenuBars/LandingMenuBar.vue';
 
@@ -54,12 +55,25 @@ export default {
         this.db.collection('orgs').doc(id)
         .get().then((doc) => {
           // console.log(doc.data());
-          this.userOrgs.push(doc.data());
+          var org = doc.data();
+          this.userOrgs.push(org);
+          for (var i in org.hackathons) {
+            this.loadHackathon(this.userOrgs.length - 1, org.hackathons[i].id);
+          }
           //console.log(doc.data());
         }).catch((err) => {
           console.error("Error in loadOrgs with the org ID " + id + ":", err);
         })
       }
+    },
+    loadHackathon(orgId, hackathonId) {
+      console.warn(orgId, hackathonId);
+      this.db.collection('hackathons').doc(hackathonId).get()
+      .then((doc) => {
+        console.log(doc.data());
+        console.log(this.userOrgs[orgId])
+        this.userOrgs[orgId].hackathons[hackathonId] = doc.data();
+      })
     },
     logout() {
       firebase.auth().signOut();
@@ -182,7 +196,7 @@ export default {
       content: '';
       position: absolute;
       top: -40%;
-      right: 110%;
+      right: 150%;
       width: 30px;
       height: 200%;
       background: rgba(white, .3);
