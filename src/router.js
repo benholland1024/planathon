@@ -45,7 +45,7 @@ export default new Router({
       component: () => import('./components/Auth/Login.vue')
     },
     {
-      path: '/dashboard',
+      path: '/dashboard/:hackathonId',
       name:'dashboard',
       component: () => import('./views/Onboarding/Dashboard.vue')
     },

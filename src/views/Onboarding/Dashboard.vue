@@ -1,16 +1,7 @@
 <template>
   <div id="dashboard" v-if="$parent.user">
-    <div class="dark-widget">
-      <div class="task-widget" v-for="task in tasks">
-        <div style="display: flex">
-          <div class="task-circle" v-for="tag in task.tags"
-            :class="[tag]"
-          ></div>
-        </div>
-        <h3>{{ task.title }}</h3>
-        <h4>{{ task.description }}</h4>
-      </div>
-    </div>
+    <tasks :timeline="timeline">
+    </tasks>
     <div class="dark-widget">
     </div>
   </div>
@@ -19,34 +10,29 @@
 <script>
 import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
+import Tasks from '@/components/dashboardComponents/tasks.vue';
+
 export default {
   data() {
     return {
-      tasks: [
-        {
-          title: "Swag: T-shirts",
-          description: "Design and order t-shirts for the event.",
-          tags: [
-            "finance",
-            "design"
-          ]
-        },
-        {
-          title: "Second Wave of Sponsor Emails",
-          description: "Remind sponsors why you're worth it.",
-          tags: [
-            "promotion"
-          ]
-        }
-      ]
+      hackathonId: this.$route.params.hackathonId,
+      timeline: []
     }
   },
   methods: {
 
   },
+  mounted() {
+    this.$parent.db.collection('hackathons').doc(this.hackathonId).get().then((doc) => {
+      this.timeline = doc.data().timeline;
+    }).catch((err) => {
+      console.error("Error getting the hackathon's timeline: ", err);
+    })
+  },
   components: {
     LineGraph,
-    PolarGraph
+    PolarGraph,
+    Tasks
   }
 }
 </script>

@@ -144,7 +144,7 @@ export default {
           })
 
         })
-        
+
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
@@ -169,7 +169,6 @@ export default {
       }
       this.$parent.db.collection('hackathons').add({
         name: this.hackathonName,
-        
       }).then((docRef) => {
 
         var updateHackObj = {
