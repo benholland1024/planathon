@@ -27,8 +27,11 @@
 
   <div id="orgList">
     <div class="material-button-large orange-gradient new-org"
-          @click="selectOrg(org)" v-for="(org, orgIndex) in $parent.userOrgs"
+          @click="selectOrg(org)" v-for="(org, orgIndex) in $parent.userOrgs" v-if="org"
           :key="orgIndex">
+          <div v-if="" class="delete" @click="deleteOrg(org)">
+            x
+          </div>
       {{org.name}}
     </div>
 
@@ -56,6 +59,8 @@
 import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Loading from '@/components/Loading.vue';
+
+import * as firebase from 'firebase';
 
 export default {
   data() {
@@ -116,7 +121,8 @@ export default {
         .then((response) => {
           var doc = response.data();
           for (var org in doc.orgs) {
-            updateObj.orgs[org] = {role: 'admin'};
+            //console.log(doc.orgs[org].role);
+            updateObj.orgs[org] = {role: doc.orgs[org].role};
           }
           updateObj.orgs[docRef.id] = {
             role: 'admin'
@@ -166,12 +172,7 @@ export default {
         this.$parent.db.collection('hackathons').doc(docRef.id).update(updateHackObj)
         .then(() => {
           console.log(" Id added to hackathon! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-
-        // Setting up an object to update the user's list of orgs
-        var updateObj = {
+          var updateObj = {
           hackathons: {}
         }
         if (this.$parent.org.hackathons) {
@@ -186,10 +187,59 @@ export default {
         }).catch(err => {
           console.error("error: ", err);
         })
+        }).catch(err => {
+          console.error("error: ", err);
+        })
 
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
+    },
+    deleteOrg(org) {
+      //Getting list of hackathons from org
+      this.$parent.db.collection('orgs').doc(org.id).get()
+      .then((response) => {
+        
+        //If org has hackathons, delete all of them from firebase
+        if (response.data().hackathons != undefined)
+          for (var id in response.data().hackathons) {
+            this.$parent.db.collection('hackathons').doc(id).delete()
+            .then(() => {
+              console.log(id, "deleted successfully");
+            });
+          }
+        
+        //Removing org from user data
+        var newUserOrgs = {
+          orgs: {}
+        };
+        this.$parent.db.collection('users').doc(this.$parent.user.id).get()
+        .then((user) => {
+          for (var orgId in user.data().orgs)
+            if (org.id != orgId)
+              newUserOrgs.orgs[orgId] = {role: user.data().orgs[orgId].role};
+            //Update user orgs with new org list
+          this.$parent.db.collection('users').doc(this.$parent.user.id).update(newUserOrgs);
+        })
+
+        
+        //Deleting org from firebase
+        this.$parent.db.collection('orgs').doc(org.id).delete()
+        .then(() => {
+          console.log("Org deleted successfully");
+        }).catch((err) => {
+          console.log("Error: ", err);
+        });
+      }).catch((err) => {
+        console.log("Cannot get org", err);
+      });
+
+      //Find the index of the org in userOrgs to auto refresh the page
+      for (var i in this.$parent.userOrgs)
+        if (this.$parent.userOrgs[i].id == org.id) {
+          this.$parent.userOrgs.splice(i, 1);
+          break;
+        }
     }
   },
   components: {
@@ -249,6 +299,11 @@ export default {
     text-align: center;
     margin-top: 50px;
 
+  }
+
+  .delete {
+    margin-top: 0px;
+    margin-left: 0px;
   }
 
   .small-graph {
