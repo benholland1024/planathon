@@ -133,7 +133,7 @@ export default {
           })
 
         })
-        
+
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
@@ -156,7 +156,24 @@ export default {
         return;
       }
       this.$parent.db.collection('hackathons').add({
-        name: this.hackathonName
+        name: this.hackathonName,
+        timeline: [
+          {
+            title: "Swag: T-shirts",
+            description: "Design and order t-shirts for the event.",
+            tags: [
+              "finance",
+              "design"
+            ]
+          },
+          {
+            title: "Second Wave of Sponsor Emails",
+            description: "Remind sponsors why you're worth it.",
+            tags: [
+              "promotion"
+            ]
+          }
+        ]
       }).then((docRef) => {
 
         var updateHackObj = {
