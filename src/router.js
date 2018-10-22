@@ -35,15 +35,6 @@ export default new Router({
       component: Vis
     },
     {
-      path: '*',
-      redirect: '/404'
-    },
-    {
-      path: '/404',
-      name: '404',
-      component: notFound
-    },
-    {
       path: '/register',
       name:'register',
       component: () => import('./components/Auth/Register.vue')
@@ -57,5 +48,14 @@ export default new Router({
       path: '/dashboard/:hackathonId',
       name:'dashboard',
       component: () => import('./views/Onboarding/Dashboard.vue')
+    },
+    {
+      path: '*',
+      redirect: '/404'
+    },
+    {
+      path: '/404',
+      name: '404',
+      component: notFound
     },]
 })
