@@ -32,11 +32,11 @@
             'expanded-org': selectedOrg === orgIndex
           }">
       <span>{{org.name}}</span>
-      <div style="text-align: left;" v-if="org.hackathons"> 
+      <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
-        <div v-for="hackathon in org.hackathons">
+        <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons">
           {{ hackathon.name }}
-        </div>
+        </router-link>
       </div>
     </div>
 
@@ -169,6 +169,18 @@ export default {
       }
       this.$parent.db.collection('hackathons').add({
         name: this.hackathonName,
+        timeline: [
+          {
+            description: "Design and order t-shirts for the event.",
+            tags: ["finance", "design"],
+            title: "Swag: T-shirts"
+          },
+          {
+            description: "Remind sponsors why you're worth it.",
+            tags: ["promotion"],
+            title: "Second Wave of Sponsor Emails"
+          }
+        ]
       }).then((docRef) => {
 
         var updateHackObj = {
@@ -183,7 +195,7 @@ export default {
         })
 
         // Setting up an object to update the user's list of orgs
-        // A codepen explaining what's happening here: 
+        // A codepen explaining what's happening here:
         //    https://codepen.io/bhollan5/pen/cf1fc208dea42754f87578a92f47121d?editors=0011
         var updateObj = {
           hackathons: {}
