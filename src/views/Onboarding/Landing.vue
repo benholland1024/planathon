@@ -66,6 +66,8 @@ import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Loading from '@/components/Loading.vue';
 
+import * as firebase from 'firebase';
+
 export default {
   name: 'Landing',
   data() {
@@ -128,6 +130,10 @@ export default {
         .then((response) => {
           var doc = response.data();
           for (var org in doc.orgs) {
+<<<<<<< HEAD
+=======
+            //console.log(doc.orgs[org].role);
+>>>>>>> 1fb90880edd3ce6b34beef55c7002afec90cc217
             updateObj.orgs[org] = {role: doc.orgs[org].role};
           }
           updateObj.orgs[docRef.id] = {
@@ -215,6 +221,9 @@ export default {
         }).catch(err => {
           console.error("error: ", err);
         })
+        }).catch(err => {
+          console.error("error: ", err);
+        })
 
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
@@ -246,7 +255,12 @@ export default {
             //Update user orgs with new org list
           this.$parent.db.collection('users').doc(this.$parent.user.id).update(newUserOrgs);
         })
+<<<<<<< HEAD
          
+=======
+
+        
+>>>>>>> 1fb90880edd3ce6b34beef55c7002afec90cc217
         //Deleting org from firebase
         this.$parent.db.collection('orgs').doc(org.id).delete()
         .then(() => {
@@ -257,13 +271,22 @@ export default {
       }).catch((err) => {
         console.log("Cannot get org", err);
       });
+<<<<<<< HEAD
        //Find the index of the org in userOrgs to auto refresh the page
+=======
+
+      //Find the index of the org in userOrgs to auto refresh the page
+>>>>>>> 1fb90880edd3ce6b34beef55c7002afec90cc217
       for (var i in this.$parent.userOrgs)
         if (this.$parent.userOrgs[i].id == org.id) {
           this.$parent.userOrgs.splice(i, 1);
           break;
         }
+<<<<<<< HEAD
     },
+=======
+    }
+>>>>>>> 1fb90880edd3ce6b34beef55c7002afec90cc217
   },
   components: {
     LineGraph,
@@ -322,6 +345,11 @@ export default {
     text-align: center;
     margin-top: 50px;
 
+  }
+
+  .delete {
+    margin-top: 0px;
+    margin-left: 0px;
   }
 
   .small-graph {
