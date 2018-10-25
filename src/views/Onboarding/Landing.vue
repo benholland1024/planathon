@@ -53,7 +53,7 @@
       <span v-if="!hackathonInput">
         + New Hackathon
       </span>
-      <input v-else v-model="hackathonName" @keyup.enter="addNewHackathon()" ref="newHackathon">
+      <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
     </div>
   </div>
 
@@ -161,7 +161,8 @@ export default {
         vm.$refs.newHackathon.focus();
       }, 200);
     },
-    addNewHackathon() {
+    addNewHackathon(taskList) {
+      console.log(taskList)
       console.log(this.hackathonName);
       if (!this.$parent.user.id) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
@@ -170,18 +171,7 @@ export default {
 
       this.$parent.db.collection('hackathons').add({
         name: this.hackathonName,
-        timeline: [
-          {
-            description: "Design and order t-shirts for the event.",
-            tags: ["finance", "design"],
-            title: "Swag: T-shirts"
-          },
-          {
-            description: "Remind sponsors why you're worth it.",
-            tags: ["promotion"],
-            title: "Second Wave of Sponsor Emails"
-          }
-        ]
+        timeline: taskList
       }).then((docRef) => {
 
         var updateHackObj = {
@@ -195,7 +185,6 @@ export default {
           console.error("error: ", err);
         })
 
-
         // Setting up an object to update the user's list of orgs
         // A codepen explaining what's happening here:
         //    https://codepen.io/bhollan5/pen/cf1fc208dea42754f87578a92f47121d?editors=0011
@@ -208,8 +197,8 @@ export default {
         updateObj.hackathons[docRef.id] = {
           id: docRef.id
         }
-        console.log("org.id:")
-        console.log(this.$parent.org)
+        console.log("org.id:");
+        console.log(this.$parent.org);
         this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
         .then(() => {
           console.log("Org added to user orgs! Nice!")
@@ -220,12 +209,63 @@ export default {
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
+    },
+    addNewTasks() {
+      console.log(this.hackathonName);
+      if (!this.$parent.user.id) {
+        console.error("We couldn't find your userID! This shouldn't be possible.");
+        return;
+      }
+
+      var taskList = [];
+      this.$parent.db.collection('tasks').add({
+        title: "Swag: T-shirts",
+        description: "Design and order t-shirts for the event.",
+        tags: ["finance", "design"]
+      }).then((docRef) => {
+        taskList.push(docRef.id);
+
+        var updateTaskObj = {
+         id: docRef.id
+        }
+
+        this.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
+        .then(() => {
+         console.log(" Id added to task! Nice!")
+        }).catch(err => {
+         console.error("error: ", err);
+        })
+      }).catch((err) => {
+       console.error("Error initializing hackathon tasks: ", err);
+      })
+
+      this.$parent.db.collection('tasks').add({
+        title: "Second Wave of Sponsor Emails",
+        description: "Remind sponsors why you're worth it.",
+        tags: ["promotion"]
+      }).then((docRef) => {
+        taskList.push(docRef.id);
+        this.addNewHackathon(taskList);
+
+        var updateTaskObj = {
+          id: docRef.id
+        }
+
+        this.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
+        .then(() => {
+          console.log(" Id added to task! Nice!")
+        }).catch(err => {
+          console.error("error: ", err);
+        })
+      }).catch((err) => {
+        console.error("Error initializing hackathon tasks: ", err);
+      })
     }
   },
   components: {
     LineGraph,
     PolarGraph,
-    Loading,
+    Loading
   }
 };
 </script>

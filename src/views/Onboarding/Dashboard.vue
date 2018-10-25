@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard" v-if="$parent.user">
-    <tasks :timeline="timeline">
+    <tasks :timeline="hackathonTasks">
     </tasks>
     <div class="dark-widget">
     </div>
@@ -16,18 +16,36 @@ export default {
   data() {
     return {
       hackathonId: this.$route.params.hackathonId,
-      timeline: []
+      timeline: [],
+      hackathonTasks: []
     }
   },
   methods: {
 
   },
   mounted() {
+    console.log("running mounted function");
     this.$parent.db.collection('hackathons').doc(this.hackathonId).get().then((doc) => {
       this.timeline = doc.data().timeline;
+
+      console.log("this.timeline");
+      console.log(this.timeline);
+      this.timeline.forEach((task) => {
+        this.$parent.db.collection('tasks').doc(task).get().then((doc) => {
+          this.hackathonTasks.push(doc.data());
+          console.log("this.hackathonTasks");
+          console.log(this.hackathonTasks);
+        }).catch((err) => {
+          console.error("Error getting the hackathon's tasks: ", err);
+        })
+      })
+
+
     }).catch((err) => {
       console.error("Error getting the hackathon's timeline: ", err);
     })
+
+
   },
   components: {
     LineGraph,

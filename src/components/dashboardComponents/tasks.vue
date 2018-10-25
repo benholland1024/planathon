@@ -26,8 +26,7 @@ import TaskAddEditModal from '@/components/dashboardComponents/taskAddEditModal.
   export default {
     data() {
       return {
-        showModal: false,
-        tasks: []
+        showModal: false
       }
     },
     props: {
@@ -40,13 +39,7 @@ import TaskAddEditModal from '@/components/dashboardComponents/taskAddEditModal.
       TaskAddEditModal
     },
     mounted() {
-      this.timeline.forEach((task) => {
-        this.$parent.db.collection('tasks').doc(task).get().then((doc) => {
-          this.tasks.push(doc.data());
-        }).catch((err) => {
-          console.error("Error getting the hackathon's tasks: ", err);
-        })
-      });
+
     },
   }
 </script>
