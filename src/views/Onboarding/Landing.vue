@@ -167,6 +167,7 @@ export default {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
+
       this.$parent.db.collection('hackathons').add({
         name: this.hackathonName,
         timeline: [
@@ -193,6 +194,7 @@ export default {
         }).catch(err => {
           console.error("error: ", err);
         })
+
 
         // Setting up an object to update the user's list of orgs
         // A codepen explaining what's happening here:

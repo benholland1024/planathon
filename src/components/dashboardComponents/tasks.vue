@@ -8,15 +8,26 @@
       </div>
       <h3>{{ task.title }}</h3>
       <h4>{{ task.description }}</h4>
+
+
+      <button id="show-modal" @click="showModal = true">Edit Task</button>
+      <task-add-edit-modal :task="task" v-if="showModal" @close="showModal = false">
+      </task-add-edit-modal>
+
+
     </div>
   </div>
 </template>
 
+
 <script>
+import TaskAddEditModal from '@/components/dashboardComponents/taskAddEditModal.vue';
+
   export default {
     data() {
       return {
-
+        showModal: false,
+        tasks: []
       }
     },
     props: {
@@ -24,7 +35,19 @@
         type: Array,
         required: true
       }
-    }
+    },
+    components: {
+      TaskAddEditModal
+    },
+    mounted() {
+      this.timeline.forEach((task) => {
+        this.$parent.db.collection('tasks').doc(task).get().then((doc) => {
+          this.tasks.push(doc.data());
+        }).catch((err) => {
+          console.error("Error getting the hackathon's tasks: ", err);
+        })
+      });
+    },
   }
 </script>
 
