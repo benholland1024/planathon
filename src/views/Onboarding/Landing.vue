@@ -38,6 +38,9 @@
                     :key="hackathon.id" class="hackathon-item">
           {{ hackathon.name }}
         </router-link>
+        <div class="hackathon-item" style="text-decoration: underline">
+          + New Hackathon
+        </div>
       </div>
     </div>
 
@@ -49,7 +52,7 @@
       <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
     </div>
 
-    <div class="material-button-large orange-gradient new-org"
+    <div class="material-button-large orange-gradient new-org" 
           @click="selectHackathonInput()">
       <span v-if="!hackathonInput">
         + New Hackathon
@@ -293,6 +296,7 @@ export default {
   #orgList {
     display: flex;
     flex-flow: row wrap;
+    align-items: flex-start;
   }
 
   .new-org {
@@ -322,7 +326,7 @@ export default {
     background: $purple-gradient;
   }
   .hackathon-item {
-    border: solid 1px black;
+    // border: solid 1px black;
     position: relative;
     left: 0px;
     width: 100%;

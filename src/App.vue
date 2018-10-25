@@ -227,7 +227,7 @@ export default {
     color: white;
     background: $light-gray;
   }
-
+  
 
 /*  ------------- */
 /*  AUTH STYLING: */
