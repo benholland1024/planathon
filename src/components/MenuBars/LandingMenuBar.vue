@@ -1,5 +1,5 @@
 <template>
-<div id="nav">
+<div id="nav" v-if="$route.name !== 'dashboard'">
   <div id="nav-left">
     <router-link to="/" tag="h1" class="link">
       <span class="light-purple">Plan</span>
@@ -28,6 +28,10 @@
     </h2>
   </div>
 </div>
+<div id="nav" v-else>
+  
+</div>
+
 </template>
 
 <script>
@@ -44,5 +48,29 @@ export default {
 h1, h2 {
     padding: 0px;
     margin: 0px;
+  }
+    #nav {
+    padding: 30px;
+    background: $dark-gray;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      font-weight: bold;
+      color: white;
+    }
+  }
+  #nav-left {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+  }
+  #nav-right {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: right;
+    width: 15%;
   }
 </style>

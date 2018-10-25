@@ -34,7 +34,8 @@
       <span>{{org.name}}</span>
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
-        <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons">
+        <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons"
+                    :key="hackathon.id" class="hackathon-item">
           {{ hackathon.name }}
         </router-link>
       </div>
@@ -303,6 +304,7 @@ export default {
     transition-duration: .5s;
     max-height: 25px;
     overflow-y: hidden;
+    position: relative;
 
     input {
       background: none;
@@ -318,5 +320,11 @@ export default {
     transition-duration: 1s;
     max-height: 500px;
     background: $purple-gradient;
+  }
+  .hackathon-item {
+    border: solid 1px black;
+    position: relative;
+    left: 0px;
+    width: 100%;
   }
 </style>
