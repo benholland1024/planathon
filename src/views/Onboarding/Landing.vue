@@ -31,6 +31,7 @@
           :key="orgIndex" :class="{
             'expanded-org': selectedOrg === orgIndex
           }">
+          <div @click="deleteOrg(org)">x</div>
       <span>{{org.name}}</span>
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
@@ -127,7 +128,7 @@ export default {
         .then((response) => {
           var doc = response.data();
           for (var org in doc.orgs) {
-            updateObj.orgs[org] = {role: 'admin'};
+            updateObj.orgs[org] = {role: doc.orgs[org].role};
           }
           updateObj.orgs[docRef.id] = {
             role: 'admin'
@@ -218,7 +219,51 @@ export default {
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
-    }
+    },
+    deleteOrg(org) {
+      //Getting list of hackathons from org
+      this.$parent.db.collection('orgs').doc(org.id).get()
+      .then((response) => {
+        
+        //If org has hackathons, delete all of them from firebase
+        if (response.data().hackathons != undefined)
+          for (var id in response.data().hackathons) {
+            this.$parent.db.collection('hackathons').doc(id).delete()
+            .then(() => {
+              console.log(id, "deleted successfully");
+            });
+          }
+        
+        //Removing org from user data
+        var newUserOrgs = {
+          orgs: {}
+        };
+        this.$parent.db.collection('users').doc(this.$parent.user.id).get()
+        .then((user) => {
+          for (var orgId in user.data().orgs)
+            if (org.id != orgId)
+              newUserOrgs.orgs[orgId] = {role: user.data().orgs[orgId].role};
+            //Update user orgs with new org list
+          this.$parent.db.collection('users').doc(this.$parent.user.id).update(newUserOrgs);
+        })
+         
+        //Deleting org from firebase
+        this.$parent.db.collection('orgs').doc(org.id).delete()
+        .then(() => {
+          console.log("Org deleted successfully");
+        }).catch((err) => {
+          console.log("Error: ", err);
+        });
+      }).catch((err) => {
+        console.log("Cannot get org", err);
+      });
+       //Find the index of the org in userOrgs to auto refresh the page
+      for (var i in this.$parent.userOrgs)
+        if (this.$parent.userOrgs[i].id == org.id) {
+          this.$parent.userOrgs.splice(i, 1);
+          break;
+        }
+    },
   },
   components: {
     LineGraph,
