@@ -31,7 +31,7 @@
           :key="orgIndex" :class="{
             'expanded-org': selectedOrg === orgIndex
           }">
-          <div @click="deleteOrg(org)">x</div>
+          
       <span>{{org.name}}</span>
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
@@ -39,10 +39,14 @@
                     :key="hackathon.id" class="hackathon-item">
           {{ hackathon.name }}
         </router-link>
-        <div class="hackathon-item" style="text-decoration: underline">
-          + New Hackathon
-        </div>
       </div>
+      <div v-else>
+        <h4>No hackathons yet!</h4>
+      </div>
+      <div class="hackathon-item new-hackathon-opt opt">
+        + New Hackathon
+      </div>
+      <div @click="deleteOrg(org)" class="delete-opt opt">Delete this Org</div>
     </div>
 
     <div class="material-button-large orange-gradient new-org"
@@ -225,6 +229,11 @@ export default {
       })
     },
     deleteOrg(org) {
+      // Confirming they actually want to delete
+      if (!confirm('Are you sure you want to delete this org? This can\'t be undone!')) {
+        return;
+      }
+
       //Getting list of hackathons from org
       this.$parent.db.collection('orgs').doc(org.id).get()
       .then((response) => {
@@ -375,5 +384,23 @@ export default {
     position: relative;
     left: 0px;
     width: 100%;
+  }
+
+  .opt {
+    font-size: 15px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 7px;
+    box-shadow: $box-shading;
+    margin: auto 0;
+    margin-top: 15px;
+    margin-left: 50%;
+    transform: translatex(-50%);
+  }
+  .new-hackathon-opt {
+    background: $blue;
+  }
+  .delete-opt {
+    background: $pink;
   }
 </style>
