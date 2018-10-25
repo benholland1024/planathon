@@ -20,32 +20,23 @@ export default {
       hackathonTasks: []
     }
   },
-  methods: {
-
-  },
   mounted() {
-    console.log("running mounted function");
+    // Get the timeline for the hackathon
     this.$parent.db.collection('hackathons').doc(this.hackathonId).get().then((doc) => {
       this.timeline = doc.data().timeline;
 
-      console.log("this.timeline");
-      console.log(this.timeline);
+      // For each task id in the timeline, get the actual task object
+      // and put the tasks in hackathonTasks
       this.timeline.forEach((task) => {
         this.$parent.db.collection('tasks').doc(task).get().then((doc) => {
           this.hackathonTasks.push(doc.data());
-          console.log("this.hackathonTasks");
-          console.log(this.hackathonTasks);
         }).catch((err) => {
           console.error("Error getting the hackathon's tasks: ", err);
         })
       })
-
-
     }).catch((err) => {
       console.error("Error getting the hackathon's timeline: ", err);
     })
-
-
   },
   components: {
     LineGraph,

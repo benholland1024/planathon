@@ -5,17 +5,14 @@
         <div class="popup-table purple-gradient" style="align: center">
           <h2>Edit Task</h2>
             <div style="display: flex">
-
               <div>
                 <p>Title:</p>
                 <input v-model="task.title" type="text" class="auth-textbox"
-                      @keyup.enter=""/>
-                <br>
+                      @keyup.enter=""/><br>
                 <p>Description:</p>
                 <input v-model="task.description" type="text" class="auth-textbox"
                       @keyup.enter=""/>
               </div>
-
               <div>
                 <p>Tags:</p>
                 <input type="checkbox" v-model="promotion">
@@ -29,20 +26,9 @@
                 <input type="checkbox" v-model="design">
                 <label for="checkbox">  Design</label><br>
               </div>
-            </div>
-
-
-
-            <br><br>
-            <button class="material-button-large" @click="saveTask()">
-              Save
-            </button><br><br>
-            <button class="material-button-large" @click="$emit('close')">
-              Close
-            </button>
-
-
-
+            </div><br><br>
+            <button class="material-button-large" @click="saveTask()">Save</button><br><br>
+            <button class="material-button-large" @click="$emit('close')">Close</button>
           </div>
         </div>
       </div>
@@ -69,6 +55,7 @@
       }
     },
     mounted() {
+      // Initialize variables for editing task tags
       if (this.task.tags.includes("promotion")) {
         this.promotion = true;
       }

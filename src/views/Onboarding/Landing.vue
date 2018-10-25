@@ -73,7 +73,6 @@ export default {
       orgName: '',
       hackathonInput: false,
       hackathonName: '',
-
       selectedOrg: '',
     }
   },
@@ -86,15 +85,19 @@ export default {
       }, 200);
     },
     addNewOrg() {
+      // Make sure the user is logged in
       console.log(this.orgName);
       if (!this.$parent.user.id) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
+
+      // Create a new org and add it to the orgs collection
       this.$parent.db.collection('orgs').add({
         name: this.orgName
       }).then((docRef) => {
 
+        // This is used to update the new org, so it holds it's id
         var updateOrgObj = {
           id: docRef.id
         }
@@ -138,13 +141,10 @@ export default {
             .then((res) => {
               this.$parent.userOrgs.push(res.data());
             })
-
           }).catch(err => {
             console.error("error: ", err);
           })
-
         })
-
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
@@ -162,18 +162,19 @@ export default {
       }, 200);
     },
     addNewHackathon(taskList) {
-      console.log(taskList)
-      console.log(this.hackathonName);
+      // Make sure the user is logged in
       if (!this.$parent.user.id) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
 
+      // Create a new hackathon and add it to the hackathons collection
       this.$parent.db.collection('hackathons').add({
         name: this.hackathonName,
         timeline: taskList
       }).then((docRef) => {
 
+        // This is used to update the new hackathon so it holds it's id
         var updateHackObj = {
           id: docRef.id
         }
@@ -185,9 +186,7 @@ export default {
           console.error("error: ", err);
         })
 
-        // Setting up an object to update the user's list of orgs
-        // A codepen explaining what's happening here:
-        //    https://codepen.io/bhollan5/pen/cf1fc208dea42754f87578a92f47121d?editors=0011
+        // Setting up an object to update the org's list of hackathons
         var updateObj = {
           hackathons: {}
         }
@@ -205,26 +204,32 @@ export default {
         }).catch(err => {
           console.error("error: ", err);
         })
-
       }).catch((err) => {
         console.error("Error submitting your org: ", err);
       })
     },
     addNewTasks() {
-      console.log(this.hackathonName);
+      // Make sure the user is logged in
       if (!this.$parent.user.id) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
 
+      // Initialize an array that will keep track of tasks for the new
+      // hackathon's timeline
       var taskList = [];
+
+      // Create a new task and add it to the tasks collection
       this.$parent.db.collection('tasks').add({
         title: "Swag: T-shirts",
         description: "Design and order t-shirts for the event.",
         tags: ["finance", "design"]
       }).then((docRef) => {
+
+        // Push the new task id to the taskList
         taskList.push(docRef.id);
 
+        // This is used to update the new task so it holds it's id
         var updateTaskObj = {
          id: docRef.id
         }
@@ -239,18 +244,20 @@ export default {
        console.error("Error initializing hackathon tasks: ", err);
       })
 
+      // Repeat/add a second task (same process as above)
       this.$parent.db.collection('tasks').add({
         title: "Second Wave of Sponsor Emails",
         description: "Remind sponsors why you're worth it.",
         tags: ["promotion"]
       }).then((docRef) => {
         taskList.push(docRef.id);
+
+        // This is the only spot where taskList was correctly passed
         this.addNewHackathon(taskList);
 
         var updateTaskObj = {
           id: docRef.id
         }
-
         this.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
         .then(() => {
           console.log(" Id added to task! Nice!")
