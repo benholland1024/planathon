@@ -31,14 +31,22 @@
           :key="orgIndex" :class="{
             'expanded-org': selectedOrg === orgIndex
           }">
-          <div @click="deleteOrg(org)">x</div>
+          
       <span>{{org.name}}</span>
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
-        <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons">
+        <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons"
+                    :key="hackathon.id" class="hackathon-item">
           {{ hackathon.name }}
         </router-link>
       </div>
+      <div v-else>
+        <h4>No hackathons yet!</h4>
+      </div>
+      <div class="hackathon-item new-hackathon-opt opt">
+        + New Hackathon
+      </div>
+      <div @click="deleteOrg(org)" class="delete-opt opt">Delete this Org</div>
     </div>
 
     <div class="material-button-large orange-gradient new-org"
@@ -49,7 +57,7 @@
       <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
     </div>
 
-    <div class="material-button-large orange-gradient new-org"
+    <div class="material-button-large orange-gradient new-org" 
           @click="selectHackathonInput()">
       <span v-if="!hackathonInput">
         + New Hackathon
@@ -230,6 +238,11 @@ export default {
       })
     },
     deleteOrg(org) {
+      // Confirming they actually want to delete
+      if (!confirm('Are you sure you want to delete this org? This can\'t be undone!')) {
+        return;
+      }
+
       //Getting list of hackathons from org
       this.$parent.db.collection('orgs').doc(org.id).get()
       .then((response) => {
@@ -365,6 +378,7 @@ export default {
   #orgList {
     display: flex;
     flex-flow: row wrap;
+    align-items: flex-start;
   }
 
   .new-org {
@@ -376,6 +390,7 @@ export default {
     transition-duration: .5s;
     max-height: 25px;
     overflow-y: hidden;
+    position: relative;
 
     input {
       background: none;
@@ -391,5 +406,29 @@ export default {
     transition-duration: 1s;
     max-height: 500px;
     background: $purple-gradient;
+  }
+  .hackathon-item {
+    // border: solid 1px black;
+    position: relative;
+    left: 0px;
+    width: 100%;
+  }
+
+  .opt {
+    font-size: 15px;
+    padding: 5px;
+    text-align: center;
+    border-radius: 7px;
+    box-shadow: $box-shading;
+    margin: auto 0;
+    margin-top: 15px;
+    margin-left: 50%;
+    transform: translatex(-50%);
+  }
+  .new-hackathon-opt {
+    background: $blue;
+  }
+  .delete-opt {
+    background: $pink;
   }
 </style>
