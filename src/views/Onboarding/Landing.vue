@@ -50,10 +50,10 @@
         <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
       </div>
 
-      <!-- manageCollabsModal -->
-      <div class="hackathon-item new-hackathon-opt opt" @click="showCollabsModal = true">Manage Organization</div>
-      <manage-collabs-modal :orgId="org.id" v-if="showCollabsModal == true" @close="showCollabsModal = false">
-      </manage-collabs-modal>
+      <!-- manageOrgModal -->
+      <div class="hackathon-item new-hackathon-opt opt" @click="showOrgModal = true">Manage Organization</div>
+      <manage-org-modal :orgId="org.id" v-if="showOrgModal == true" @close="showOrgModal = false">
+      </manage-org-modal>
 
     </div>
     <div class="material-button-large orange-gradient new-org"
@@ -73,7 +73,7 @@
 import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Loading from '@/components/Loading.vue';
-import ManageCollabsModal from '@/components/dashboardComponents/manageCollabsModal.vue'
+import ManageOrgModal from '@/components/dashboardComponents/manageOrgModal.vue'
 
 export default {
   name: 'Landing',
@@ -84,7 +84,7 @@ export default {
       hackathonInput: false,
       hackathonName: '',
       selectedOrg: '',
-      showCollabsModal: false
+      showOrgModal: false
     }
   },
   methods: {
@@ -107,9 +107,13 @@ export default {
       this.$parent.db.collection('orgs').where("name", "==", this.orgName).get()
       .then((data) => {
         if (data.empty == true) {
+
           // Create a new org and add it to the orgs collection
+          var collabsList = [];
+          collabsList.push(this.$parent.user.id);
           this.$parent.db.collection('orgs').add({
-            name: this.orgName
+            name: this.orgName,
+            collaborators: collabsList
           }).then((docRef) => {
 
             // This is used to update the new org, so it holds it's id
@@ -307,7 +311,7 @@ export default {
     LineGraph,
     PolarGraph,
     Loading,
-    ManageCollabsModal
+    ManageOrgModal
   }
 };
 </script>
