@@ -6,10 +6,10 @@
       <span class="light-yellow">a</span>
       <span class="light-purple">thon</span>
     </router-link>
-    <router-link to="/about" tag="h2" class="link light-blue faded-link">
+    <router-link to="/about" tag="h2" class="link light-blue faded-link menu-link">
       About
     </router-link>
-    <router-link to="/dne" tag="h2" class="link light-purple faded-link">
+    <router-link to="/dne" tag="h2" class="link light-purple faded-link menu-link">
       Features
     </router-link>
   </div>
@@ -72,6 +72,10 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     text-align: right;
     width: 15%;
+  }
+
+  .menu-link {
+    margin-left: 20px;
   }
   
 </style>

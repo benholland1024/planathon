@@ -187,13 +187,7 @@ export default {
   margin-right: 5px;
 }
 
-h3, h4 {
-  margin: 0;
-}
 
-h4 {
-  opacity: .5;
-}
 
 #calendar {
   width: 180px;
@@ -257,5 +251,15 @@ h4 {
 }
 .underlined {
   text-decoration: underline;
+}
+</style>
+
+<style lang="scss" scoped>
+h3, h4 {
+  margin: 0;
+}
+
+h4 {
+  opacity: .5;
 }
 </style>
