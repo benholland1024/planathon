@@ -8,24 +8,35 @@
       </div>
       <h3>{{ task.title }}</h3>
       <h4>{{ task.description }}</h4>
+      <button id="show-modal" @click="showModal = true">Edit Task</button>
+      <task-add-edit-modal :task="task" v-if="showModal" @close="showModal = false">
+      </task-add-edit-modal>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
+import TaskAddEditModal from '@/components/dashboardComponents/taskAddEditModal.vue';
 
-      }
-    },
-    props: {
-      timeline: {
-        type: Array,
-        required: true
-      }
+export default {
+  data() {
+    return {
+      showModal: false
     }
+  },
+  props: {
+    timeline: {
+      type: Array,
+      required: true
+    }
+  },
+  components: {
+    TaskAddEditModal
+  },
+  mounted() {
+
   }
+}
 </script>
 
 <style scoped lang="scss">
