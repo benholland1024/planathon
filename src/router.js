@@ -60,6 +60,11 @@ export default new Router({
       component: () => import('./components/Sponsorship/ContactTracker.vue')
     },
     {
+      path: '/sponsorship/:hackathonId',
+      name: 'SponsorshipDashboard',
+      component: () => import('./views/Sponsorship.vue')
+    },
+    {
       path: '*',
       redirect: '/404'
     },
