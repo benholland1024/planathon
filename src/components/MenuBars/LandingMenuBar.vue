@@ -1,5 +1,5 @@
 <template>
-<div id="nav" v-if="$route.meta.menuBar">
+<div id="nav" v-if="!$route.meta.dash">
   <div id="nav-left">
     <router-link to="/" tag="h1" class="link">
       <span class="light-purple">Plan</span>
