@@ -2,6 +2,23 @@
   <div id="dashboard" v-if="$parent.user">
     <tasks :timeline="timeline" :hackathonTasks="hackathonTasks" :hackathonId="hackathonId">
     </tasks>
+      <div id="calendar">
+        <div id="day-labels">
+          <span>M</span>
+          <span>T</span>
+          <span>W</span>
+          <span>R</span>
+          <span>F</span>
+          <span>S</span>
+          <span>S</span>
+        </div>
+      <div id="day-nodes">
+        <div class="week-node" v-for="week in 35">
+          <div v-for="i in 7" class="day-node">
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="dark-widget">
     </div>
   </div>
@@ -52,6 +69,9 @@ export default {
 #dashboard {
   display: flex;
   justify-content: space-evenly;
+  width: calc(100% - 180px);
+  margin-right: 0px;
+  margin-left: auto;
 }
 
 .dark-widget {
@@ -85,4 +105,42 @@ h4 {
   opacity: .5;
 }
 
+#calendar {
+  width: 180px;
+  height: 100%;
+  position: absolute;
+  background: $gray;
+  left: 0px;
+  top: 0px;
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-template-rows: 5% 95%;
+  font-family: courier;
+}
+#day-labels {
+  grid-column: 2/3;
+  grid-row: 1/2;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+#day-nodes {
+  grid-column: 2/3;
+  grid-row: 2/3;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+.day-node {
+  width: 10px;
+  height: 10px;
+  background: $lighter-gray;
+}
+.week-node {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+}
 </style>
