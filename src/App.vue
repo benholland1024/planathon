@@ -66,8 +66,7 @@ export default {
     },
     loadHackathon(orgId, hackathonId) {
       console.warn(orgId, hackathonId);
-      this.db.collection('hackathons').doc(hackathonId).get()
-      .then((doc) => {
+      this.db.collection('hackathons').doc(hackathonId).onSnapshot((doc) => {
         console.log(doc.data());
         console.log(this.userOrgs[orgId])
         this.userOrgs[orgId].hackathons[hackathonId] = doc.data();
