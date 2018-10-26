@@ -11,9 +11,14 @@
       <button id="show-edit-modal" @click="showEditModal = index">Edit Task</button>
       <task-edit-modal :task="task" v-if="showEditModal == index" @close="showEditModal = -1">
       </task-edit-modal>
+      <button id="show-delete-modal" @click="showDeleteModal = index">Delete Task</button>
+      <task-delete-modal :taskId="task.id" :hackathonId="hackathonId" :timeline="timeline"
+            v-if="showDeleteModal == index" @close="showDeleteModal = -1">
+      </task-delete-modal>
     </div>
     <button id="show-add-modal" @click="showAddModal = true">Add Task</button>
-    <task-add-modal :timeline="timeline" :hackathonId="hackathonId" v-if="showAddModal == true" @close="showAddModal = false">
+    <task-add-modal :timeline="timeline" :hackathonId="hackathonId" v-if="showAddModal == true"
+          @close="showAddModal = false">
     </task-add-modal>
   </div>
 </template>
@@ -21,11 +26,13 @@
 <script>
 import TaskEditModal from '@/components/dashboardComponents/taskEditModal.vue';
 import TaskAddModal from '@/components/dashboardComponents/taskAddModal.vue';
+import TaskDeleteModal from '@/components/dashboardComponents/taskDeleteModal.vue';
 
 export default {
   data() {
     return {
       showEditModal: -1,
+      showDeleteModal: -1,
       showAddModal: false
     }
   },
@@ -45,7 +52,8 @@ export default {
   },
   components: {
     TaskEditModal,
-    TaskAddModal
+    TaskAddModal,
+    TaskDeleteModal
   },
   mounted() {
 
