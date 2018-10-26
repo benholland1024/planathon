@@ -3,8 +3,7 @@
 </loading>
 <div id="landing" v-else-if="!$parent.user">
   <div id="promo-container">
-    <line-graph class="small-graph"></line-graph>
-    <polar-graph class="small-graph" v-if="0"></polar-graph>
+    <graph2d v-bind:start="start" v-bind:end="end" v-bind:items="items"></graph2d >
   </div>
   <div id="call-to-action">
     <p class="light-blue title">Organize Your Hackathon</p>
@@ -31,7 +30,7 @@
           :key="orgIndex" :class="{
             'expanded-org': selectedOrg === orgIndex
           }">
-          
+
       <span>{{org.name}}</span>
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
@@ -49,9 +48,13 @@
         </span>
         <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
       </div>
-      <div @click="deleteOrg(org)" class="delete-opt opt">Delete this Org</div>
-    </div>
 
+      <!-- manageCollabsModal -->
+      <div class="hackathon-item new-hackathon-opt opt" @click="showCollabsModal = true">Manage Organization</div>
+      <manage-collabs-modal :orgId="org.id" v-if="showCollabsModal == true" @close="showCollabsModal = false">
+      </manage-collabs-modal>
+
+    </div>
     <div class="material-button-large orange-gradient new-org"
           @click="selectOrgInput()">
       <span v-if="!orgInput">
@@ -59,25 +62,39 @@
       </span>
       <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
     </div>
+
   </div>
 
 </div>
 </template>
 
 <script>
-import LineGraph from '@/components/Charts/LineGraph.js';
-import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Loading from '@/components/Loading.vue';
+import graph2d from '@/components/Visualization/graph2d.vue';
+import vis from 'vis';
+import 'vis/dist/vis.min.css';
+import ManageCollabsModal from '@/components/dashboardComponents/manageCollabsModal.vue'
 
 export default {
   name: 'Landing',
   data() {
     return {
+      start: '2014-06-11',
+      end: '2014-06-20',
+      items: [
+        {x: '2014-06-11', y: 10},
+        {x: '2014-06-12', y: 25},
+        {x: '2014-06-13', y: 30},
+        {x: '2014-06-14', y: 10},
+        {x: '2014-06-15', y: 15},
+        {x: '2014-06-16', y: 30}
+      ],
       orgInput: false,
       orgName: '',
       hackathonInput: false,
       hackathonName: '',
       selectedOrg: '',
+      showCollabsModal: false
     }
   },
   methods: {
@@ -96,61 +113,70 @@ export default {
         return;
       }
 
-      // Create a new org and add it to the orgs collection
-      this.$parent.db.collection('orgs').add({
-        name: this.orgName
-      }).then((docRef) => {
+      //Check to see if org name is already in use
+      this.$parent.db.collection('orgs').where("name", "==", this.orgName).get()
+      .then((data) => {
+        if (data.empty == true) {
+          // Create a new org and add it to the orgs collection
+          this.$parent.db.collection('orgs').add({
+            name: this.orgName
+          }).then((docRef) => {
 
-        // This is used to update the new org, so it holds it's id
-        var updateOrgObj = {
-          id: docRef.id
-        }
+            // This is used to update the new org, so it holds it's id
+            var updateOrgObj = {
+              id: docRef.id
+            }
 
-        this.$parent.db.collection('orgs').doc(docRef.id).update(updateOrgObj)
-        .then(() => {
-          console.log(" Id added to org! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-
-        // Setting up an object to update the user's list of orgs
-        var updateObj = {
-          orgs: {}
-        }
-        if (this.$parent.user.orgs) {
-          updateObj.orgs = this.$parent.user.orgs;
-        }
-        updateObj.orgs[docRef.id] = {
-          role: 'admin'
-        }
-        this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
-        .then(() => {
-          console.log("Org added to user orgs! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-
-        this.$parent.db.collection('users').doc(this.$parent.user.id).get()
-        .then((response) => {
-          var doc = response.data();
-          for (var org in doc.orgs) {
-            updateObj.orgs[org] = {role: doc.orgs[org].role};
-          }
-          updateObj.orgs[docRef.id] = {
-            role: 'admin'
-          }
-          this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
-          .then(() => {
-            this.$parent.db.collection('orgs').doc(docRef.id).get()
-            .then((res) => {
-              this.$parent.userOrgs.push(res.data());
+            this.$parent.db.collection('orgs').doc(docRef.id).update(updateOrgObj)
+            .then(() => {
+              console.log(" Id added to org! Nice!")
+            }).catch(err => {
+              console.error("error: ", err);
             })
-          }).catch(err => {
-            console.error("error: ", err);
+
+            // Setting up an object to update the user's list of orgs
+            var updateObj = {
+              orgs: {}
+            }
+            if (this.$parent.user.orgs) {
+              updateObj.orgs = this.$parent.user.orgs;
+            }
+            updateObj.orgs[docRef.id] = {
+              role: 'admin'
+            }
+            this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
+            .then(() => {
+              console.log("Org added to user orgs! Nice!")
+            }).catch(err => {
+              console.error("error: ", err);
+            })
+
+            this.$parent.db.collection('users').doc(this.$parent.user.id).get()
+            .then((response) => {
+              var doc = response.data();
+              for (var org in doc.orgs) {
+                updateObj.orgs[org] = {role: doc.orgs[org].role};
+              }
+              updateObj.orgs[docRef.id] = {
+                role: 'admin'
+              }
+              this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
+              .then(() => {
+                this.$parent.db.collection('orgs').doc(docRef.id).get()
+                .then((res) => {
+                  this.$parent.userOrgs.push(res.data());
+                })
+              }).catch(err => {
+                console.error("error: ", err);
+              })
+            })
+          }).catch((err) => {
+            console.error("Error submitting your org: ", err);
           })
-        })
-      }).catch((err) => {
-        console.error("Error submitting your org: ", err);
+        }
+        else {
+          alert("Sorry, organization: " + this.orgName + " is already in use");
+        }
       })
     },
     selectOrg(org, index) {
@@ -285,62 +311,12 @@ export default {
       }).catch((err) => {
         console.error("Error initializing hackathon tasks: ", err);
       })
-    },
-    deleteOrg(org) {
-      // Confirming they actually want to delete
-      if (!confirm('Are you sure you want to delete this org? This can\'t be undone!')) {
-        return;
-      }
-
-      //Getting list of hackathons from org
-      this.$parent.db.collection('orgs').doc(org.id).get()
-      .then((response) => {
-        
-        //If org has hackathons, delete all of them from firebase
-        if (response.data().hackathons != undefined)
-          for (var id in response.data().hackathons) {
-            this.$parent.db.collection('hackathons').doc(id).delete()
-            .then(() => {
-              console.log(id, "deleted successfully");
-            });
-          }
-        
-        //Removing org from user data
-        var newUserOrgs = {
-          orgs: {}
-        };
-        this.$parent.db.collection('users').doc(this.$parent.user.id).get()
-        .then((user) => {
-          for (var orgId in user.data().orgs)
-            if (org.id != orgId)
-              newUserOrgs.orgs[orgId] = {role: user.data().orgs[orgId].role};
-            //Update user orgs with new org list
-          this.$parent.db.collection('users').doc(this.$parent.user.id).update(newUserOrgs);
-        })
-
-        //Deleting org from firebase
-        this.$parent.db.collection('orgs').doc(org.id).delete()
-        .then(() => {
-          console.log("Org deleted successfully");
-        }).catch((err) => {
-          console.log("Error: ", err);
-        });
-      }).catch((err) => {
-        console.log("Cannot get org", err);
-      });
-
-       //Find the index of the org in userOrgs to auto refresh the page
-      for (var i in this.$parent.userOrgs)
-        if (this.$parent.userOrgs[i].id == org.id) {
-          this.$parent.userOrgs.splice(i, 1);
-          break;
-        }
     }
   },
   components: {
-    LineGraph,
-    PolarGraph,
-    Loading
+    Loading,
+    graph2d,
+    ManageCollabsModal
   }
 };
 </script>
@@ -395,12 +371,7 @@ export default {
     margin-top: 50px;
 
   }
-
-  .small-graph {
-    width: 44%;
-    padding: 1%;
-  }
-
+  
   button {
     margin-top: 20px;
 

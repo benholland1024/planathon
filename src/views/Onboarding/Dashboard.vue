@@ -1,17 +1,80 @@
 <template>
   <div id="dashboard" v-if="$parent.user">
-    <tasks :timeline="timeline" :hackathonTasks="hackathonTasks" :hackathonId="hackathonId">
-    </tasks>
-      <div id="calendar">
-        <div id="day-labels">
-          <span>M</span>
-          <span>T</span>
-          <span>W</span>
-          <span>R</span>
-          <span>F</span>
-          <span>S</span>
-          <span>S</span>
-        </div>
+
+  <div id="dash-nav">
+    <div style="text-align:left">
+      <h2>{{ this.currentHackathon.name }} - 127 Days Left</h2>
+      <h4>Keep up the good work!</h4>
+    </div>
+    <div style="display: flex;align-items: center;">
+      <div style="text-align: right;margin-right:20px;">
+        <h3>Ben Holland</h3>
+        <h4>King of Promotional Material</h4>
+      </div>
+      <router-link :to="{ name: 'home' }">
+      <img src="@/assets/logout.png" style="width: 25px; height: 25px;
+      filter:brightness(1000);cursor:pointer;">
+      </router-link>
+    </div>
+  </div>
+
+    <div id="catagory-tabs">
+      <div class="light-gray">Update me on: </div>
+        <router-link class="catagory-tab yellow" tag="div"
+          :to="{ name: 'finances', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Finances
+        </router-link>
+        <router-link class="catagory-tab orange" tag="div"
+          :to="{ name: 'development', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Development
+        </router-link>
+        <router-link class="catagory-tab pink" tag="div"
+          :to="{ name: 'promotion', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Promotion
+        </router-link>
+        <router-link class="catagory-tab purple" tag="div"
+          :to="{ name: 'design', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Design
+        </router-link>
+        <router-link class="catagory-tab blue" tag="div"
+          :to="{ name: 'general', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >General Logistics
+        </router-link>
+        <router-link class="catagory-tab" tag="div"
+          :to="{ name: 'all', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >All
+        </router-link>
+    </div>
+
+  <!--Calendar on the side -- TODO: Abstract to a component?-->
+    <div id="calendar">
+      <div id="day-labels">
+        <span>M</span>
+        <span>T</span>
+        <span>W</span>
+        <span>R</span>
+        <span>F</span>
+        <span>S</span>
+        <span>S</span>
+      </div>
       <div id="day-nodes">
         <div class="week-node" v-for="week in 35">
           <div v-for="i in 7" class="day-node">
@@ -19,8 +82,12 @@
         </div>
       </div>
     </div>
-    <div class="dark-widget">
-    </div>
+
+    <router-view></router-view>
+
+  </div>
+  <div v-else>
+    <div id="calendar"></div>
   </div>
 </template>
 
@@ -30,17 +97,21 @@ import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Tasks from '@/components/dashboardComponents/tasks.vue';
 
 export default {
+  name: 'dashboard',
   data() {
     return {
       hackathonId: this.$route.params.hackathonId,
       timeline: [],
-      hackathonTasks: []
+      hackathonTasks: [],
+
+      currentHackathon: {},
     }
   },
   mounted() {
     // Get the timeline for the hackathon
     this.$parent.db.collection('hackathons').doc(this.hackathonId).get().then((doc) => {
       this.timeline = doc.data().timeline;
+      this.currentHackathon = doc.data();
 
       // For each task id in the timeline, get the actual task object
       // and put the tasks in hackathonTasks
@@ -63,16 +134,35 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '@/GlobalVars.scss';
 
 #dashboard {
-  display: flex;
-  justify-content: space-evenly;
+  
   width: calc(100% - 180px);
   margin-right: 0px;
   margin-left: auto;
 }
+.widget-holder {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#dash-nav {
+    padding: 30px;
+    background: $dark-gray;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      font-weight: bold;
+      color: white;
+    }
+    h1, h2, h3, h4, h5 {
+      margin: 0px;
+      padding: 0px;
+    }
+  }
 
 .dark-widget {
   background-color: $dark-gray;
@@ -97,13 +187,7 @@ export default {
   margin-right: 5px;
 }
 
-h3, h4 {
-  margin: 0;
-}
 
-h4 {
-  opacity: .5;
-}
 
 #calendar {
   width: 180px;
@@ -123,6 +207,7 @@ h4 {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding-right: 5px;
 }
 #day-nodes {
   grid-column: 2/3;
@@ -130,6 +215,7 @@ h4 {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+  padding-right: 5px;
 }
 .day-node {
   width: 10px;
@@ -141,6 +227,39 @@ h4 {
   justify-content: space-around;
   margin-bottom: 10px;
   display: flex;
-  justify-content: space-around;
+}
+
+#catagory-tabs {
+  width: 100%;
+  height: 50px;
+  background: $gray;
+  display: flex;
+  align-items: center;
+  div {
+    margin-left: 20px;
+  }
+}
+
+.light-gray {
+  color: $lighter-gray;
+}
+
+.catagory-tab {
+  font-weight: bolder;
+  font-size: 18px;
+  cursor: pointer;
+}
+.underlined {
+  text-decoration: underline;
+}
+</style>
+
+<style lang="scss" scoped>
+h3, h4 {
+  margin: 0;
+}
+
+h4 {
+  opacity: .5;
 }
 </style>
