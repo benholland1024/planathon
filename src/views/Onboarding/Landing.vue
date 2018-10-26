@@ -8,7 +8,7 @@
   <div id="call-to-action">
     <p class="light-blue title">Organize Your Hackathon</p>
     <p class="light-pink bold title">Like A Pro.</p>
-    <p style="opacity: .5;font-size:20px;">Rununing a hackathon is a herculean task. Organize your todo list, keep track of financial and development progress, see tips on running hackathons by people like you, and much more. </p>
+    <p style="opacity: .5;font-size:20px;">Running a hackathon is a herculean task. Organize your todo list, keep track of financial and development progress, see tips on running hackathons by people like you, and much more. </p>
     <div id="get-started">
       <router-link tag="button" class="material-button-large purple-gradient"
                    :to="{name: 'register'}">
