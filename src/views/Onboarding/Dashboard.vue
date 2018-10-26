@@ -1,5 +1,16 @@
 <template>
   <div id="dashboard" v-if="$parent.user">
+    <div id="catagory-tabs">
+      <div class="light-gray">Update me on: </div>
+        <div class="catagory-tab yellow">Finances</div>
+        <div class="catagory-tab orange">Development</div>
+        <div class="catagory-tab pink">Promotion</div>
+        <div class="catagory-tab purple">Design</div>
+        <div class="catagory-tab blue">General Logistics</div>
+        <div class="catagory-tab">All</div>
+    </div>
+
+  <!--Calendar on the side -- TODO: Abstract to a component?-->
     <div id="calendar">
       <div id="day-labels">
         <span>M</span>
@@ -18,10 +29,18 @@
         </div>
       </div>
     </div>
-    <tasks :timeline="timeline">
-    </tasks>
-    <div class="dark-widget">
+
+
+    <div class="widget-holder">
+      <tasks :timeline="timeline">
+      </tasks>
+      <div class="dark-widget">
+      </div>
     </div>
+
+  </div>
+  <div v-else>
+    <div id="calendar"></div>
   </div>
 </template>
 
@@ -59,11 +78,14 @@ export default {
 @import '@/GlobalVars.scss';
 
 #dashboard {
-  display: flex;
-  justify-content: space-evenly;
+  
   width: calc(100% - 180px);
   margin-right: 0px;
   margin-left: auto;
+}
+.widget-holder {
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .dark-widget {
@@ -115,6 +137,7 @@ h4 {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding-right: 5px;
 }
 #day-nodes {
   grid-column: 2/3;
@@ -122,6 +145,7 @@ h4 {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
+  padding-right: 5px;
 }
 .day-node {
   width: 10px;
@@ -133,6 +157,26 @@ h4 {
   justify-content: space-around;
   margin-bottom: 10px;
   display: flex;
-  justify-content: space-around;
+}
+
+#catagory-tabs {
+  width: 100%;
+  height: 50px;
+  background: $gray;
+  display: flex;
+  align-items: center;
+  div {
+    margin-left: 20px;
+  }
+}
+
+.light-gray {
+  color: $lighter-gray;
+}
+
+.catagory-tab {
+  font-weight: bolder;
+  font-size: 18px;
+  cursor: pointer;
 }
 </style>
