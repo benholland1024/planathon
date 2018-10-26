@@ -171,6 +171,20 @@ export default {
         timeline: taskList
       }).then((docRef) => {
 
+        // Add the hackathon id to the tasks
+        taskList.forEach((taskElem) => {
+          var updateTEObj = {
+            hackathon: docRef.id
+          }
+
+          this.$parent.db.collection('tasks').doc(taskElem).update(updateTEObj)
+          .then(() => {
+            console.log("Added hackathon id to task! Nice!")
+          }).catch(err => {
+            console.error("error: ", err);
+          })
+        })
+
         // This is used to update the new hackathon so it holds it's id
         var updateHackObj = {
           id: docRef.id
@@ -193,8 +207,7 @@ export default {
         updateObj.hackathons[docRef.id] = {
           id: docRef.id
         }
-        console.log("org.id:");
-        console.log(this.$parent.org);
+
         this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
         .then(() => {
           console.log("Org added to user orgs! Nice!")
