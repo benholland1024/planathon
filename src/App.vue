@@ -227,30 +227,7 @@ export default {
     color: white;
     background: $light-gray;
   }
-  #nav {
-    padding: 30px;
-    background: $dark-gray;
-    display: flex;
-    justify-content: space-between;
-
-    a {
-      font-weight: bold;
-      color: white;
-    }
-  }
-  #nav-left {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 40%;
-  }
-  #nav-right {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    text-align: right;
-    width: 15%;
-  }
+  
 
 /*  --------------- */
 /*  POPUP STYLING: */
