@@ -74,6 +74,8 @@ import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Loading from '@/components/Loading.vue';
 
+import * as firebase from 'firebase';
+
 export default {
   name: 'Landing',
   data() {
@@ -308,7 +310,7 @@ export default {
             //Update user orgs with new org list
           this.$parent.db.collection('users').doc(this.$parent.user.id).update(newUserOrgs);
         })
-         
+
         //Deleting org from firebase
         this.$parent.db.collection('orgs').doc(org.id).delete()
         .then(() => {
@@ -319,13 +321,14 @@ export default {
       }).catch((err) => {
         console.log("Cannot get org", err);
       });
+
        //Find the index of the org in userOrgs to auto refresh the page
       for (var i in this.$parent.userOrgs)
         if (this.$parent.userOrgs[i].id == org.id) {
           this.$parent.userOrgs.splice(i, 1);
           break;
         }
-    },
+    }
   },
   components: {
     LineGraph,
@@ -384,6 +387,11 @@ export default {
     text-align: center;
     margin-top: 50px;
 
+  }
+
+  .delete {
+    margin-top: 0px;
+    margin-left: 0px;
   }
 
   .small-graph {
