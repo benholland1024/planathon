@@ -334,7 +334,6 @@ export default {
     padding: 20px 10vw;
   }
   #promo-container {
-
     
     background: $dark-gray;
     width: 45vw;
