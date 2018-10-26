@@ -74,7 +74,6 @@ import ManageOrgModal from '@/components/dashboardComponents/manageOrgModal.vue'
 import graph2d from '@/components/Visualization/graph2d.vue';
 import vis from 'vis';
 import 'vis/dist/vis.min.css';
-import ManageCollabsModal from '@/components/dashboardComponents/manageCollabsModal.vue'
 
 export default {
   name: 'Landing',
@@ -376,7 +375,7 @@ export default {
     margin-top: 50px;
 
   }
-  
+
   button {
     margin-top: 20px;
 
