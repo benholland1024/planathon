@@ -229,6 +229,35 @@ export default {
   }
   
 
+/*  --------------- */
+/*  POPUP STYLING: */
+/*  --------------- */
+
+  .popup-background {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .4s ease;
+  }
+
+  .popup-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .popup-table{
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: $box-shading;
+  }
+
 /*  ------------- */
 /*  AUTH STYLING: */
 /*  ------------- */

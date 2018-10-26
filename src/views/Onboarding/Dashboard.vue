@@ -24,7 +24,6 @@
       <div id="day-nodes">
         <div class="week-node" v-for="week in 35">
           <div v-for="i in 7" class="day-node">
-          
           </div>
         </div>
       </div>
@@ -53,15 +52,24 @@ export default {
   data() {
     return {
       hackathonId: this.$route.params.hackathonId,
-      timeline: []
+      timeline: [],
+      hackathonTasks: []
     }
   },
-  methods: {
-
-  },
   mounted() {
+    // Get the timeline for the hackathon
     this.$parent.db.collection('hackathons').doc(this.hackathonId).get().then((doc) => {
       this.timeline = doc.data().timeline;
+
+      // For each task id in the timeline, get the actual task object
+      // and put the tasks in hackathonTasks
+      this.timeline.forEach((task) => {
+        this.$parent.db.collection('tasks').doc(task).get().then((doc) => {
+          this.hackathonTasks.push(doc.data());
+        }).catch((err) => {
+          console.error("Error getting the hackathon's tasks: ", err);
+        })
+      })
     }).catch((err) => {
       console.error("Error getting the hackathon's timeline: ", err);
     })
