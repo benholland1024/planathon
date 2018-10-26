@@ -103,61 +103,70 @@ export default {
         return;
       }
 
-      // Create a new org and add it to the orgs collection
-      this.$parent.db.collection('orgs').add({
-        name: this.orgName
-      }).then((docRef) => {
+      //Check to see if org name is already in use
+      this.$parent.db.collection('orgs').where("name", "==", this.orgName).get()
+      .then((data) => {
+        if (data.empty == true) {
+          // Create a new org and add it to the orgs collection
+          this.$parent.db.collection('orgs').add({
+            name: this.orgName
+          }).then((docRef) => {
 
-        // This is used to update the new org, so it holds it's id
-        var updateOrgObj = {
-          id: docRef.id
-        }
+            // This is used to update the new org, so it holds it's id
+            var updateOrgObj = {
+              id: docRef.id
+            }
 
-        this.$parent.db.collection('orgs').doc(docRef.id).update(updateOrgObj)
-        .then(() => {
-          console.log(" Id added to org! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-
-        // Setting up an object to update the user's list of orgs
-        var updateObj = {
-          orgs: {}
-        }
-        if (this.$parent.user.orgs) {
-          updateObj.orgs = this.$parent.user.orgs;
-        }
-        updateObj.orgs[docRef.id] = {
-          role: 'admin'
-        }
-        this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
-        .then(() => {
-          console.log("Org added to user orgs! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-
-        this.$parent.db.collection('users').doc(this.$parent.user.id).get()
-        .then((response) => {
-          var doc = response.data();
-          for (var org in doc.orgs) {
-            updateObj.orgs[org] = {role: doc.orgs[org].role};
-          }
-          updateObj.orgs[docRef.id] = {
-            role: 'admin'
-          }
-          this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
-          .then(() => {
-            this.$parent.db.collection('orgs').doc(docRef.id).get()
-            .then((res) => {
-              this.$parent.userOrgs.push(res.data());
+            this.$parent.db.collection('orgs').doc(docRef.id).update(updateOrgObj)
+            .then(() => {
+              console.log(" Id added to org! Nice!")
+            }).catch(err => {
+              console.error("error: ", err);
             })
-          }).catch(err => {
-            console.error("error: ", err);
+
+            // Setting up an object to update the user's list of orgs
+            var updateObj = {
+              orgs: {}
+            }
+            if (this.$parent.user.orgs) {
+              updateObj.orgs = this.$parent.user.orgs;
+            }
+            updateObj.orgs[docRef.id] = {
+              role: 'admin'
+            }
+            this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
+            .then(() => {
+              console.log("Org added to user orgs! Nice!")
+            }).catch(err => {
+              console.error("error: ", err);
+            })
+
+            this.$parent.db.collection('users').doc(this.$parent.user.id).get()
+            .then((response) => {
+              var doc = response.data();
+              for (var org in doc.orgs) {
+                updateObj.orgs[org] = {role: doc.orgs[org].role};
+              }
+              updateObj.orgs[docRef.id] = {
+                role: 'admin'
+              }
+              this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
+              .then(() => {
+                this.$parent.db.collection('orgs').doc(docRef.id).get()
+                .then((res) => {
+                  this.$parent.userOrgs.push(res.data());
+                })
+              }).catch(err => {
+                console.error("error: ", err);
+              })
+            })
+          }).catch((err) => {
+            console.error("Error submitting your org: ", err);
           })
-        })
-      }).catch((err) => {
-        console.error("Error submitting your org: ", err);
+        }
+        else {
+          alert("Sorry, organization: " + this.orgName + " is already in use");
+        }
       })
     },
     selectOrg(org, index) {
