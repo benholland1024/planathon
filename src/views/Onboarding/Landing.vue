@@ -43,8 +43,11 @@
       <div v-else>
         <h4>No hackathons yet!</h4>
       </div>
-      <div class="hackathon-item new-hackathon-opt opt">
-        + New Hackathon
+      <div class="hackathon-item new-hackathon-opt opt" @click="hackathonInput = true">
+        <span v-if="!hackathonInput">
+          + New Hackathon
+        </span>
+        <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
       </div>
       <div @click="deleteOrg(org)" class="delete-opt opt">Delete this Org</div>
     </div>
@@ -56,14 +59,6 @@
       </span>
       <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
     </div>
-
-    <div class="material-button-large orange-gradient new-org" 
-          @click="selectHackathonInput()">
-      <span v-if="!hackathonInput">
-        + New Hackathon
-      </span>
-      <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
-    </div>
   </div>
 
 </div>
@@ -73,8 +68,6 @@
 import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Loading from '@/components/Loading.vue';
-
-import * as firebase from 'firebase';
 
 export default {
   name: 'Landing',
@@ -165,13 +158,6 @@ export default {
       this.selectedOrg = index;
       this.$parent.org = org;
     },
-    selectHackathonInput() {
-      this.hackathonInput = true;
-      var vm = this;
-      setTimeout(() => {
-        vm.$refs.newHackathon.focus();
-      }, 200);
-    },
     addNewHackathon(taskList) {
       // Make sure the user is logged in
       if (!this.$parent.user.id) {
@@ -212,6 +198,14 @@ export default {
         this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
         .then(() => {
           console.log("Org added to user orgs! Nice!")
+
+          //Updating hackathon list
+          while (this.$parent.userOrgs[0]) {
+            this.$parent.userOrgs.pop();
+          }
+          this.$parent.loadOrgs();
+          this.hackathonInput = false;
+          this.hackathonName = '';
         }).catch(err => {
           console.error("error: ", err);
         })
@@ -387,11 +381,6 @@ export default {
     text-align: center;
     margin-top: 50px;
 
-  }
-
-  .delete {
-    margin-top: 0px;
-    margin-left: 0px;
   }
 
   .small-graph {

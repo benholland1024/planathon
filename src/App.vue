@@ -13,8 +13,6 @@ import Vue from 'vue';
 
 import MenuBar from '@/components/MenuBars/LandingMenuBar.vue';
 
-export const Firestore = firebase.firestore;
-
 firebase.initializeApp(config);
 var db = firebase.firestore();
 const settings = {/* your settings... */ timestampsInSnapshots: true};
