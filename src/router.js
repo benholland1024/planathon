@@ -47,7 +47,40 @@ export default new Router({
     {
       path: '/dashboard/:hackathonId',
       name:'dashboard',
-      component: () => import('./views/Onboarding/Dashboard.vue')
+      component: () => import('./views/Onboarding/Dashboard.vue'),
+      children: [
+        {
+          path: 'finance',
+          component: () => import ('./components/dashboardComponents/Finances.vue'),
+          name: 'finances',
+          meta: { menuBar: false }
+        },
+        {
+          path: 'promotion',
+          component: () => import ('./components/dashboardComponents/Promotion.vue'),
+          name: 'promotion'
+        },
+        {
+          path: 'general',
+          component: () => import ('./components/dashboardComponents/General.vue'),
+          name: 'general'
+        },
+        {
+          path: 'development',
+          component: () => import ('./components/dashboardComponents/Development.vue'),
+          name: 'development'
+        },
+        {
+          path: 'design',
+          component: () => import ('./components/dashboardComponents/Design.vue'),
+          name: 'design'
+        },
+        {
+          path: 'all',
+          component: () => import ('./components/dashboardComponents/All.vue'),
+          name: 'all'
+        }
+      ]
     },
     {
       path: '*',

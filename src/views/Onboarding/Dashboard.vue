@@ -2,12 +2,48 @@
   <div id="dashboard" v-if="$parent.user">
     <div id="catagory-tabs">
       <div class="light-gray">Update me on: </div>
-        <div class="catagory-tab yellow">Finances</div>
-        <div class="catagory-tab orange">Development</div>
-        <div class="catagory-tab pink">Promotion</div>
-        <div class="catagory-tab purple">Design</div>
-        <div class="catagory-tab blue">General Logistics</div>
-        <div class="catagory-tab">All</div>
+        <router-link class="catagory-tab yellow" tag="div"
+          :to="{ name: 'finances', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Finances
+        </router-link>
+        <router-link class="catagory-tab orange" tag="div"
+          :to="{ name: 'development', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Development
+        </router-link>
+        <router-link class="catagory-tab pink" tag="div"
+          :to="{ name: 'promotion', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Promotion
+        </router-link>
+        <router-link class="catagory-tab purple" tag="div"
+          :to="{ name: 'design', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Design
+        </router-link>
+        <router-link class="catagory-tab blue" tag="div"
+          :to="{ name: 'general', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >General Logistics
+        </router-link>
+        <router-link class="catagory-tab" tag="div"
+          :to="{ name: 'all', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >All
+        </router-link>
     </div>
 
   <!--Calendar on the side -- TODO: Abstract to a component?-->
@@ -29,13 +65,7 @@
       </div>
     </div>
 
-
-    <div class="widget-holder">
-      <tasks :timeline="timeline">
-      </tasks>
-      <div class="dark-widget">
-      </div>
-    </div>
+    <router-view></router-view>
 
   </div>
   <div v-else>
@@ -82,7 +112,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '@/GlobalVars.scss';
 
 #dashboard {
@@ -186,5 +216,8 @@ h4 {
   font-weight: bolder;
   font-size: 18px;
   cursor: pointer;
+}
+.underlined {
+  text-decoration: underline;
 }
 </style>
