@@ -3,8 +3,6 @@
 </loading>
 <div id="landing" v-else-if="!$parent.user">
   <div id="promo-container">
-    <line-graph class="small-graph"></line-graph>
-    <polar-graph class="small-graph" v-if="0"></polar-graph>
   </div>
   <div id="call-to-action">
     <p class="light-blue title">Organize Your Hackathon</p>
@@ -45,15 +43,38 @@
 </template>
 
 <script>
-import LineGraph from '@/components/Charts/LineGraph.js';
-import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Loading from '@/components/Loading.vue';
+import vis from 'vis';
+import 'vis/dist/vis.min.css';
 
 export default {
   data() {
     return {
       orgInput: false,
-      orgName: ''
+      orgName: '',
+      items: [
+        {x: '2014-06-11', y: -20},
+        {x: '2014-06-12', y: 20},
+        {x: '2014-06-13', y: 30},
+        {x: '2014-06-14', y: 10},
+        {x: '2014-06-15', y: 15},
+        {x: '2014-06-16', y: 30}
+      ],
+      options: {
+        start: '2014-06-10',
+        end: '2014-06-17',
+        width: '100%',
+        height: '100%',
+        timeAxis: { scale: 'day', step: 1 },
+        verticalScroll: true,
+        dataAxis :{
+          left:{range:{min: 0,max: 35}},
+          right:{range:{min:0}}
+        }
+      },
+      dataset: new vis.DataSet(this.items),
+      container: '',
+      graph: ''
     }
   },
   methods: {
@@ -96,9 +117,13 @@ export default {
       console.log(org)
     }
   },
+  mounted() {
+    setTimeout(() => {
+      this.container = document.getElementById('promo-container');
+      this.graph = new vis.Graph2d(this.container, this.dataset, this.options);
+    }, 1000);
+  },
   components: {
-    LineGraph,
-    PolarGraph,
     Loading,
   }
 }
@@ -117,6 +142,8 @@ export default {
     padding: 20px 10vw;
   }
   #promo-container {
+
+    
     background: $dark-gray;
     width: 45vw; 
     flex-grow: 1;
@@ -153,11 +180,6 @@ export default {
     text-align: center;
     margin-top: 50px;
     
-  }
-  
-  .small-graph {
-    width: 44%;
-    padding: 1%;
   }
   
   button {
