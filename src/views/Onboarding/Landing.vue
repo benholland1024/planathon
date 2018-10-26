@@ -49,10 +49,10 @@
         <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
       </div>
 
-      <!-- manageCollabsModal -->
-      <div class="hackathon-item new-hackathon-opt opt" @click="showCollabsModal = true">Manage Organization</div>
-      <manage-collabs-modal :orgId="org.id" v-if="showCollabsModal == true" @close="showCollabsModal = false">
-      </manage-collabs-modal>
+      <!-- manageOrgModal -->
+      <div class="hackathon-item new-hackathon-opt opt" @click="showOrgModal = true">Manage Organization</div>
+      <manage-org-modal :orgId="org.id" v-if="showOrgModal == true" @close="showOrgModal = false">
+      </manage-org-modal>
 
     </div>
     <div class="material-button-large orange-gradient new-org"
@@ -70,6 +70,7 @@
 
 <script>
 import Loading from '@/components/Loading.vue';
+import ManageOrgModal from '@/components/dashboardComponents/manageOrgModal.vue'
 import graph2d from '@/components/Visualization/graph2d.vue';
 import vis from 'vis';
 import 'vis/dist/vis.min.css';
@@ -94,7 +95,7 @@ export default {
       hackathonInput: false,
       hackathonName: '',
       selectedOrg: '',
-      showCollabsModal: false
+      showOrgModal: false
     }
   },
   methods: {
@@ -117,9 +118,13 @@ export default {
       this.$parent.db.collection('orgs').where("name", "==", this.orgName).get()
       .then((data) => {
         if (data.empty == true) {
+
           // Create a new org and add it to the orgs collection
+          var collabsList = [];
+          collabsList.push(this.$parent.user.id);
           this.$parent.db.collection('orgs').add({
-            name: this.orgName
+            name: this.orgName,
+            collaborators: collabsList
           }).then((docRef) => {
 
             // This is used to update the new org, so it holds it's id
@@ -315,8 +320,8 @@ export default {
   },
   components: {
     Loading,
-    graph2d,
-    ManageCollabsModal
+    ManageOrgModal,
+    graph2d
   }
 };
 </script>
