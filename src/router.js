@@ -50,6 +50,11 @@ export default new Router({
       component: () => import('./views/Onboarding/Dashboard.vue')
     },
     {
+      path: '/sponsorship',
+      name: 'sponsorship',
+      component: () => import('./views/FundingBurndown.vue')
+    },
+    {
       path: '*',
       redirect: '/404'
     },
