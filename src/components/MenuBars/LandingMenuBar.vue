@@ -10,7 +10,7 @@
       About
     </router-link>
     <router-link to="/dne" tag="h2" class="link light-purple faded-link">
-      Features
+      Features!
     </router-link>
   </div>
   <div id="nav-right">

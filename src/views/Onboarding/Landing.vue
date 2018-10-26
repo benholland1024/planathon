@@ -3,11 +3,12 @@
 </loading>
 <div id="landing" v-else-if="!$parent.user">
   <div id="promo-container">
+    <graph2d v-bind:start="start" v-bind:end="end" v-bind:items="items"></graph2d >
   </div>
   <div id="call-to-action">
     <p class="light-blue title">Organize Your Hackathon</p>
     <p class="light-pink bold title">Like A Pro.</p>
-    <p style="opacity: .5;font-size:20px;">Running a hackathon is a herculean task. Organize your todo list, keep track of financial and development progress, see tips on running hackathons by people like you, and much more. </p>
+    <p style="opacity: .5;font-size:20px;">Rununing a hackathon is a herculean task. Organize your todo list, keep track of financial and development progress, see tips on running hackathons by people like you, and much more. </p>
     <div id="get-started">
       <router-link tag="button" class="material-button-large purple-gradient" 
                    :to="{name: 'register'}">
@@ -44,37 +45,25 @@
 
 <script>
 import Loading from '@/components/Loading.vue';
+import graph2d from '@/components/Visualization/graph2d.vue';
 import vis from 'vis';
 import 'vis/dist/vis.min.css';
 
 export default {
   data() {
     return {
-      orgInput: false,
-      orgName: '',
+      start: '2014-06-11',
+      end: '2014-06-20',
       items: [
-        {x: '2014-06-11', y: -20},
-        {x: '2014-06-12', y: 20},
+        {x: '2014-06-11', y: 10},
+        {x: '2014-06-12', y: 25},
         {x: '2014-06-13', y: 30},
         {x: '2014-06-14', y: 10},
         {x: '2014-06-15', y: 15},
         {x: '2014-06-16', y: 30}
       ],
-      options: {
-        start: '2014-06-10',
-        end: '2014-06-17',
-        width: '100%',
-        height: '100%',
-        timeAxis: { scale: 'day', step: 1 },
-        verticalScroll: true,
-        dataAxis :{
-          left:{range:{min: 0,max: 35}},
-          right:{range:{min:0}}
-        }
-      },
-      dataset: new vis.DataSet(this.items),
-      container: '',
-      graph: ''
+      orgInput: false,
+      orgName: '',
     }
   },
   methods: {
@@ -117,14 +106,9 @@ export default {
       console.log(org)
     }
   },
-  mounted() {
-    setTimeout(() => {
-      this.container = document.getElementById('promo-container');
-      this.graph = new vis.Graph2d(this.container, this.dataset, this.options);
-    }, 1000);
-  },
   components: {
     Loading,
+    graph2d,
   }
 }
 </script>
