@@ -43,8 +43,11 @@
       <div v-else>
         <h4>No hackathons yet!</h4>
       </div>
-      <div class="hackathon-item new-hackathon-opt opt">
-        + New Hackathon
+      <div class="hackathon-item new-hackathon-opt opt" @click="hackathonInput = true">
+        <span v-if="!hackathonInput">
+          + New Hackathon
+        </span>
+        <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
       </div>
       <div @click="deleteOrg(org)" class="delete-opt opt">Delete this Org</div>
     </div>
@@ -55,14 +58,6 @@
         + New Organization
       </span>
       <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
-    </div>
-
-    <div class="material-button-large orange-gradient new-org" 
-          @click="selectHackathonInput()">
-      <span v-if="!hackathonInput">
-        + New Hackathon
-      </span>
-      <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
     </div>
   </div>
 
@@ -163,13 +158,6 @@ export default {
       this.selectedOrg = index;
       this.$parent.org = org;
     },
-    selectHackathonInput() {
-      this.hackathonInput = true;
-      var vm = this;
-      setTimeout(() => {
-        vm.$refs.newHackathon.focus();
-      }, 200);
-    },
     addNewHackathon(taskList) {
       // Make sure the user is logged in
       if (!this.$parent.user.id) {
@@ -223,6 +211,14 @@ export default {
         this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
         .then(() => {
           console.log("Org added to user orgs! Nice!")
+
+          //Updating hackathon list
+          while (this.$parent.userOrgs[0]) {
+            this.$parent.userOrgs.pop();
+          }
+          this.$parent.loadOrgs();
+          this.hackathonInput = false;
+          this.hackathonName = '';
         }).catch(err => {
           console.error("error: ", err);
         })
@@ -321,7 +317,7 @@ export default {
             //Update user orgs with new org list
           this.$parent.db.collection('users').doc(this.$parent.user.id).update(newUserOrgs);
         })
-         
+
         //Deleting org from firebase
         this.$parent.db.collection('orgs').doc(org.id).delete()
         .then(() => {
@@ -332,13 +328,14 @@ export default {
       }).catch((err) => {
         console.log("Cannot get org", err);
       });
+
        //Find the index of the org in userOrgs to auto refresh the page
       for (var i in this.$parent.userOrgs)
         if (this.$parent.userOrgs[i].id == org.id) {
           this.$parent.userOrgs.splice(i, 1);
           break;
         }
-    },
+    }
   },
   components: {
     LineGraph,
