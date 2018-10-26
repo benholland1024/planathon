@@ -28,16 +28,6 @@
     </h2>
   </div>
 </div>
-<div id="dash-nav" v-else>
-  <div style="text-align:left">
-    <h2>Kent Hack Enough - 127 Days Left</h2>
-    <h4>Keep up the good work!</h4>
-  </div>
-  <div style="text-align: right;">
-    <h3>Ben Holland</h3>
-    <h5>King of Promotional Material</h5>
-  </div>
-</div>
 
 </template>
 
@@ -83,19 +73,5 @@ h1, h2, h3, h4, h5 {
     text-align: right;
     width: 15%;
   }
-  #dash-nav {
-    padding: 30px;
-    background: $dark-gray;
-    display: flex;
-    justify-content: space-between;
-
-    a {
-      font-weight: bold;
-      color: white;
-    }
-    // 60px accounts for the padding
-    width: calc(100% - (60px + 180px));
-    margin-left: auto;
-    margin-right: 0px;
-  }
+  
 </style>

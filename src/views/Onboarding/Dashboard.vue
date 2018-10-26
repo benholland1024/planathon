@@ -1,5 +1,23 @@
 <template>
   <div id="dashboard" v-if="$parent.user">
+
+  <div id="dash-nav">
+    <div style="text-align:left">
+      <h2>{{ this.currentHackathon.name }} - 127 Days Left</h2>
+      <h4>Keep up the good work!</h4>
+    </div>
+    <div style="display: flex;align-items: center;">
+      <div style="text-align: right;margin-right:20px;">
+        <h3>Ben Holland</h3>
+        <h4>King of Promotional Material</h4>
+      </div>
+      <router-link :to="{ name: 'home' }">
+      <img src="@/assets/logout.png" style="width: 25px; height: 25px;
+      filter:brightness(1000);cursor:pointer;">
+      </router-link>
+    </div>
+  </div>
+
     <div id="catagory-tabs">
       <div class="light-gray">Update me on: </div>
         <router-link class="catagory-tab yellow" tag="div"
@@ -79,17 +97,21 @@ import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Tasks from '@/components/dashboardComponents/tasks.vue';
 
 export default {
+  name: 'dashboard',
   data() {
     return {
       hackathonId: this.$route.params.hackathonId,
       timeline: [],
-      hackathonTasks: []
+      hackathonTasks: [],
+
+      currentHackathon: {},
     }
   },
   mounted() {
     // Get the timeline for the hackathon
     this.$parent.db.collection('hackathons').doc(this.hackathonId).get().then((doc) => {
       this.timeline = doc.data().timeline;
+      this.currentHackathon = doc.data();
 
       // For each task id in the timeline, get the actual task object
       // and put the tasks in hackathonTasks
@@ -125,6 +147,22 @@ export default {
   display: flex;
   justify-content: space-evenly;
 }
+
+#dash-nav {
+    padding: 30px;
+    background: $dark-gray;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      font-weight: bold;
+      color: white;
+    }
+    h1, h2, h3, h4, h5 {
+      margin: 0px;
+      padding: 0px;
+    }
+  }
 
 .dark-widget {
   background-color: $dark-gray;
