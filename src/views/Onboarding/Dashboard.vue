@@ -1,25 +1,24 @@
 <template>
   <div id="dashboard" v-if="$parent.user">
+    <tasks :timeline="timeline" :hackathonTasks="hackathonTasks" :hackathonId="hackathonId">
+    </tasks>
       <div id="calendar">
-      <div id="day-labels">
-        <span>M</span>
-        <span>T</span>
-        <span>W</span>
-        <span>R</span>
-        <span>F</span>
-        <span>S</span>
-        <span>S</span>
-      </div>
+        <div id="day-labels">
+          <span>M</span>
+          <span>T</span>
+          <span>W</span>
+          <span>R</span>
+          <span>F</span>
+          <span>S</span>
+          <span>S</span>
+        </div>
       <div id="day-nodes">
         <div class="week-node" v-for="week in 35">
           <div v-for="i in 7" class="day-node">
-          
           </div>
         </div>
       </div>
     </div>
-    <tasks :timeline="hackathonTasks">
-    </tasks>
     <div class="dark-widget">
     </div>
   </div>
