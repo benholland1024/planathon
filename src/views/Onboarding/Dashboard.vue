@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard" v-if="$parent.user">
-    <tasks :timeline="hackathonTasks">
+    <tasks :timeline="timeline" :hackathonTasks="hackathonTasks" :hackathonId="hackathonId">
     </tasks>
     <div class="dark-widget">
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="dark-widget">
-    <div class="task-widget" v-for="task in timeline">
+    <div class="task-widget" v-for="(task, index) in hackathonTasks">
       <div style="display: flex">
         <div class="task-circle" v-for="tag in task.tags"
           :class="[tag]">
@@ -8,30 +8,44 @@
       </div>
       <h3>{{ task.title }}</h3>
       <h4>{{ task.description }}</h4>
-      <button id="show-modal" @click="showModal = true">Edit Task</button>
-      <task-add-edit-modal :task="task" v-if="showModal" @close="showModal = false">
-      </task-add-edit-modal>
+      <button id="show-edit-modal" @click="showEditModal = index">Edit Task</button>
+      <task-edit-modal :task="task" v-if="showEditModal == index" @close="showEditModal = -1">
+      </task-edit-modal>
     </div>
+    <button id="show-add-modal" @click="showAddModal = true">Add Task</button>
+    <task-add-modal :timeline="timeline" :hackathonId="hackathonId" v-if="showAddModal == true" @close="showAddModal = false">
+    </task-add-modal>
   </div>
 </template>
 
 <script>
-import TaskAddEditModal from '@/components/dashboardComponents/taskAddEditModal.vue';
+import TaskEditModal from '@/components/dashboardComponents/taskEditModal.vue';
+import TaskAddModal from '@/components/dashboardComponents/taskAddModal.vue';
 
 export default {
   data() {
     return {
-      showModal: false
+      showEditModal: -1,
+      showAddModal: false
     }
   },
   props: {
     timeline: {
       type: Array,
       required: true
+    },
+    hackathonTasks: {
+      type: Array,
+      required: true
+    },
+    hackathonId: {
+      type: String,
+      required: true
     }
   },
   components: {
-    TaskAddEditModal
+    TaskEditModal,
+    TaskAddModal
   },
   mounted() {
 
