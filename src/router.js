@@ -50,9 +50,14 @@ export default new Router({
       component: () => import('./views/Onboarding/Dashboard.vue')
     },
     {
-      path: '/sponsorship',
-      name: 'sponsorship',
-      component: () => import('./views/FundingBurndown.vue')
+      path: '/fundingburndown',
+      name: 'FundingBurndown',
+      component: () => import('./components/Sponsorship/FundingBurndown.vue')
+    },
+    {
+      path: '/contacttracker',
+      name: 'ContactTracker',
+      component: () => import('./components/Sponsorship/ContactTracker.vue')
     },
     {
       path: '*',
