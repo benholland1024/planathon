@@ -2,9 +2,11 @@
   <div class="auth-widget purple-gradient" id="login">
     <h2>Login</h2>
     <p>Email:</p>
-    <input v-model="email" type="text" class="auth-textbox"/>
+    <input v-model="email" type="text" class="auth-textbox"
+          @keyup.enter="signIn()"/>
     <p>Password:</p>
-    <input v-model="password" type="password" class="auth-textbox"/> <br><br>
+    <input v-model="password" type="password" class="auth-textbox"
+          @keyup.enter="signIn()"/> <br><br>
     <button @click="signIn()" class="material-button-large ">Login!</button> <br><br>
     
     <p class="err-text">{{err}}</p>

@@ -1,5 +1,5 @@
 <template>
-<div id="nav">
+<div id="nav" v-if="!$route.meta.dash">
   <div id="nav-left">
     <router-link to="/" tag="h1" class="link">
       <span class="light-purple">Plan</span>
@@ -28,6 +28,17 @@
     </h2>
   </div>
 </div>
+<div id="dash-nav" v-else>
+  <div style="text-align:left">
+    <h2>Kent Hack Enough - 127 Days Left</h2>
+    <h4>Keep up the good work!</h4>
+  </div>
+  <div style="text-align: right;">
+    <h3>Ben Holland</h3>
+    <h5>King of Promotional Material</h5>
+  </div>
+</div>
+
 </template>
 
 <script>
@@ -40,9 +51,51 @@ export default {
 }
 </script>
 
-<style scoped>
-h1, h2 {
+<style scoped lang="scss">
+
+@import '@/GlobalVars.scss';
+
+h1, h2, h3, h4, h5 {
     padding: 0px;
     margin: 0px;
+  }
+  #nav {
+    padding: 30px;
+    background: $dark-gray;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      font-weight: bold;
+      color: white;
+    }
+  }
+  #nav-left {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+  }
+  #nav-right {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: right;
+    width: 15%;
+  }
+  #dash-nav {
+    padding: 30px;
+    background: $dark-gray;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      font-weight: bold;
+      color: white;
+    }
+    // 60px accounts for the padding
+    width: calc(100% - (60px + 180px));
+    margin-left: auto;
+    margin-right: 0px;
   }
 </style>

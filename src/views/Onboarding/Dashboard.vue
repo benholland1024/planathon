@@ -1,60 +1,127 @@
 <template>
   <div id="dashboard" v-if="$parent.user">
-    <div class="dark-widget">
-      <div class="task-widget" v-for="task in tasks">
-        <div style="display: flex">
-          <div class="task-circle" v-for="tag in task.tags"
-            :class="[tag]"
-          ></div>
+    <div id="catagory-tabs">
+      <div class="light-gray">Update me on: </div>
+        <router-link class="catagory-tab yellow" tag="div"
+          :to="{ name: 'finances', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Finances
+        </router-link>
+        <router-link class="catagory-tab orange" tag="div"
+          :to="{ name: 'development', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Development
+        </router-link>
+        <router-link class="catagory-tab pink" tag="div"
+          :to="{ name: 'promotion', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Promotion
+        </router-link>
+        <router-link class="catagory-tab purple" tag="div"
+          :to="{ name: 'design', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >Design
+        </router-link>
+        <router-link class="catagory-tab blue" tag="div"
+          :to="{ name: 'general', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >General Logistics
+        </router-link>
+        <router-link class="catagory-tab" tag="div"
+          :to="{ name: 'all', params: {
+            hackathonId: hackathonId
+          } }"
+          active-class="underlined"
+          >All
+        </router-link>
+    </div>
+
+  <!--Calendar on the side -- TODO: Abstract to a component?-->
+    <div id="calendar">
+      <div id="day-labels">
+        <span>M</span>
+        <span>T</span>
+        <span>W</span>
+        <span>R</span>
+        <span>F</span>
+        <span>S</span>
+        <span>S</span>
+      </div>
+      <div id="day-nodes">
+        <div class="week-node" v-for="week in 35">
+          <div v-for="i in 7" class="day-node">
+          </div>
         </div>
-        <h3>{{ task.title }}</h3>
-        <h4>{{ task.description }}</h4>
       </div>
     </div>
-    <div class="dark-widget">
-    </div>
+
+    <router-view></router-view>
+
+  </div>
+  <div v-else>
+    <div id="calendar"></div>
   </div>
 </template>
 
 <script>
 import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
+import Tasks from '@/components/dashboardComponents/tasks.vue';
+
 export default {
   data() {
     return {
-      tasks: [
-        {
-          title: "Swag: T-shirts",
-          description: "Design and order t-shirts for the event.",
-          tags: [
-            "finance",
-            "design"
-          ]
-        },
-        {
-          title: "Second Wave of Sponsor Emails",
-          description: "Remind sponsors why you're worth it.",
-          tags: [
-            "promotion"
-          ]
-        }
-      ]
+      hackathonId: this.$route.params.hackathonId,
+      timeline: [],
+      hackathonTasks: []
     }
   },
-  methods: {
+  mounted() {
+    // Get the timeline for the hackathon
+    this.$parent.db.collection('hackathons').doc(this.hackathonId).get().then((doc) => {
+      this.timeline = doc.data().timeline;
 
+      // For each task id in the timeline, get the actual task object
+      // and put the tasks in hackathonTasks
+      this.timeline.forEach((task) => {
+        this.$parent.db.collection('tasks').doc(task).get().then((doc) => {
+          this.hackathonTasks.push(doc.data());
+        }).catch((err) => {
+          console.error("Error getting the hackathon's tasks: ", err);
+        })
+      })
+    }).catch((err) => {
+      console.error("Error getting the hackathon's timeline: ", err);
+    })
   },
   components: {
     LineGraph,
-    PolarGraph
+    PolarGraph,
+    Tasks
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import '@/GlobalVars.scss';
 
 #dashboard {
+  
+  width: calc(100% - 180px);
+  margin-right: 0px;
+  margin-left: auto;
+}
+.widget-holder {
   display: flex;
   justify-content: space-evenly;
 }
@@ -90,4 +157,67 @@ h4 {
   opacity: .5;
 }
 
+#calendar {
+  width: 180px;
+  height: 100%;
+  position: absolute;
+  background: $gray;
+  left: 0px;
+  top: 0px;
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-template-rows: 5% 95%;
+  font-family: courier;
+}
+#day-labels {
+  grid-column: 2/3;
+  grid-row: 1/2;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-right: 5px;
+}
+#day-nodes {
+  grid-column: 2/3;
+  grid-row: 2/3;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding-right: 5px;
+}
+.day-node {
+  width: 10px;
+  height: 10px;
+  background: $lighter-gray;
+}
+.week-node {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+#catagory-tabs {
+  width: 100%;
+  height: 50px;
+  background: $gray;
+  display: flex;
+  align-items: center;
+  div {
+    margin-left: 20px;
+  }
+}
+
+.light-gray {
+  color: $lighter-gray;
+}
+
+.catagory-tab {
+  font-weight: bolder;
+  font-size: 18px;
+  cursor: pointer;
+}
+.underlined {
+  text-decoration: underline;
+}
 </style>
