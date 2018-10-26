@@ -103,7 +103,7 @@
          tags: updatedTags
         }
 
-        this.$parent.$parent.$parent.db.collection('tasks').doc(this.task.id).update(updateTaskObj)
+        this.$parent.$parent.$parent.$parent.db.collection('tasks').doc(this.task.id).update(updateTaskObj)
         .then(() => {
          console.log("Task saved! Nice!")
          this.task.title = this.taskTitle;
