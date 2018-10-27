@@ -1,8 +1,10 @@
 <template>
   <transition name="modal">
     <div class="popup-background">
-      <div class="popup-wrapper">
-        <div class="popup-table purple-gradient" style="align: center">
+      <div class="popup-wrapper" @click="$parent.showDeleteModal = -1">
+        <!-- We use @click.stop on the next line to prevent showDeleteModal 
+        from being changed when clicking on the purple text -->
+        <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Delete Task</h2>
           <p>Are you sure you want to delete this task?</p>
           <div style="display:flex;flex-flow: row wrap;">

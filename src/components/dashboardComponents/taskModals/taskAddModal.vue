@@ -1,8 +1,10 @@
 <template>
   <transition name="modal">
     <div class="popup-background">
-      <div class="popup-wrapper">
-        <div class="popup-table purple-gradient" style="align: center">
+      <div class="popup-wrapper"  @click="$parent.showAddModal = -1">
+        <!-- We use @click.stop on the next line to prevent showAddModal 
+        from being changed when clicking on the purple text -->
+        <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Add Task</h2>
             <div style="display: flex">
               <div>
