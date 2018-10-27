@@ -22,7 +22,8 @@
       </task-delete-modal>
 
     </div>
-    <button id="show-add-modal" @click="showAddModal = true">+ Add Task</button>
+    <button id="show-add-modal" class="hover-shine" 
+      @click="showAddModal = true">+ Add Task</button>
     <task-add-modal :timeline="timeline" :hackathonId="hackathonId" v-if="showAddModal == true"
           @close="showAddModal = false">
     </task-add-modal>
@@ -129,6 +130,7 @@ h4 {
   display: block;
   border: none;
   box-shadow: $box-shading;
+  cursor: pointer;
 }
 
 </style>

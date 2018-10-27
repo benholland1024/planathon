@@ -21,12 +21,12 @@
 </div>
 <div id="project-choice" v-else>
   <h1 class="light-blue title">Welcome Back!</h1>
-  <div class="dark-gray-widget" style="padding-bottom: 50px">
+  <div class="" style="padding-bottom: 50px">
     Below is a list of the organization. Click on any of them to see their details!
   </div>
 
   <div id="orgList">
-    <div class="material-button-large orange-gradient new-org"
+    <div class="material-button-large orange-gradient new-org hover-shine"
           @click="selectOrg(org, orgIndex)" v-for="(org, orgIndex) in $parent.userOrgs"
           :key="orgIndex" :class="{
             'expanded-org': selectedOrg === orgIndex
@@ -43,7 +43,7 @@
       <div v-else>
         <h4>No hackathons yet!</h4>
       </div>
-      <div class="hackathon-item new-hackathon-opt opt" @click="hackathonInput = true">
+      <div class="hackathon-item new-hackathon-opt opt " @click="hackathonInput = true">
         <span v-if="!hackathonInput">
           + New Hackathon
         </span>
@@ -56,7 +56,7 @@
       </manage-collabs-modal>
 
     </div>
-    <div class="material-button-large orange-gradient new-org"
+    <div class="material-button-large orange-gradient new-org hover-shine"
           @click="selectOrgInput()">
       <span v-if="!orgInput">
         + New Organization

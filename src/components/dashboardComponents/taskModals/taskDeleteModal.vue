@@ -5,8 +5,10 @@
         <div class="popup-table purple-gradient" style="align: center">
           <h2>Delete Task</h2>
           <p>Are you sure you want to delete this task?</p>
-          <button class="material-button-large" @click="deleteTask()">Delete</button><br><br>
-          <button class="material-button-large" @click="$emit('close')">Close</button>
+          <div style="display:flex;flex-flow: row wrap;">
+            <button class="material-button-large" style="margin-right: 15px;" @click="deleteTask()">Delete</button><br><br>
+            <button class="material-button-large" @click="$emit('close')">Close</button>
+          </div>
         </div>
       </div>
     </div>
