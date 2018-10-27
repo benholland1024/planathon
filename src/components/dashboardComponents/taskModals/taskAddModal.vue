@@ -85,7 +85,7 @@
         }
 
         // Create and add the new task
-        this.$parent.$parent.$parent.db.collection('tasks').add({
+        this.$parent.$parent.$parent.$parent.db.collection('tasks').add({
           title: this.taskTitle,
           description: this.taskDesc,
           tags: updatedTags,
@@ -100,7 +100,7 @@
           }
 
           // Update the new task
-          this.$parent.$parent.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
+          this.$parent.$parent.$parent.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
           .then(() => {
             console.log(" Id added to task! Nice!")
           }).catch(err => {
@@ -114,7 +114,7 @@
             timeline: newTimeline
           }
 
-          this.$parent.$parent.$parent.db.collection('hackathons').doc(this.hackathonId).update(updateHackObj)
+          this.$parent.$parent.$parent.$parent.db.collection('hackathons').doc(this.hackathonId).update(updateHackObj)
           .then(() => {
             console.log(" Id added to task! Nice!")
           }).catch(err => {

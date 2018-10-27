@@ -4,9 +4,21 @@
       <div class="popup-wrapper">
         <div class="popup-table purple-gradient" style="align: center">
           <h2>Manage Organization</h2>
-          <p>{{orgId}}</p>
-          <button class="material-button-large" @click="deleteOrg()">Delete Organization</button><br><br>
-          <button class="material-button-large" @click="$emit('close')">Close</button>
+          <h3>Collaborators:</h3>
+          
+          <select multiple>
+            <option v-for="collab in collabObjs">{{collab.email}}</option>
+          </select>
+          <br><br>
+          <div style="display: flex" justify-content>
+            <button class="material-button-large" @click="addCollaborator()">Add Collaborator</button>
+            <button class="material-button-large" @click="$emit('close')">Remove Collaborator</button>
+          </div>
+          <br>
+          <div style="display: flex">
+            <button class="material-button-large" @click="deleteOrg()">Delete Organization</button>
+            <button class="material-button-large" @click="$emit('close')">Close</button>
+          </div>
         </div>
       </div>
     </div>
@@ -17,7 +29,10 @@
   export default {
     data() {
       return {
-        showCollabsModal: false
+        showOrgModal: false,
+        collabIds: [],
+        collabObjs: [],
+        collabSearch: ''
       }
     },
     props: {
@@ -27,10 +42,45 @@
       }
     },
     mounted() {
+      // Get the collaborator ids
+      this.$parent.$parent.db.collection('orgs').doc(this.orgId).get()
+      .then((docRef) => {
+        this.collabIds = docRef.data().collaborators;
 
+        // Get the collaborator objects
+        for (var collabId in this.collabIds) {
+          this.$parent.$parent.db.collection('users').doc(this.collabIds[collabId]).get()
+          .then((docRef) => {
+            this.collabObjs.push({
+              id: docRef.data().id,
+              email: docRef.data().email
+            });
+          }).catch((err) => {
+            console.log("Error getting collaborator objects: ", err);
+          });
+        }
+
+      }).catch((err) => {
+        console.log("Error getting collaborator ids: ", err);
+      });
     },
     methods: {
+      addCollaborator() {
+        // Make sure the user is an org collaborator
+        if (!collabIds.includes(this.$parent.$parent.user.id)) {
+          console.error("You must be an organization collaborator to add collaborators.");
+          return;
+        }
+
+
+      },
       deleteOrg(org) {
+        // Make sure the user is an org collaborator
+        if (!collabIds.includes(this.$parent.$parent.user.id)) {
+          console.error("You must be an organization collaborator to delete the organization.");
+          return;
+        }
+
         // Confirming they actually want to delete
         if (!confirm('Are you sure you want to delete this org? This can\'t be undone!')) {
           return;
