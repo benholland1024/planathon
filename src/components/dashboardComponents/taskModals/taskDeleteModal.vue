@@ -43,7 +43,7 @@
       deleteTask() {
 
         // Delete the task from the tasks collection
-        this.$parent.$parent.$parent.db.collection('tasks').doc(this.taskId).delete()
+        this.$parent.$parent.$parent.$parent.db.collection('tasks').doc(this.taskId).delete()
         .then(() => {
          console.log("Task was deleted from tasks collection! Nice!")
         }).catch(err => {
@@ -58,7 +58,7 @@
         }
 
         // Delete the task from the hackathon's timeline
-        this.$parent.$parent.$parent.db.collection('hackathons').doc(this.hackathonId).update(updateHackObj)
+        this.$parent.$parent.$parent.$parent.db.collection('hackathons').doc(this.hackathonId).update(updateHackObj)
         .then(() => {
          console.log("Task was deleted from hackathon's timeline! Nice!")
         }).catch(err => {
