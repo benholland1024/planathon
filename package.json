@@ -12,9 +12,11 @@
     "@firebase/firestore": "^0.8.2",
     "chart.js": "^2.7.2",
     "firebase": "^5.5.2",
+    "vis": "^4.21.0",
     "vue": "^2.5.17",
     "vue-chartjs": "^3.4.0",
     "vue-router": "^3.0.1",
+    "vue2vis": "0.0.15",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
