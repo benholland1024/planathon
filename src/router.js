@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Onboarding/Landing.vue'
 import DoesNotExist from './views/notDone.vue'
 import notFound from './views/notFound.vue'
+import Vis from './views/Vis.vue'
 
 Vue.use(Router)
 
@@ -29,13 +30,9 @@ export default new Router({
       component: DoesNotExist
     },
     {
-      path: '*',
-      redirect: '/404'
-    },
-    {
-      path: '/404',
-      name: '404',
-      component: notFound
+      path: '/vis',
+      name: 'Vis',
+      component: Vis
     },
     {
       path: '/register',
@@ -46,5 +43,58 @@ export default new Router({
       path: '/login',
       name:'login',
       component: () => import('./components/Auth/Login.vue')
-    }]
+    },
+    {
+      path: '/dashboard/:hackathonId',
+      name:'dashboard',
+      component: () => import('./views/Onboarding/Dashboard.vue'),
+      redirect: { name: 'finances' },
+      children: [
+        {
+          path: 'finance',
+          component: () => import ('./components/dashboardComponents/Finances.vue'),
+          name: 'finances',
+          meta: { dash: true }
+        },
+        {
+          path: 'promotion',
+          component: () => import ('./components/dashboardComponents/Promotion.vue'),
+          name: 'promotion',
+          meta: { dash: true }
+        },
+        {
+          path: 'general',
+          component: () => import ('./components/dashboardComponents/General.vue'),
+          name: 'general',
+          meta: { dash: true }
+        },
+        {
+          path: 'development',
+          component: () => import ('./components/dashboardComponents/Development.vue'),
+          name: 'development',
+          meta: { dash: true }
+        },
+        {
+          path: 'design',
+          component: () => import ('./components/dashboardComponents/Design.vue'),
+          name: 'design',
+          meta: { dash: true }
+        },
+        {
+          path: 'all',
+          component: () => import ('./components/dashboardComponents/All.vue'),
+          name: 'all',
+          meta: { dash: true }
+        }
+      ]
+    },
+    {
+      path: '*',
+      redirect: '/404'
+    },
+    {
+      path: '/404',
+      name: '404',
+      component: notFound
+    },]
 })

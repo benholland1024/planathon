@@ -1,6 +1,7 @@
 $dark-gray: #1E1E1E;
 $gray: #292929;
 $light-gray: #3C3C3C;
+$lighter-gray: #848484;
 
 $yellow: #FFE16E;
 $orange: #FF9A6E;
@@ -16,5 +17,7 @@ $light-blue: lighten($blue, 15%);
 
 $purple-gradient: linear-gradient(#7C11FF, #A358FF);
 $orange-gradient: linear-gradient(to right, #CA6333, #B75A83);
+
+$desaturated-purple: #B75A83;
 
 $box-shading: 2px 2px 10px rgba(0,0,0,.5);
