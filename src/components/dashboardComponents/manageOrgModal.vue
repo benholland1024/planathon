@@ -5,9 +5,13 @@
         <div class="popup-table purple-gradient" style="align: center">
           <h2>Manage Organization</h2>
           <h3>Collaborators:</h3>
-          
-          <select multiple>
+          <input type="text" v-model="collabSearch" v-on:input="getSearchResults">
+        </input><br><br>
+          <select v-if="collabSearch == ''" multiple>
             <option v-for="collab in collabObjs">{{collab.email}}</option>
+          </select>
+          <select v-if="!collabSearch == ''" multiple>
+            <option v-for="collab in collabResults">{{collab.email}}</option>
           </select>
           <br><br>
           <div style="display: flex" justify-content>
@@ -32,7 +36,8 @@
         showOrgModal: false,
         collabIds: [],
         collabObjs: [],
-        collabSearch: ''
+        collabSearch: '',
+        collabResults: []
       }
     },
     props: {
@@ -72,6 +77,7 @@
           return;
         }
 
+        // Needs to be written still
 
       },
       deleteOrg(org) {
@@ -91,13 +97,14 @@
         .then((response) => {
 
           //If org has hackathons, delete all of them from firebase
-          if (response.data().hackathons != undefined)
+          if (response.data().hackathons != undefined) {
             for (var id in response.data().hackathons) {
               this.$parent.$parent.db.collection('hackathons').doc(id).delete()
               .then(() => {
                 console.log(id, "deleted successfully");
               });
             }
+          }
 
           //Removing org from user data
           var newUserOrgs = {
@@ -124,11 +131,17 @@
         });
 
          //Find the index of the org in userOrgs to auto refresh the page
-        for (var i in this.$parent.$parent.userOrgs)
+        for (var i in this.$parent.$parent.userOrgs) {
           if (this.$parent.$parent.userOrgs[i].id == this.orgId) {
             this.$parent.$parent.userOrgs.splice(i, 1);
             break;
           }
+        }
+      },
+      getSearchResults() {
+        this.collabResults = this.collabObjs.filter((collabObj) => {
+          return collabObj.email.toLowerCase().includes(this.collabSearch.toLowerCase());
+        })
       }
     }
   }

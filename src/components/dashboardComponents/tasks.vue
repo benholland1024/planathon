@@ -7,11 +7,7 @@
         <img src="@/assets/trash.png" @click="showDeleteModal = index">
       </div>
       
-      <div style="display: flex">
-        <div class="task-circle" v-for="tag in task.tags"
-          :class="[tag]">
-        </div>
-      </div>
+      <task-circle-display :tags="task.tags"></task-circle-display>
       <h3>{{ task.title }}</h3>
       <h4>{{ task.description }}</h4>
 
@@ -22,7 +18,8 @@
       </task-delete-modal>
 
     </div>
-    <button id="show-add-modal" @click="showAddModal = true">+ Add Task</button>
+    <button id="show-add-modal" class="hover-shine" 
+      @click="showAddModal = true">+ Add Task</button>
     <task-add-modal :timeline="timeline" :hackathonId="hackathonId" v-if="showAddModal == true"
           @close="showAddModal = false">
     </task-add-modal>
@@ -33,6 +30,8 @@
 import TaskEditModal from '@/components/dashboardComponents/taskModals/taskEditModal.vue';
 import TaskAddModal from '@/components/dashboardComponents/taskModals/taskAddModal.vue';
 import TaskDeleteModal from '@/components/dashboardComponents/taskModals/taskDeleteModal.vue';
+
+import TaskCircleDisplay from '@/components/dashboardComponents/taskModals/taskCircleDisplay.vue';
 
 export default {
   data() {
@@ -59,7 +58,8 @@ export default {
   components: {
     TaskEditModal,
     TaskAddModal,
-    TaskDeleteModal
+    TaskDeleteModal,
+    TaskCircleDisplay
   },
   mounted() {
 
@@ -73,8 +73,10 @@ export default {
 .dark-widget {
   background-color: $dark-gray;
   width: 40%;
-  height: 500px;
+  height: calc(500px - 50px);
   margin-top: 25px;
+  overflow-y: scroll;
+  padding-bottom: 50px;
 }
 
 .task-widget {
@@ -88,12 +90,7 @@ export default {
   box-shadow: $box-shading;
 }
 
-.task-circle {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 5px;
-}
+
 
 h3, h4 {
   margin: 0;
@@ -129,6 +126,7 @@ h4 {
   display: block;
   border: none;
   box-shadow: $box-shading;
+  cursor: pointer;
 }
 
 </style>
