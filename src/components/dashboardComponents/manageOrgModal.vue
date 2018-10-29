@@ -15,7 +15,7 @@
           </select>
           <br><br>
           <div style="display: flex" justify-content>
-            <button class="material-button-large" @click="addCollaborator()">Add Collaborator</button>
+            <button class="material-button-large" @click="getNewCollabId()">Add Collaborator</button>
             <button class="material-button-large" @click="$emit('close')">Remove Collaborator</button>
           </div>
           <br>
@@ -70,15 +70,64 @@
       });
     },
     methods: {
-      addCollaborator() {
+      addCollaborator(newCollabId) {
+        // Will need some sort of if statement here (if no results found...)
+        this.$parent.$parent.db.collection('users').doc(newCollabId).get()
+        .then((result) => {
+          var newCollab = result.data();
+
+          // Used to update the new collaborator's list of orgs
+          var updateUserObj = {
+            orgs: {}
+          }
+          console.log("newCollab");
+          console.log(newCollab);
+          if (newCollab.orgs) {
+            updateUserObj.orgs = newCollab.orgs;
+          }
+          updateUserObj.orgs[this.orgId] = {
+            role: 'collaborator'
+          }
+          this.$parent.$parent.db.collection('users').doc(newCollab.id).update(updateUserObj)
+          .then(() => {
+            console.log("Org added to new collaborator's orgs! Nice!")
+          }).catch(err => {
+            console.error("Error adding org to new collaborator's orgs", err);
+          })
+
+          // Used to update the org's list of collaborators
+          var newCollabList = this.collabIds;
+          newCollabList.push(newCollab.id);
+          var updateOrgObj = {
+            collaborators: newCollabList
+          }
+
+          this.$parent.$parent.db.collection('orgs').doc(this.orgId).update(updateOrgObj)
+          .then(() => {
+            console.log("Collaborator added to org! Nice!")
+          }).catch(err => {
+            console.error("Error adding collaborator to org", err);
+          })
+        })
+      },
+      getNewCollabId() {
         // Make sure the user is an org collaborator
-        if (!collabIds.includes(this.$parent.$parent.user.id)) {
+        if (!this.collabIds.includes(this.$parent.$parent.user.id)) {
           console.error("You must be an organization collaborator to add collaborators.");
           return;
         }
 
-        // Needs to be written still
-
+        // Try to find the account matching the email
+        this.$parent.$parent.db.collection('users').where("email", "==", this.collabSearch).get()
+        .then((data) => {
+          if (data.empty == true) {
+            console.log("There is no account associated with this email.")
+            console.log("Please try again after an account has been made.");
+          }
+          else {
+            this.addCollaborator(data.docs[0].id);
+          }
+        })
       },
       deleteOrg(org) {
         // Make sure the user is an org collaborator
