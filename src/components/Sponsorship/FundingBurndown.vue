@@ -1,10 +1,5 @@
 <template>
 <div>
-    <form @submit.prevent="insertSponsorData">
-        <input type="number" v-model="amountPaid" />
-        <input type="date" v-model="sponsorDate"/>
-        <input type="submit" />
-    </form>
     <div id="burndown"></div>
 </div>
 </template>
@@ -18,8 +13,6 @@ export default Vue.extend({
     data() {
         return {
             hackathonId: 'jkVV4jCvDWwAzx9OiAHn',
-            sponsorDate: '',
-            amountPaid: 0,
             container: {},
             dataset: null
         }
@@ -46,9 +39,9 @@ export default Vue.extend({
         getSponsorData: async function() {
             try {
                 let req = await this.$parent.db
-                    .collection('sponsorship')
+                    .collection('sponsors')
                     .where('hackathonId', '==', this.hackathonId)
-                    .orderBy('sponsorDate')
+                    .orderBy('sponsored.dateCommitted')
                     .get();
                 let totalPaid = 0;
                 let sponsors = [];
@@ -67,20 +60,6 @@ export default Vue.extend({
                 console.log(e)
             }
         },
-        insertSponsorData: async function() {
-            try {
-                let data = await this.$parent.db.collection('sponsorship').add({
-                    hackathonId: this.hackathonId,
-                    amountPaid: parseInt(this.amountPaid),
-                    sponsorDate: firebase.firestore.Timestamp.fromDate(new Date(this.sponsorDate))
-                })
-
-                console.log('Sponsor added.')
-                this.getSponsorData();
-            } catch (e) {
-                console.log('Sponsor add failed.')
-            }
-        }
     }
 })
 </script>
