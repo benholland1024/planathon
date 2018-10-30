@@ -7,16 +7,16 @@
           <h3>Collaborators:</h3>
           <input type="text" v-model="collabSearch" v-on:input="getSearchResults">
         </input><br><br>
-          <select v-if="collabSearch == ''" multiple>
+          <select v-if="collabSearch == ''" v-model="collabSelect" multiple>
             <option v-for="collab in collabObjs">{{collab.email}}</option>
           </select>
-          <select v-if="!collabSearch == ''" multiple>
+          <select v-if="!collabSearch == ''" v-model="collabSelect" multiple>
             <option v-for="collab in collabResults">{{collab.email}}</option>
           </select>
           <br><br>
           <div style="display: flex" justify-content>
             <button class="material-button-large" @click="getNewCollabId()">Add Collaborator</button>
-            <button class="material-button-large" @click="$emit('close')">Remove Collaborator</button>
+            <button class="material-button-large" @click="getCollabIdToRemove()">Remove Collaborator</button>
           </div>
           <br>
           <div style="display: flex">
@@ -37,7 +37,8 @@
         collabIds: [],
         collabObjs: [],
         collabSearch: '',
-        collabResults: []
+        collabResults: [],
+        collabSelect: []
       }
     },
     props: {
@@ -47,7 +48,7 @@
       }
     },
     mounted() {
-      // Get the collaborator ids
+      // Get the collaborator id's
       this.$parent.$parent.db.collection('orgs').doc(this.orgId).get()
       .then((docRef) => {
         this.collabIds = docRef.data().collaborators;
@@ -70,6 +71,69 @@
       });
     },
     methods: {
+      getCollabIdToRemove() {
+        // Make sure the user is an org collaborator
+        if (!this.collabIds.includes(this.$parent.$parent.user.id)) {
+          console.error("You must be an organization collaborator to remove collaborators.");
+          return;
+        }
+
+        // Get the id(s) of the selected collab(s) and call removeCollaborator for each
+        this.collabSelect.forEach((element) => {
+
+          // Try to find the account matching the email (collabSelect will contain emails)
+          this.$parent.$parent.db.collection('users').where("email", "==", element).get()
+          .then((data) => {
+            if (data.empty == true) {
+              console.log("There is no account associated with this email.")
+              console.log("Please try again after an account has been made.");
+            }
+            else {
+              this.removeCollaborator(data.docs[0].id);
+            }
+          })
+        })
+      },
+      removeCollaborator(collabIdToRemove) {
+        // Get the user object for the collaborator being removed
+        this.$parent.$parent.db.collection('users').doc(collabIdToRemove).get()
+        .then((result) => {
+          var collabToRemove = result.data();
+
+          // Remove the org from the user's orgs
+          var newOrgList = collabToRemove.orgs;
+          delete newOrgList[this.orgId];
+
+          var updateUserObj = {
+            orgs: newOrgList
+          }
+
+          this.$parent.$parent.db.collection('users').doc(collabToRemove.id).update(updateUserObj)
+          .then(() => {
+            console.log("Org removed from collaborator's orgs! Nice!")
+          }).catch(err => {
+            console.error("Error removing org from collaborator's orgs", err);
+          })
+
+        })
+
+        // Remove the collaborator from the org's collaborators
+        var newCollabList = this.collabIds;
+        var indexOfCollab = newCollabList.indexOf(collabIdToRemove);
+        if (indexOfCollab !== -1) newCollabList.splice(indexOfCollab, 1);
+
+        var updateOrgObj = {
+          collaborators: newCollabList
+        }
+
+        this.$parent.$parent.db.collection('orgs').doc(this.orgId).update(updateOrgObj)
+        .then(() => {
+          console.log("collaborator removed from org! Nice!")
+        }).catch(err => {
+          console.error("Error removing collaborator from org", err);
+        })
+
+      },
       addCollaborator(newCollabId) {
         // Will need some sort of if statement here (if no results found...)
         this.$parent.$parent.db.collection('users').doc(newCollabId).get()
@@ -80,8 +144,6 @@
           var updateUserObj = {
             orgs: {}
           }
-          console.log("newCollab");
-          console.log(newCollab);
           if (newCollab.orgs) {
             updateUserObj.orgs = newCollab.orgs;
           }
@@ -105,6 +167,7 @@
           this.$parent.$parent.db.collection('orgs').doc(this.orgId).update(updateOrgObj)
           .then(() => {
             console.log("Collaborator added to org! Nice!")
+            this.collabObjs.push(newCollab);
           }).catch(err => {
             console.error("Error adding collaborator to org", err);
           })
