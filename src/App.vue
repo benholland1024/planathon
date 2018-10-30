@@ -73,7 +73,12 @@ export default {
       })
     },
     logout() {
-      firebase.auth().signOut();
+      firebase.auth().signOut().then(() => {
+        location.reload()
+      })
+      .catch((err) => {
+        throw err;
+      });
       this.user = null;
     },
   },
