@@ -1,6 +1,7 @@
 <template>
 <loading v-if="$parent.loadingUser">
 </loading>
+
 <div id="landing" v-else-if="!$parent.user">
   <div id="promo-container">
     <graph2d v-bind:start="start" v-bind:end="end" v-bind:items="items"></graph2d >
@@ -18,44 +19,55 @@
     </div>
   </div>
 </div>
+
 <div id="project-choice" v-else>
-  <h1 class="light-blue title">Welcome Back!</h1>
-  <div class="dark-gray-widget" style="padding-bottom: 50px">
+  <img src="@/assets/low_poly_spike_bg.svg" id="bg-spikes">
+
+  <h1 class="light-blue title" style="margin-bottom:10px;">Welcome Back!</h1>
+  <task-circle-display 
+  :tags="['finance', 'development', 'promotion', 'design', 'general']">
+  </task-circle-display><br>
+
+  <div style="padding-bottom: 50px; z-index: 20;">
     Below is a list of the organization. Click on any of them to see their details!
   </div>
 
   <div id="orgList">
-    <div class="material-button-large orange-gradient new-org"
+    <div class="material-button-large orange-gradient new-org "
           @click="selectOrg(org, orgIndex)" v-for="(org, orgIndex) in $parent.userOrgs"
           :key="orgIndex" :class="{
-            'expanded-org': selectedOrg === orgIndex
+            'expanded-org': selectedOrg === orgIndex,
+            'hover-shine': selectedOrg !== orgIndex
           }">
 
       <span>{{org.name}}</span>
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
         <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons"
-                    :key="hackathon.id" class="hackathon-item">
+                    :key="hackathon.id" class="hackathon-opt opt hover-shine">
           {{ hackathon.name }}
         </router-link>
       </div>
       <div v-else>
         <h4>No hackathons yet!</h4>
       </div>
-      <div class="hackathon-item new-hackathon-opt opt" @click="hackathonInput = true">
+      <br>
+      <div class="new-hackathon-opt opt hover-shine" @click="hackathonInput = true">
         <span v-if="!hackathonInput">
           + New Hackathon
         </span>
         <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
       </div>
 
-      <!-- manageCollabsModal -->
-      <div class="hackathon-item new-hackathon-opt opt" @click="showCollabsModal = true">Manage Organization</div>
-      <manage-collabs-modal :orgId="org.id" v-if="showCollabsModal == true" @close="showCollabsModal = false">
-      </manage-collabs-modal>
+      <!-- manageOrgModal -->
+      <div class="hackathon-item manage-org-opt opt hover-shine" @click="showOrgModal = true">
+        Organization Settings
+      </div>
+      <manage-org-modal :orgId="org.id" v-if="showOrgModal == true" @close="showOrgModal = false">
+      </manage-org-modal>
 
     </div>
-    <div class="material-button-large orange-gradient new-org"
+    <div class="material-button-large orange-gradient new-org hover-shine"
           @click="selectOrgInput()">
       <span v-if="!orgInput">
         + New Organization
@@ -70,10 +82,13 @@
 
 <script>
 import Loading from '@/components/Loading.vue';
+import ManageOrgModal from '@/components/dashboardComponents/manageOrgModal.vue'
 import graph2d from '@/components/Visualization/graph2d.vue';
+
+import TaskCircleDisplay from '@/components/dashboardComponents/taskModals/taskCircleDisplay.vue';
+
 import vis from 'vis';
 import 'vis/dist/vis.min.css';
-import ManageCollabsModal from '@/components/dashboardComponents/manageCollabsModal.vue'
 
 export default {
   name: 'Landing',
@@ -94,7 +109,7 @@ export default {
       hackathonInput: false,
       hackathonName: '',
       selectedOrg: '',
-      showCollabsModal: false
+      showOrgModal: false
     }
   },
   methods: {
@@ -117,9 +132,13 @@ export default {
       this.$parent.db.collection('orgs').where("name", "==", this.orgName).get()
       .then((data) => {
         if (data.empty == true) {
+
           // Create a new org and add it to the orgs collection
+          var collabsList = [];
+          collabsList.push(this.$parent.user.id);
           this.$parent.db.collection('orgs').add({
-            name: this.orgName
+            name: this.orgName,
+            collaborators: collabsList
           }).then((docRef) => {
 
             // This is used to update the new org, so it holds it's id
@@ -315,23 +334,36 @@ export default {
   },
   components: {
     Loading,
+    ManageOrgModal,
     graph2d,
-    ManageCollabsModal
+    TaskCircleDisplay,
   }
 };
 </script>
 
 <style scoped lang="scss">
 @import '@/GlobalVars.scss';
+
+  #bg-spikes {
+    position: absolute;
+    z-index: -1;
+    width: 50%;
+    right: 0px;
+    opacity: .9;
+  }
+
   #landing {
     padding: 50px;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
+    z-index: 1;
   }
   #project-choice {
     text-align: left;
     padding: 20px 10vw;
+    z-index: 10;
+    position: relative;
   }
   #promo-container {
     background: $dark-gray;
@@ -371,7 +403,7 @@ export default {
     margin-top: 50px;
 
   }
-  
+
   button {
     margin-top: 20px;
 
@@ -404,6 +436,7 @@ export default {
       color: white;
     }
   }
+  
   .expanded-org {
     transition-duration: 1s;
     max-height: 500px;
@@ -416,6 +449,10 @@ export default {
     width: 100%;
   }
 
+  .hackathon-opt {
+    background: $gray;
+  }
+
   .opt {
     font-size: 15px;
     padding: 5px;
@@ -426,11 +463,12 @@ export default {
     margin-top: 15px;
     margin-left: 50%;
     transform: translatex(-50%);
+    width: 100%;
   }
   .new-hackathon-opt {
     background: $blue;
   }
-  .delete-opt {
-    background: $pink;
+  .manage-org-opt {
+    background: $blue;
   }
 </style>

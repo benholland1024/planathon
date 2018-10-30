@@ -186,9 +186,12 @@ export default {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    
+  }
+  .hover-shine {
+    position: relative;
+    overflow: hidden;
     transition: 200ms ease all;
-
-
     &:before {
       content: '';
       position: absolute;
@@ -207,7 +210,6 @@ export default {
         transition: 1s ease all;
       }
     }
-
   }
   .purple-gradient {
     background: $purple-gradient;
