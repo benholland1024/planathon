@@ -11,6 +11,10 @@ new Vue({
   render: h => h(App),
   mounted() {
     this.$store.dispatch('users/openDBChannel')
-
+    this.$store.dispatch('orgs/openDBChannel')
+    this.$store.dispatch('hackathons/openDBChannel')
+    this.$store.dispatch('tasks/openDBChannel')
+    this.$store.dispatch('sponsors/openDBChannel')
+    this.$store.dispatch('sponsorship/openDBChannel')
   }
 }).$mount('#app')
