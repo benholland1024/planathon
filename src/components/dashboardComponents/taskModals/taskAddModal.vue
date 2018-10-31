@@ -1,7 +1,7 @@
 <template>
   <transition name="modal">
     <div class="popup-background">
-      <div class="popup-wrapper"  @click="$parent.showAddModal = -1">
+      <div class="popup-wrapper"  @click="$parent.showAddModal = false">
         <!-- We use @click.stop on the next line to prevent showAddModal 
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
@@ -15,19 +15,24 @@
                 <input v-model="taskDesc" type="text" class="auth-textbox"
                       @keyup.enter=""/>
               </div>
+
               <div>
-                <p>Tags:</p>
-                <input type="checkbox" v-model="promotion">
-                <label for="checkbox">  Promotion</label><br>
-                <input type="checkbox" v-model="general">
-                <label for="checkbox">  General</label><br>
-                <input type="checkbox" v-model="dev">
-                <label for="checkbox">  Dev</label><br>
-                <input type="checkbox" v-model="finance">
-                <label for="checkbox">  Finance</label><br>
-                <input type="checkbox" v-model="design">
-                <label for="checkbox">  Design</label><br>
+                <div class="tag-picker">
+                  <input type="checkbox" v-model="tags.promotion">
+                  <label for="checkbox">  Promotion</label><br>
+                  <input type="checkbox" v-model="tags.general">
+                  <label for="checkbox">  General</label><br>
+                  <input type="checkbox" v-model="tags.development">
+                  <label for="checkbox">  Dev</label><br>
+                  <input type="checkbox" v-model="tags.finance">
+                  <label for="checkbox">  Finance</label><br>
+                  <input type="checkbox" v-model="tags.design">
+                  <label for="checkbox">  Design</label><br>
+                </div>
+                <date-picker v-model="date" :first-day-of-week="1"
+                lang="en"></date-picker>
               </div>
+              
             </div><br><br>
             <button class="material-button-large" @click="saveTask()">Save</button><br><br>
             <button class="material-button-large" @click="$emit('close')">Close</button>
@@ -39,19 +44,30 @@
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker';
+
   export default {
     data() {
       return {
         showAddModal: false,
         taskTitle: '',
         taskDesc: '',
-        promotion: false,
-        general: false,
-        design: false,
-        dev: false,
-        finance: false
+        tags: {
+          promotion: false,
+          general: false,
+          design: false,
+          development: false,
+          finance: false,
+        },
+
+        date: new Date()
       }
     },
+
+    components: {
+      DatePicker
+    },
+
     props: {
       timeline: {
         type: Array,
@@ -62,29 +78,28 @@
         required: true
       }
     },
+
     mounted() {
 
     },
+
     methods: {
       saveTask() {
 
         // Create an array to keep track of task tags
         var updatedTags = [];
-        if (this.promotion) {
-          updatedTags.push("promotion");
+        // List of all the tags you have to check:
+        const tagsToCheck = ['finance', 'development', 'promotion', 'design', 'general'];
+        // Iterate through all those tags, push their string to 
+        // 'updatedTags' if the corresponding bool is true
+        for (var i in tagsToCheck) {
+          if (this.tags[tagsToCheck[i]]) {
+            updatedTags.push(tagsToCheck[i])
+          }
         }
-        if (this.finance) {
-          updatedTags.push("finance");
-        }
-        if (this.general) {
-          updatedTags.push("general");
-        }
-        if (this.dev) {
-          updatedTags.push("development");
-        }
-        if (this.design) {
-          updatedTags.push("design");
-        }
+        // updatedTags should now be an array that looks similar to this:
+        // ['development', 'promotion', 'design']
+        
 
         // Create and add the new task
         this.$parent.$parent.$parent.$parent.db.collection('tasks').add({

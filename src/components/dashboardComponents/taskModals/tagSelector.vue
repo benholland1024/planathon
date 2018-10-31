@@ -13,3 +13,23 @@
   <label for="checkbox">  Design</label><br>
 </div>
 </template>
+
+<script>
+export default {
+  props: {
+    value: {
+      required: true,
+      type: Object
+    }
+  },
+  data() {
+    return {
+      promotion: '',
+      general: '',
+      dev: '',
+      finance: '',
+      design: ''
+    }
+  }
+}
+</script>
