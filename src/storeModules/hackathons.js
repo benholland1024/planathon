@@ -1,12 +1,12 @@
 import createEasyFirestore from 'vuex-easy-firestore';
 
-const usersDataModule = {
-    firestorePath: 'users',
+const hackathonsDataModule = {
+    firestorePath: 'hackathons',
     firestoreRefType: 'collection', // or 'doc'
-    moduleName: 'users',
+    moduleName: 'hackathons',
     statePropName: 'docs',
     // you can also add state/getters/mutations/actions
     // for other config like fillables see 'Extra features'
   }
 
-export default createEasyFirestore(usersDataModule, {logging: true});
+export default createEasyFirestore(hackathonsDataModule, {logging: true});
