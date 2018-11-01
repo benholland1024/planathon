@@ -3,6 +3,7 @@
     <h1>This is an about page - there's nothing here yet!</h1>
     <div v-for="user in users">
       {{user.id}}
+      {{user.email}}
     </div>
     <div v-for="org in orgs">
       {{org.id}}
@@ -26,6 +27,9 @@ export default {
     orgs() {
       return this.$store.getters['orgs/storeRef']
     }
-  }
+  },
+  // mounted() {
+  //   console.log(this.users.id)
+  // }
 }
 </script>
