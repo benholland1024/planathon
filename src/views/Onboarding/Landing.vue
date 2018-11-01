@@ -136,7 +136,7 @@ export default {
           // Create a new org and add it to the orgs collection
           var collabsList = [];
           collabsList.push(this.currentUser.id);
-          const orgId = this.$store.getters('orgs/dbRef').doc().id;
+          const orgId = this.$store.getters['orgs/dbRef'].doc().id;
           this.$store.dispatch('orgs/insert', {
             id: orgId,
             name: this.orgName,
