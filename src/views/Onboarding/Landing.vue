@@ -158,7 +158,7 @@ export default {
           }
 
           // Updating user's list of orgs
-          this.$store.dispatch('users/set', {[`${this.$parent.userId}`]: {orgs: updateObj}})
+          this.$store.dispatch('users/set', {[`${this.$parent.userId}`]: {orgs: updateObj.orgs}})
           .catch(err => {
             console.error("Problem updating user org list: ", err)
           })
