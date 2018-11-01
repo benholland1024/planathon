@@ -99,23 +99,24 @@
           updatedTags.push("design");
         }
 
-        var updateTaskObj = {
-         title: this.taskTitle,
-         description: this.taskDesc,
-         tags: updatedTags
-        }
-
-        this.$parent.$parent.$parent.$parent.db.collection('tasks').doc(this.task.id).update(updateTaskObj)
+        this.$store.dispatch('tasks/set', {[`${this.task.id}`]: {
+          title: this.taskTitle,
+          description: this.taskDesc,
+          tags: updatedTags
+        }})
         .then(() => {
-         console.log("Task saved! Nice!")
          this.task.title = this.taskTitle;
          this.task.description = this.taskDesc;
          this.task.tags = updatedTags;
-
-
+         this.$emit('close');
         }).catch(err => {
          console.error("error: ", err);
         })
+      }
+    },
+    computed: {
+      tasks() {
+        return this.$store.getters['tasks/storeRef']
       }
     }
   }
