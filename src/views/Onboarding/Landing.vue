@@ -108,6 +108,7 @@ export default {
       orgName: '',
       hackathonInput: false,
       hackathonName: '',
+      hackathonId: '',
       selectedOrg: '',
       showOrgModal: false
     }
@@ -123,7 +124,7 @@ export default {
     addNewOrg() {
       // Make sure the user is logged in
       console.log(this.orgName);
-      if (!this.currentUser.id) {
+      if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
@@ -178,133 +179,82 @@ export default {
     },
     addNewHackathon(taskList) {
       // Make sure the user is logged in
-      console.log(this.$parent.userId);
       if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
 
       // Create a new hackathon and add it to the hackathons collection
-      this.$parent.db.collection('hackathons').add({
+      this.$store.dispatch('hackathons/insert', {
+        id: this.hackathonId,
         name: this.hackathonName,
         timeline: taskList
-      }).then((docRef) => {
+      })
 
-        // Add the hackathon id to the tasks
-        taskList.forEach((taskElem) => {
-          var updateTEObj = {
-            hackathon: docRef.id
-          }
+      // Setting up an object to update the org's list of hackathons
+      var updateObj = {
+        hackathons: {}
+      }
+      if (this.$parent.org.hackathons) {
+        updateObj.hackathons = this.$parent.org.hackathons;
+      }
+      updateObj.hackathons[this.hackathonId] = {
+        id: this.hackathonId,
+        name: this.hackathonName,
+        timeline: taskList
+      }
 
-          this.$parent.db.collection('tasks').doc(taskElem).update(updateTEObj)
-          .then(() => {
-            console.log("Added hackathon id to task! Nice!")
-          }).catch(err => {
-            console.error("error: ", err);
-          })
-        })
+      // Updating org list and resetting org data for reloading
+      this.$store.dispatch('orgs/set', {[`${this.$parent.org.id}`]: {hackathons: updateObj.hackathons}})
+      .then(() => {
+        while (this.$parent.userOrgs[0])
+          this.$parent.userOrgs.pop();
 
-        // This is used to update the new hackathon so it holds it's id
-        var updateHackObj = {
-          id: docRef.id
-        }
-
-        this.$parent.db.collection('hackathons').doc(docRef.id).update(updateHackObj)
-        .then(() => {
-          console.log(" Id added to hackathon! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-
-        // Setting up an object to update the org's list of hackathons
-        var updateObj = {
-          hackathons: {}
-        }
-        if (this.$parent.org.hackathons) {
-          updateObj.hackathons = this.$parent.org.hackathons;
-        }
-        updateObj.hackathons[docRef.id] = {
-          id: docRef.id
-        }
-
-        this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
-        .then(() => {
-          console.log("Org added to user orgs! Nice!")
-
-          //Updating hackathon list
-          while (this.$parent.userOrgs[0]) {
-            this.$parent.userOrgs.pop();
-          }
-          this.$parent.loadOrgs();
-          this.hackathonInput = false;
-          this.hackathonName = '';
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-      }).catch((err) => {
-        console.error("Error submitting your org: ", err);
+        this.$parent.loadOrgs();
+        this.hackathonInput = false;
+        this.hackathonName = '';
       })
     },
     addNewTasks() {
       // Make sure the user is logged in
-      console.log(this.$parent.userId);
       if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
 
-      // Initialize an array that will keep track of tasks for the new
+      // Initialize an array that will keep track of tasks of the new
       // hackathon's timeline
       var taskList = [];
 
+      this.hackathonId = this.$store.getters['hackathons/dbRef'].doc().id
+
       // Create a new task and add it to the tasks collection
-      this.$parent.db.collection('tasks').add({
+      const taskId1 = this.$store.getters['tasks/dbRef'].doc().id;
+      taskList.push(taskId1)
+      this.$store.dispatch('tasks/set', {
+        id: taskId1,
+        hackathon: this.hackathonId,
         title: "Swag: T-shirts",
         description: "Design and order t-shirts for the event.",
         tags: ["finance", "design"]
-      }).then((docRef) => {
-
-        // Push the new task id to the taskList
-        taskList.push(docRef.id);
-
-        // This is used to update the new task so it holds it's id
-        var updateTaskObj = {
-         id: docRef.id
-        }
-
-        this.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
-        .then(() => {
-         console.log(" Id added to task! Nice!")
-        }).catch(err => {
-         console.error("error: ", err);
-        })
-      }).catch((err) => {
-       console.error("Error initializing hackathon tasks: ", err);
+      }).catch(err => {
+        console.error("Error initializing task: ", err)
       })
 
-      // Repeat/add a second task (same process as above)
-      this.$parent.db.collection('tasks').add({
-        title: "Second Wave of Sponsor Emails",
+      // Repeat process
+      const taskId2 = this.$store.getters['tasks/dbRef'].doc().id;
+      taskList.push(taskId2)
+      this.$store.dispatch('tasks/set', {
+        id: taskId2,
+        hackathon: this.hackathonId,
+        title: "Second wave of sponsor emails",
         description: "Remind sponsors why you're worth it.",
         tags: ["promotion"]
-      }).then((docRef) => {
-        taskList.push(docRef.id);
-
-        // This is the only spot where taskList was correctly passed
-        this.addNewHackathon(taskList);
-
-        var updateTaskObj = {
-          id: docRef.id
-        }
-        this.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
-        .then(() => {
-          console.log(" Id added to task! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-      }).catch((err) => {
-        console.error("Error initializing hackathon tasks: ", err);
+      }).catch(err => {
+        console.error("Error initializing task: ", err)
       })
+      this.addNewHackathon(taskList);
+      console.log(taskList, taskId1, taskId2)
     }
   },
   components: {
