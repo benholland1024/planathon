@@ -100,47 +100,44 @@ import DatePicker from 'vue2-datepicker';
         // updatedTags should now be an array that looks similar to this:
         // ['development', 'promotion', 'design']
         
+        // Manually generates a new id in tasks collection
+        const taskId = this.$store.getters['tasks/dbRef'].doc().id;
 
         // Create and add the new task
-        this.$parent.$parent.$parent.$parent.db.collection('tasks').add({
+        this.$store.dispatch('tasks/insert', {
+          id: taskId,
           title: this.taskTitle,
           description: this.taskDesc,
           tags: updatedTags,
           hackathon: this.hackathonId
         })
-        .then((docRef) => {
-          console.log("Task saved! Nice!")
-
-          // This is used to update the new task to hold it's id
-          var updateTaskObj = {
-            id: docRef.id
-          }
-
-          // Update the new task
-          this.$parent.$parent.$parent.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
-          .then(() => {
-            console.log(" Id added to task! Nice!")
-          }).catch(err => {
-            console.error("error: ", err);
-          })
-
-          // This is used to update the hackathon to include the new task
-          var newTimeline = this.timeline;
-          newTimeline.push(docRef.id);
-          var updateHackObj = {
-            timeline: newTimeline
-          }
-
-          this.$parent.$parent.$parent.$parent.db.collection('hackathons').doc(this.hackathonId).update(updateHackObj)
-          .then(() => {
-            console.log(" Id added to task! Nice!")
-          }).catch(err => {
-            console.error("error: ", err);
-          })
-
-        }).catch(err => {
-          console.error("error: ", err);
+        .catch(err => {
+          console.error("Oops: ", err)
         })
+
+        // This is used to update the hackathon to include the new task
+        var newTimeline = this.hackathon.timeline;
+        newTimeline.push(taskId);
+
+        // Updates the hackathon specified by hackathonId
+        const hackathon = this.hackathonId
+        this.$store.dispatch('hackathons/set', {[hackathon]: {timeline: newTimeline}})
+        .catch(err => {
+          console.error("Whoops: ", err)
+        })
+      }
+    },
+
+    computed: {
+      tasks() {
+        return this.$store.getters['tasks/storeRef']
+      },
+      hackathons() {
+        return this.$store.getters['hackathons/storeRef']
+      },
+      hackathon() {
+        var id = this.hackathonId;
+        return this.hackathons[id]
       }
     }
   }
