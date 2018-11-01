@@ -69,10 +69,6 @@ import DatePicker from 'vue2-datepicker';
     },
 
     props: {
-      timeline: {
-        type: Array,
-        required: true
-      },
       hackathonId: {
         type: String,
         required: true
@@ -120,8 +116,10 @@ import DatePicker from 'vue2-datepicker';
         newTimeline.push(taskId);
 
         // Updates the hackathon specified by hackathonId
-        const hackathon = this.hackathonId
-        this.$store.dispatch('hackathons/set', {[hackathon]: {timeline: newTimeline}})
+        this.$store.dispatch('hackathons/set', {[`${this.hackathonId}`]: {timeline: newTimeline}})
+        .then(() => {
+          this.$emit('close')
+        })
         .catch(err => {
           console.error("Whoops: ", err)
         })

@@ -32,44 +32,42 @@
       hackathonId: {
         type: String,
         required: true
-      },
-      timeline: {
-        type: Array,
-        required: true
       }
-    },
-    mounted() {
-
     },
     methods: {
       deleteTask() {
-
         // Delete the task from the tasks collection
-        this.$parent.$parent.$parent.$parent.db.collection('tasks').doc(this.taskId).delete()
-        .then(() => {
-         console.log("Task was deleted from tasks collection! Nice!")
-        }).catch(err => {
-         console.error("error: ", err);
+        this.$store.dispatch('tasks/delete', `${this.taskId}`)
+        .catch(err => {
+          console.error("Could not delete task: ", err)
         })
 
-        var indexOfTask = this.timeline.indexOf(this.taskId);
-        if (indexOfTask !== -1) this.timeline.splice(indexOfTask, 1);
-
-        var updateHackObj = {
-          timeline: this.timeline
-        }
+        var indexOfTask = this.hackathon.timeline.indexOf(this.taskId);
+        if (indexOfTask !== -1) this.hackathon.timeline.splice(indexOfTask, 1);
 
         // Delete the task from the hackathon's timeline
-        this.$parent.$parent.$parent.$parent.db.collection('hackathons').doc(this.hackathonId).update(updateHackObj)
+        this.$store.dispatch('hackathons/set', {[`${this.hackathonId}`]: {timeline: this.hackathon.timeline}})
         .then(() => {
-         console.log("Task was deleted from hackathon's timeline! Nice!")
-        }).catch(err => {
-         console.error("error: ", err);
+          this.$emit('close');
         })
-
-
+        .catch(err => {
+          console.error("Could not remove task from hackathon: ", err)
+        })
+      }
+    },
+    computed: {
+      tasks() {
+        return this.$store.getters['tasks/storeRef']
+      },
+      hackathons() {
+        return this.$store.getters['hackathons/storeRef']
+      },
+      hackathon() {
+        var id = this.hackathonId;
+        return this.hackathons[id]
       }
     }
+
   }
 </script>
 
