@@ -111,7 +111,7 @@ export default {
         this.taskId = id;
         this.hackathonTasks.push(this.task);
       });
-    }, 1500);
+    }, 1000);
   },
   components: {
     LineGraph,
@@ -123,15 +123,13 @@ export default {
       return this.$store.getters['tasks/storeRef']
     },
     task() {
-      var id = this.taskId;
-      return this.tasks[id]
+      return this.tasks[`${this.taskId}`]
     },
     hackathons() {
       return this.$store.getters['hackathons/storeRef']
     },
     hackathon() {
-      var id = this.$route.params.hackathonId;
-      return this.hackathons[id]
+      return this.hackathons[`${this.$route.params.hackathonId}`]
     }
   }
 }

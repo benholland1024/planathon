@@ -13,14 +13,14 @@
 
       <task-edit-modal :task="task" v-if="showEditModal == index" @close="showEditModal = -1">
       </task-edit-modal>
-      <task-delete-modal :taskId="task.id" :hackathonId="hackathonId" :timeline="timeline"
+      <task-delete-modal :taskId="task.id" :hackathonId="hackathonId"
             v-if="showDeleteModal == index" @close="showDeleteModal = -1">
       </task-delete-modal>
 
     </div>
     <button id="show-add-modal" class="hover-shine" 
       @click="showAddModal = true">+ Add Task</button>
-    <task-add-modal :timeline="timeline" :hackathonId="hackathonId" v-if="showAddModal == true"
+    <task-add-modal :hackathonId="hackathonId" v-if="showAddModal == true"
           @close="showAddModal = false">
     </task-add-modal>
   </div>

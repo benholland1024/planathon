@@ -21,6 +21,7 @@ db.settings(settings);
 export default {
   data() {
     return {
+      userId: '',
       db: db,
       user: null,
       userOrgs: [],
@@ -33,44 +34,19 @@ export default {
     MenuBar
   },
   methods: {
-    loadUser(id) {
-      // Getting the user's info from the User table (which is different from the Auth table!)
-      this.db.collection('users').doc(id)
-      .get().then((doc) => {
-        this.user = doc.data();
-        // Loading in the user's orgs now that we have the IDs from the user's table
-        this.loadOrgs();
-        this.loadingUser = false;
-      }).catch((err) => {
-        console.error("Error getting the user's information: ", err);
-      })
-    },
     loadOrgs() {
       // Getting the data from each of the orgs based on the org's ID
       // (which was stored in the User's table)
-      for (let id in this.user.orgs) {
-        console.log("Hm.", this.user.orgs[id])
-        this.db.collection('orgs').doc(id)
-        .get().then((doc) => {
-          // console.log(doc.data());
-          var org = doc.data();
-          this.userOrgs.push(org);
-          for (var i in org.hackathons) {
-            this.loadHackathon(this.userOrgs.length - 1, org.hackathons[i].id);
-          }
-          //console.log(doc.data());
-        }).catch((err) => {
-          console.error("Error in loadOrgs with the org ID " + id + ":", err);
-        })
+      for (let id in this.currentUser.orgs) {
+        this.userOrgs.push(this.orgs[`${id}`])
+        for (var i in this.orgs[`${id}`].hackathons) {
+          this.loadHackathon(this.userOrgs.length -1, this.orgs[`${id}`].hackathons[i].id);
+        }
       }
     },
     loadHackathon(orgId, hackathonId) {
-      console.warn(orgId, hackathonId);
-      this.db.collection('hackathons').doc(hackathonId).onSnapshot((doc) => {
-        console.log(doc.data());
-        console.log(this.userOrgs[orgId])
-        this.userOrgs[orgId].hackathons[hackathonId] = doc.data();
-      })
+      console.log(orgId, hackathonId);
+      this.userOrgs[orgId].hackathons[hackathonId] = this.hackathons[`${hackathonId}`]
     },
     logout() {
       firebase.auth().signOut().then(() => {
@@ -88,14 +64,33 @@ export default {
       // This if statement will be true if the user is logged in
       // when the page loads! :)
       if (user){
-        this.loadUser(user.uid);
+        this.userId = user.uid;
+        setTimeout(() => {
+          this.loadOrgs();
+        }, 1000)
+        this.user = true;
         this.loggedIn = true;
         this.loginModule = false;
+        this.loadingUser = false;
       } else {
         this.loadingUser = false;
       }
     });
 
+  },
+  computed: {
+    users() {
+      return this.$store.getters['users/storeRef']
+    },
+    currentUser() {
+      return this.users[`${this.userId}`]
+    },
+    orgs() {
+      return this.$store.getters['orgs/storeRef']
+    },
+    hackathons() {
+      return this.$store.getters['hackathons/storeRef']
+    },
   }
 }
 
