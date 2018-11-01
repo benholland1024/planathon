@@ -37,20 +37,30 @@ export default {
           console.log(doc.user);
 
           // Registering the user in the database table:
-          this.$parent.db.collection('users').doc(doc.user.uid)
-          .set({
-            id: doc.user.uid,
+          // this.$parent.db.collection('users').doc(doc.user.uid)
+          // .set({
+          //   id: doc.user.uid,
+          //   email: doc.user.email
+          // })
+          this.$store.dispatch('users/insert', {
+            id: doc.user.id,
             email: doc.user.email
           })
+
           // Redirecting to the main from /register:
           this.$router.push('/');
         }).catch((error) => {
-          // Catching errors:
-          this.err = error.message;
-          console.error("Error signing you in!")
+        // Catching errors:
+        this.err = error.message;
+        console.error("Error signing you in!")
 //            throw error;
         });
       }
+    },
+    computed: {
+      users() {
+        return this.$store.getters['users/storeRef']
+      },
     }
  }
 </script>

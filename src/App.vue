@@ -38,6 +38,7 @@ export default {
       // Getting the data from each of the orgs based on the org's ID
       // (which was stored in the User's table)
       for (let id in this.currentUser.orgs) {
+        this.org = this.orgs[`${id}`]
         this.userOrgs.push(this.orgs[`${id}`])
         for (var i in this.orgs[`${id}`].hackathons) {
           this.loadHackathon(this.userOrgs.length -1, this.orgs[`${id}`].hackathons[i].id);
@@ -65,10 +66,11 @@ export default {
       // when the page loads! :)
       if (user){
         this.userId = user.uid;
+        this.user = true;
         setTimeout(() => {
           this.loadOrgs();
+          this.user = this.currentUser;
         }, 1000)
-        this.user = true;
         this.loggedIn = true;
         this.loginModule = false;
         this.loadingUser = false;
