@@ -27,9 +27,6 @@ export default {
     orgs() {
       return this.$store.getters['orgs/storeRef']
     }
-  },
-  // mounted() {
-  //   console.log(this.users.id)
-  // }
+  }
 }
 </script>
