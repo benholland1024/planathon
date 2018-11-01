@@ -165,7 +165,7 @@ export default {
 
           // Updating org list populating screen
           this.$parent.userOrgs.push(this.orgs[`${orgId}`]);
-
+          this.orgName = '';
         } else {
           alert("Sorry, organization: " + this.orgName + " is already in use");
         }
@@ -178,7 +178,8 @@ export default {
     },
     addNewHackathon(taskList) {
       // Make sure the user is logged in
-      if (!this.$parent.user.id) {
+      console.log(this.$parent.userId);
+      if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
@@ -246,7 +247,8 @@ export default {
     },
     addNewTasks() {
       // Make sure the user is logged in
-      if (!this.$parent.user.id) {
+      console.log(this.$parent.userId);
+      if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
