@@ -24,7 +24,7 @@
   <img src="@/assets/low_poly_spike_bg.svg" id="bg-spikes">
 
   <h1 class="light-blue title" style="margin-bottom:10px;">Welcome Back!</h1>
-  <task-circle-display 
+  <task-circle-display
   :tags="['finance', 'development', 'promotion', 'design', 'general']">
   </task-circle-display><br>
 
@@ -108,6 +108,7 @@ export default {
       orgName: '',
       hackathonInput: false,
       hackathonName: '',
+      hackathonId: '',
       selectedOrg: '',
       showOrgModal: false
     }
@@ -123,77 +124,48 @@ export default {
     addNewOrg() {
       // Make sure the user is logged in
       console.log(this.orgName);
-      if (!this.$parent.user.id) {
+      if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
 
       //Check to see if org name is already in use
-      this.$parent.db.collection('orgs').where("name", "==", this.orgName).get()
-      .then((data) => {
-        if (data.empty == true) {
+      this.$store.dispatch('orgs/fetch', {whereFilters: [['name', '==', this.orgName]]})
+      .then(querySnapshot => {
+        if (querySnapshot.empty == true) {
 
           // Create a new org and add it to the orgs collection
           var collabsList = [];
-          collabsList.push(this.$parent.user.id);
-          this.$parent.db.collection('orgs').add({
+
+          collabsList.push(this.$parent.userId);
+          const orgId = this.$store.getters['orgs/dbRef'].doc().id;
+          this.$store.dispatch('orgs/insert', {
+            id: orgId,
             name: this.orgName,
             collaborators: collabsList
-          }).then((docRef) => {
-
-            // This is used to update the new org, so it holds it's id
-            var updateOrgObj = {
-              id: docRef.id
-            }
-
-            this.$parent.db.collection('orgs').doc(docRef.id).update(updateOrgObj)
-            .then(() => {
-              console.log(" Id added to org! Nice!")
-            }).catch(err => {
-              console.error("error: ", err);
-            })
-
-            // Setting up an object to update the user's list of orgs
-            var updateObj = {
-              orgs: {}
-            }
-            if (this.$parent.user.orgs) {
-              updateObj.orgs = this.$parent.user.orgs;
-            }
-            updateObj.orgs[docRef.id] = {
-              role: 'admin'
-            }
-            this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
-            .then(() => {
-              console.log("Org added to user orgs! Nice!")
-            }).catch(err => {
-              console.error("error: ", err);
-            })
-
-            this.$parent.db.collection('users').doc(this.$parent.user.id).get()
-            .then((response) => {
-              var doc = response.data();
-              for (var org in doc.orgs) {
-                updateObj.orgs[org] = {role: doc.orgs[org].role};
-              }
-              updateObj.orgs[docRef.id] = {
-                role: 'admin'
-              }
-              this.$parent.db.collection('users').doc(this.$parent.user.id).update(updateObj)
-              .then(() => {
-                this.$parent.db.collection('orgs').doc(docRef.id).get()
-                .then((res) => {
-                  this.$parent.userOrgs.push(res.data());
-                })
-              }).catch(err => {
-                console.error("error: ", err);
-              })
-            })
-          }).catch((err) => {
-            console.error("Error submitting your org: ", err);
+          }).catch(err => {
+            console.error("Problem adding new org: ", err)
           })
-        }
-        else {
+
+
+          // Setting up an object to update the user's list of orgs
+          var updateObj = {
+            orgs: {}
+          }
+          if (this.users[this.$parent.userId] && this.users[this.$parent.userId].orgs) {
+            updateObj.orgs = this.users[this.$parent.userId].orgs;
+          }
+          updateObj.orgs[orgId] = {
+            role: 'admin'
+          }
+
+          // Updating user's list of orgs
+          this.$store.dispatch('users/set', {[`${this.$parent.userId}`]: {orgs: updateObj.orgs}})
+          .catch(err => {
+            console.error("Problem updating user org list: ", err)
+          })
+
+        } else {
           alert("Sorry, organization: " + this.orgName + " is already in use");
         }
       })
@@ -205,131 +177,82 @@ export default {
     },
     addNewHackathon(taskList) {
       // Make sure the user is logged in
-      if (!this.$parent.user.id) {
+      if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
 
       // Create a new hackathon and add it to the hackathons collection
-      this.$parent.db.collection('hackathons').add({
+      this.$store.dispatch('hackathons/insert', {
+        id: this.hackathonId,
         name: this.hackathonName,
         timeline: taskList
-      }).then((docRef) => {
+      })
 
-        // Add the hackathon id to the tasks
-        taskList.forEach((taskElem) => {
-          var updateTEObj = {
-            hackathon: docRef.id
-          }
+      // Setting up an object to update the org's list of hackathons
+      var updateObj = {
+        hackathons: {}
+      }
+      if (this.$parent.org.hackathons) {
+        updateObj.hackathons = this.$parent.org.hackathons;
+      }
+      updateObj.hackathons[this.hackathonId] = {
+        id: this.hackathonId,
+        name: this.hackathonName,
+        timeline: taskList
+      }
 
-          this.$parent.db.collection('tasks').doc(taskElem).update(updateTEObj)
-          .then(() => {
-            console.log("Added hackathon id to task! Nice!")
-          }).catch(err => {
-            console.error("error: ", err);
-          })
-        })
+      // Updating org list and resetting org data for reloading
+      this.$store.dispatch('orgs/set', {[`${this.$parent.org.id}`]: {hackathons: updateObj.hackathons}})
+      .then(() => {
+        while (this.$parent.userOrgs[0])
+          this.$parent.userOrgs.pop();
 
-        // This is used to update the new hackathon so it holds it's id
-        var updateHackObj = {
-          id: docRef.id
-        }
-
-        this.$parent.db.collection('hackathons').doc(docRef.id).update(updateHackObj)
-        .then(() => {
-          console.log(" Id added to hackathon! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-
-        // Setting up an object to update the org's list of hackathons
-        var updateObj = {
-          hackathons: {}
-        }
-        if (this.$parent.org.hackathons) {
-          updateObj.hackathons = this.$parent.org.hackathons;
-        }
-        updateObj.hackathons[docRef.id] = {
-          id: docRef.id
-        }
-
-        this.$parent.db.collection('orgs').doc(this.$parent.org.id).update(updateObj)
-        .then(() => {
-          console.log("Org added to user orgs! Nice!")
-
-          //Updating hackathon list
-          while (this.$parent.userOrgs[0]) {
-            this.$parent.userOrgs.pop();
-          }
-          this.$parent.loadOrgs();
-          this.hackathonInput = false;
-          this.hackathonName = '';
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-      }).catch((err) => {
-        console.error("Error submitting your org: ", err);
+        //this.$parent.loadOrgs();
+        this.hackathonInput = false;
+        this.hackathonName = '';
       })
     },
     addNewTasks() {
       // Make sure the user is logged in
-      if (!this.$parent.user.id) {
+      if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
 
-      // Initialize an array that will keep track of tasks for the new
+      // Initialize an array that will keep track of tasks of the new
       // hackathon's timeline
       var taskList = [];
 
+      this.hackathonId = this.$store.getters['hackathons/dbRef'].doc().id
+
       // Create a new task and add it to the tasks collection
-      this.$parent.db.collection('tasks').add({
+      const taskId1 = this.$store.getters['tasks/dbRef'].doc().id;
+      taskList.push(taskId1)
+      this.$store.dispatch('tasks/set', {
+        id: taskId1,
+        hackathon: this.hackathonId,
         title: "Swag: T-shirts",
         description: "Design and order t-shirts for the event.",
         tags: ["finance", "design"]
-      }).then((docRef) => {
-
-        // Push the new task id to the taskList
-        taskList.push(docRef.id);
-
-        // This is used to update the new task so it holds it's id
-        var updateTaskObj = {
-         id: docRef.id
-        }
-
-        this.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
-        .then(() => {
-         console.log(" Id added to task! Nice!")
-        }).catch(err => {
-         console.error("error: ", err);
-        })
-      }).catch((err) => {
-       console.error("Error initializing hackathon tasks: ", err);
+      }).catch(err => {
+        console.error("Error initializing task: ", err)
       })
 
-      // Repeat/add a second task (same process as above)
-      this.$parent.db.collection('tasks').add({
-        title: "Second Wave of Sponsor Emails",
+      // Repeat process
+      const taskId2 = this.$store.getters['tasks/dbRef'].doc().id;
+      taskList.push(taskId2)
+      this.$store.dispatch('tasks/set', {
+        id: taskId2,
+        hackathon: this.hackathonId,
+        title: "Second wave of sponsor emails",
         description: "Remind sponsors why you're worth it.",
         tags: ["promotion"]
-      }).then((docRef) => {
-        taskList.push(docRef.id);
-
-        // This is the only spot where taskList was correctly passed
-        this.addNewHackathon(taskList);
-
-        var updateTaskObj = {
-          id: docRef.id
-        }
-        this.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
-        .then(() => {
-          console.log(" Id added to task! Nice!")
-        }).catch(err => {
-          console.error("error: ", err);
-        })
-      }).catch((err) => {
-        console.error("Error initializing hackathon tasks: ", err);
+      }).catch(err => {
+        console.error("Error initializing task: ", err)
       })
+      this.addNewHackathon(taskList);
+      console.log(taskList, taskId1, taskId2)
     }
   },
   components: {
@@ -337,6 +260,23 @@ export default {
     ManageOrgModal,
     graph2d,
     TaskCircleDisplay,
+  },
+  computed: {
+    users() {
+      return this.$store.getters['users/storeRef']
+    },
+    currentUser() {
+      return this.users[`${this.$parent.userId}`]
+    },
+    orgs() {
+      return this.$store.getters['orgs/storeRef']
+    },
+    hackathons() {
+      return this.$store.getters['hackathons/storeRef']
+    },
+    tasks() {
+      return this.$store.getters['tasks/storeRef']
+    }
   }
 };
 </script>
@@ -436,7 +376,7 @@ export default {
       color: white;
     }
   }
-  
+
   .expanded-org {
     transition-duration: 1s;
     max-height: 500px;

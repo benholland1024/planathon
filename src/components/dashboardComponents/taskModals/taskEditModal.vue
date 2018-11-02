@@ -1,8 +1,10 @@
 <template>
   <transition name="modal">
     <div class="popup-background">
-      <div class="popup-wrapper">
-        <div class="popup-table purple-gradient" style="align: center">
+      <div class="popup-wrapper" @click="$parent.showEditModal = -1">
+        <!-- We use @click.stop on the next line to prevent showEditModal 
+        from being changed when clicking on the purple text -->
+        <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Edit Task</h2>
             <div style="display: flex">
               <div>
@@ -97,23 +99,24 @@
           updatedTags.push("design");
         }
 
-        var updateTaskObj = {
-         title: this.taskTitle,
-         description: this.taskDesc,
-         tags: updatedTags
-        }
-
-        this.$parent.$parent.$parent.$parent.db.collection('tasks').doc(this.task.id).update(updateTaskObj)
+        this.$store.dispatch('tasks/set', {[`${this.task.id}`]: {
+          title: this.taskTitle,
+          description: this.taskDesc,
+          tags: updatedTags
+        }})
         .then(() => {
-         console.log("Task saved! Nice!")
          this.task.title = this.taskTitle;
          this.task.description = this.taskDesc;
          this.task.tags = updatedTags;
-
-
+         this.$emit('close');
         }).catch(err => {
          console.error("error: ", err);
         })
+      }
+    },
+    computed: {
+      tasks() {
+        return this.$store.getters['tasks/storeRef']
       }
     }
   }

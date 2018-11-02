@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Home from './views/Onboarding/Landing.vue'
 import DoesNotExist from './views/notDone.vue'
 import notFound from './views/notFound.vue'
-import Vis from './views/Vis.vue'
 
 Vue.use(Router)
 
@@ -28,11 +27,6 @@ export default new Router({
       path: '/dne',
       name: 'doesNotExist',
       component: DoesNotExist
-    },
-    {
-      path: '/vis',
-      name: 'Vis',
-      component: Vis
     },
     {
       path: '/register',
