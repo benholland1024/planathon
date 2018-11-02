@@ -80,7 +80,7 @@ import DatePicker from 'vue2-datepicker';
           promotion: false,
           general: false,
           design: false,
-          development: false,
+          sponsors: false,
           finance: false,
         },
 
@@ -109,7 +109,7 @@ import DatePicker from 'vue2-datepicker';
         // Create an array to keep track of task tags
         var updatedTags = [];
         // List of all the tags you have to check:
-        const tagsToCheck = ['finance', 'development', 'promotion', 'design', 'general'];
+        const tagsToCheck = ['finance', 'sponsors', 'promotion', 'design', 'general'];
         // Iterate through all those tags, push their string to 
         // 'updatedTags' if the corresponding bool is true
         for (var i in tagsToCheck) {
@@ -118,7 +118,7 @@ import DatePicker from 'vue2-datepicker';
           }
         }
         // updatedTags should now be an array that looks similar to this:
-        // ['development', 'promotion', 'design']
+        // ['sponsors', 'promotion', 'design']
         
         // Manually generates a new id in tasks collection
         const taskId = this.$store.getters['tasks/dbRef'].doc().id;

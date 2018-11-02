@@ -25,7 +25,7 @@
 
   <h1 class="light-blue title" style="margin-bottom:10px;">Welcome Back!</h1>
   <task-circle-display
-  :tags="['finance', 'development', 'promotion', 'design', 'general']">
+  :tags="['finance', 'sponsors', 'promotion', 'design', 'general']">
   </task-circle-display><br>
 
   <div style="padding-bottom: 50px; z-index: 20;">
