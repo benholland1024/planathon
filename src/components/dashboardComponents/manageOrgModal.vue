@@ -49,31 +49,20 @@
     },
     mounted() {
       // Get the collaborator id's
-      this.$parent.$parent.db.collection('orgs').doc(this.orgId).get()
-      .then((docRef) => {
-        this.collabIds = docRef.data().collaborators;
+      this.collabIds = this.orgs[`${this.orgId}`].collaborators;
 
-        // Get the collaborator objects
-        for (var collabId in this.collabIds) {
-          this.$parent.$parent.db.collection('users').doc(this.collabIds[collabId]).get()
-          .then((docRef) => {
-            this.collabObjs.push({
-              id: docRef.data().id,
-              email: docRef.data().email
-            });
-          }).catch((err) => {
-            console.log("Error getting collaborator objects: ", err);
-          });
-        }
-
-      }).catch((err) => {
-        console.log("Error getting collaborator ids: ", err);
-      });
+      // Get the collaborator objects
+      for (var collabId in this.collabIds) {
+        this.collabObjs.push({
+          id: this.users[`${this.collabIds[collabId]}`].id,
+          email: this.users[`${this.collabIds[collabId]}`].email
+        });
+      }
     },
     methods: {
       getCollabIdToRemove() {
         // Make sure the user is an org collaborator
-        if (!this.collabIds.includes(this.$parent.$parent.user.id)) {
+        if (!this.collabIds.includes(this.$parent.$parent.userId)) {
           console.error("You must be an organization collaborator to remove collaborators.");
           return;
         }
@@ -82,39 +71,48 @@
         this.collabSelect.forEach((element) => {
 
           // Try to find the account matching the email (collabSelect will contain emails)
-          this.$parent.$parent.db.collection('users').where("email", "==", element).get()
-          .then((data) => {
-            if (data.empty == true) {
-              console.log("There is no account associated with this email.")
-              console.log("Please try again after an account has been made.");
+          this.$store.dispatch('users/fetch', {whereFilters: [['email', '==', element]]})
+          .then(querySnapshot => {
+            if (querySnapshot.empty == true) {
+              console.log("There is no account associated with this email.");
+              console.log("Please try again after an account has been made");
             }
             else {
-              this.removeCollaborator(data.docs[0].id);
+              this.removeCollaborator(querySnapshot.docs[0].id)
             }
           })
         })
       },
       removeCollaborator(collabIdToRemove) {
         // Get the user object for the collaborator being removed
-        this.$parent.$parent.db.collection('users').doc(collabIdToRemove).get()
-        .then((result) => {
-          var collabToRemove = result.data();
+        // this.$parent.$parent.db.collection('users').doc(collabIdToRemove).get()
+        // .then((result) => {
+        //   var collabToRemove = result.data();
 
-          // Remove the org from the user's orgs
-          var newOrgList = collabToRemove.orgs;
-          delete newOrgList[this.orgId];
+        //   // Remove the org from the user's orgs
+        //   var newOrgList = collabToRemove.orgs;
+        //   delete newOrgList[this.orgId];
 
-          var updateUserObj = {
-            orgs: newOrgList
-          }
+        //   var updateUserObj = {
+        //     orgs: newOrgList
+        //   }
 
-          this.$parent.$parent.db.collection('users').doc(collabToRemove.id).update(updateUserObj)
-          .then(() => {
-            console.log("Org removed from collaborator's orgs! Nice!")
-          }).catch(err => {
-            console.error("Error removing org from collaborator's orgs", err);
-          })
+        //   this.$parent.$parent.db.collection('users').doc(collabToRemove.id).update(updateUserObj)
+        //   .then(() => {
+        //     console.log("Org removed from collaborator's orgs! Nice!")
+        //   }).catch(err => {
+        //     console.error("Error removing org from collaborator's orgs", err);
+        //   })
+        var collabToRemove = this.users[`${collabIdToRemove}`]
 
+        // Remove the org from the user's orgs
+        var newOrgList = collabToRemove.orgs;
+        delete newOrgList[this.orgId];
+
+        this.$store.dispatch('users/set', {[`${collabIdToRemove}`]: {
+          orgs: newOrgList
+        }}).catch(err => {
+          console.error("Error removing org from collaborator's orgs", err)
         })
 
         // Remove the collaborator from the org's collaborators
@@ -122,16 +120,22 @@
         var indexOfCollab = newCollabList.indexOf(collabIdToRemove);
         if (indexOfCollab !== -1) newCollabList.splice(indexOfCollab, 1);
 
-        var updateOrgObj = {
+        this.$store.dispatch('orgs/set', {[`${this.orgId}`]: {
           collaborators: newCollabList
-        }
-
-        this.$parent.$parent.db.collection('orgs').doc(this.orgId).update(updateOrgObj)
-        .then(() => {
-          console.log("collaborator removed from org! Nice!")
-        }).catch(err => {
-          console.error("Error removing collaborator from org", err);
+        }}).catch(err => {
+          console.error("Error removing collaborator from org ", err)
         })
+
+        // var updateOrgObj = {
+        //   collaborators: newCollabList
+        // }
+
+        // this.$parent.$parent.db.collection('orgs').doc(this.orgId).update(updateOrgObj)
+        // .then(() => {
+        //   console.log("collaborator removed from org! Nice!")
+        // }).catch(err => {
+        //   console.error("Error removing collaborator from org", err);
+        // })
 
       },
       addCollaborator(newCollabId) {
@@ -254,6 +258,20 @@
         this.collabResults = this.collabObjs.filter((collabObj) => {
           return collabObj.email.toLowerCase().includes(this.collabSearch.toLowerCase());
         })
+      }
+    },
+    computed: {
+      users() {
+        return this.$store.getters['users/storeRef']
+      },
+      orgs() {
+        return this.$store.getters['orgs/storeRef']
+      },
+      tasks() {
+        return this.$store.getters['tasks/storeRef']
+      },
+      hackathons() {
+        return this.$store.getters['hackathons/storeRef']
       }
     }
   }
