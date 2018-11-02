@@ -15,7 +15,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import firebase from 'firebase';
-import { Sponsor } from './Sponsor';
+import { Sponsor, importSponsors } from './Sponsor';
 const Timestamp = firebase.firestore.Timestamp;
 
 export default Vue.extend({
@@ -38,11 +38,9 @@ export default Vue.extend({
 
             console.log(this.newSponsor)
 
-            let sponsor = Sponsor.createSponsor(
+            let sponsor = Sponsor(
                 'jkVV4jCvDWwAzx9OiAHn',
-                this.newSponsor.company,
-                this.newSponsor.contact.name,
-                this.newSponsor.contact.email
+                this.newSponsor.company
             );
 
             // Add the creator to the list of people 
@@ -56,7 +54,7 @@ export default Vue.extend({
         },
 
         testImport: async function() {
-            await Sponsor.importSponsors(
+            await importSponsors(
                 this.$parent.db,
                 'lFazEee7vhrO1oWg9r59',
                 'jkVV4jCvDWwAzx9OiAHn',

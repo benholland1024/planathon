@@ -13,7 +13,7 @@ export function Interaction() {
     }
 }
 
-export function Sponsor(eventId='', company='', contactName='', contactEmail='') {    
+export function Sponsor(eventId='', company='') {    
     return {
         hackathonId: eventId,
         company: company,

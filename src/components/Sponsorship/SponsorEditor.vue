@@ -1,6 +1,10 @@
 <template>
-    <form @submit.prevent="saveSponsor">
-        <label for="hackid" >HackID</label><input v-model="sponsor.hackathonId" id="hackid"/><br>
+<div>
+    <div class="header" @click="toggleExpand" >
+        <h1>{{ sponsor.company }}</h1>
+    </div>
+    <form @submit.prevent="saveSponsor" v-if="isExpanded">
+        <label for="hackid" >HackID</label><input v-model="sponsor.hackathonId" id="hackid" readonly/><br>
         <label for="company" >Company</label><input v-model="sponsor.company" id="company"/><br>
         <h3>Contacts</h3>
         <div v-for="contact in sponsor.contacts" 
@@ -23,13 +27,19 @@
         <input type="button" @click="watchThisSponsor" value="Watch" />
         <input type="submit" value="Save"/>
     </form>
+
+</div>
 </template>
 
 <script>
 import { Sponsor, Contact, Interaction } from './Sponsor'
 
 export default {
-
+    data() {
+        return {
+            isExpanded: false
+        }
+    },
     props: {
         sponsor: {
             type: Object,
@@ -52,12 +62,18 @@ export default {
             this.sponsor.watchers.push(
                 this.$parent.$parent.$parent.userId
             );
+        },
+        toggleExpand() {
+            this.isExpanded = !this.isExpanded;
         }
     }
 }
 </script>
 
 <style>
-
+.header {
+    height: 25px;
+    width: 100%;
+}
 </style>
 
