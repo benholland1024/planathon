@@ -15,7 +15,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import firebase from 'firebase';
-import Sponsor from './Sponsor';
+import { Sponsor } from './Sponsor';
 const Timestamp = firebase.firestore.Timestamp;
 
 export default Vue.extend({

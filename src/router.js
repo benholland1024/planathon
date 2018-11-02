@@ -28,16 +28,25 @@ export default new Router({
       name: 'doesNotExist',
       component: DoesNotExist
     },
+
     {
       path: '/register',
       name:'register',
       component: () => import('./components/Auth/Register.vue')
     },
+
     {
       path: '/login',
       name:'login',
       component: () => import('./components/Auth/Login.vue')
     },
+
+    {
+      path: '/new-hackathon',
+      name: 'new-hackathon',
+      component: () => import('./views/Onboarding/NewHackathon.vue')
+    },
+
     {
       path: '/dashboard/:hackathonId',
       name:'dashboard',
@@ -45,7 +54,7 @@ export default new Router({
       redirect: { name: 'finances' },
       children: [
         {
-          path: 'finance',
+          path: 'finances',
           component: () => import ('./components/dashboardComponents/Finances.vue'),
           name: 'finances',
           meta: { dash: true }
@@ -63,9 +72,9 @@ export default new Router({
           meta: { dash: true }
         },
         {
-          path: 'development',
-          component: () => import ('./components/dashboardComponents/Development.vue'),
-          name: 'development',
+          path: 'sponsors',
+          component: () => import ('./components/dashboardComponents/Sponsors.vue'),
+          name: 'sponsors',
           meta: { dash: true }
         },
         {
