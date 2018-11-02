@@ -1,8 +1,8 @@
 <template>
   <transition name="modal">
     <div class="popup-background">
-      <div class="popup-wrapper">
-        <div class="popup-table purple-gradient" style="align: center">
+      <div class="popup-wrapper" @click="$parent.showOrgModal = false">
+        <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Manage Organization</h2>
           <h3>Collaborators:</h3>
           <input type="text" v-model="collabSearch" v-on:input="getSearchResults">

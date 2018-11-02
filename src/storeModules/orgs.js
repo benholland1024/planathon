@@ -10,10 +10,11 @@ const orgsDataModule = {
       userOrgs: (state) => (userId) => {
         var userOrgs = []
         for (var key in state.docs) {
-          console.warn(key)
           //console.warn(state.docs[key])
           if (state.docs.hasOwnProperty(key)) {
             if (state.docs[key].collaborators.includes(userId)) {
+              console.log("User ID: ", userId);
+              console.log("Is it included? ", )
               userOrgs.push(state.docs[key])
             }
           }
@@ -21,8 +22,6 @@ const orgsDataModule = {
         return userOrgs
       }
     }
-    // you can also add state/getters/mutations/actions
-    // for other config like fillables see 'Extra features'
   }
 
 export default createEasyFirestore(orgsDataModule, {logging: true});

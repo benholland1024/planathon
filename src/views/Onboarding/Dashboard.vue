@@ -1,5 +1,5 @@
 <template>
-  <div id="dashboard" v-if="$parent.user">
+  <div id="dashboard" v-if="$parent.user && this.hackathon">
 
   <div id="dash-nav">
     <div style="text-align:left">
@@ -28,11 +28,11 @@
           >Finances
         </router-link>
         <router-link class="catagory-tab orange" tag="div"
-          :to="{ name: 'development', params: {
+          :to="{ name: 'sponsors', params: {
             hackathon: hackathon
           } }"
           active-class="underlined"
-          >Development
+          >Sponsors
         </router-link>
         <router-link class="catagory-tab pink" tag="div"
           :to="{ name: 'promotion', params: {
@@ -89,6 +89,10 @@
   <div v-else>
     <div id="calendar"></div>
   </div>
+
+  <div id="dashboard" v-else-if="$parent.user">
+    <h1>Loading...</h1>
+  </div>
 </template>
 
 <script>
@@ -101,17 +105,10 @@ export default {
   data() {
     return {
       timeline: [],
-      taskId: '',
-      hackathonTasks: [],
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.hackathon.timeline.forEach((id) => {
-        this.taskId = id;
-        this.hackathonTasks.push(this.task);
-      });
-    }, 1000);
+
   },
   components: {
     LineGraph,
@@ -120,7 +117,7 @@ export default {
   },
   computed: {
     tasks() {
-      return this.$store.getters['tasks/storeRef']
+      return this.$store.getters['tasks/hackathonTasks'](this.hackathon.id)
     },
     task() {
       return this.tasks[`${this.taskId}`]
