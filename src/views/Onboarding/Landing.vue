@@ -234,7 +234,8 @@ export default {
         hackathon: this.hackathonId,
         title: "Swag: T-shirts",
         description: "Design and order t-shirts for the event.",
-        tags: ["finance", "design"]
+        tags: ["finance", "design"], 
+        daysBefore: 60,
       }).catch(err => {
         console.error("Error initializing task: ", err)
       })
@@ -247,7 +248,8 @@ export default {
         hackathon: this.hackathonId,
         title: "Second wave of sponsor emails",
         description: "Remind sponsors why you're worth it.",
-        tags: ["promotion"]
+        tags: ["promotion"],
+        daysBefore: 90,
       }).catch(err => {
         console.error("Error initializing task: ", err)
       })

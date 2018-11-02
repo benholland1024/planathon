@@ -19,16 +19,36 @@
               <div>
                 <p>Catagory:</p>
                 <div class="tag-picker">
-                  <input type="checkbox" v-model="tags.promotion">
-                  <label for="checkbox">  Promotion</label><br>
-                  <input type="checkbox" v-model="tags.general">
-                  <label for="checkbox">  General</label><br>
-                  <input type="checkbox" v-model="tags.development">
-                  <label for="checkbox">  Dev</label><br>
-                  <input type="checkbox" v-model="tags.finance">
-                  <label for="checkbox">  Finance</label><br>
-                  <input type="checkbox" v-model="tags.design">
-                  <label for="checkbox">  Design</label><br>
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.finance"
+                      color="#FFE16E"/>
+                    <label for="checkbox">  Finance</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.sponsors"
+                      color="#FF9A6E"/>
+                    <label for="checkbox">  Sponsors</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.promotion"
+                      color="#FF6EE0"/>
+                    <label for="checkbox">  Promotion</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.design"
+                      color="#BA68FF"/>
+                    <label for="checkbox">  Design</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.general"
+                      color="#7A8FFF"/>
+                    <label for="checkbox">  General</label>
+                  </div>
+
                 </div>
                 <p>Deadline:</p>
                 <date-picker v-model="date" :first-day-of-week="1"
@@ -36,8 +56,10 @@
               </div>
               
             </div><br><br>
-            <button class="material-button-large" @click="saveTask()">Save</button><br><br>
-            <button class="material-button-large" @click="$emit('close')">Close</button>
+            <div>
+              <button class="material-button-large" @click="saveTask()">Add</button>
+              <button class="material-button-large" @click="$emit('close')">Back</button>
+            </div>
           </div>
         </div>
       </div>
@@ -149,6 +171,7 @@ import DatePicker from 'vue2-datepicker';
   .material-button-large {
     background: $gray;
     color: white;
+    margin: 0px 10px;
   }
   .tag-picker {
     background: $gray;
@@ -171,5 +194,14 @@ import DatePicker from 'vue2-datepicker';
 <style>
 .mx-calendar-icon {
   display: none;
+}
+.tag-toggle {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.v-switch-core {
+  transform: scale(.7);
 }
 </style>

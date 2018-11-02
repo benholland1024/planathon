@@ -11,6 +11,11 @@ import * as firebase from 'firebase';
 import VueFire from 'vuefire';
 import Vue from 'vue';
 
+// Fancy switches for textboxes 😛
+import ToggleButton from 'vue-js-toggle-button'
+Vue.use(ToggleButton)
+
+
 import MenuBar from '@/components/MenuBars/LandingMenuBar.vue';
 
 firebase.initializeApp(config);
@@ -146,7 +151,7 @@ export default {
   .finance {
     background-color: $yellow;
   }
-  .development {
+  .sponsors {
     background-color: $orange;
   }
   .promotion {

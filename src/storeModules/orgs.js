@@ -22,8 +22,6 @@ const orgsDataModule = {
         return userOrgs
       }
     }
-    // you can also add state/getters/mutations/actions
-    // for other config like fillables see 'Extra features'
   }
 
 export default createEasyFirestore(orgsDataModule, {logging: true});
