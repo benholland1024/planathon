@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="sponsor-editview">
     <div class="header" @click="toggleExpand" >
         <h1>{{ sponsor.company }}</h1>
     </div>
@@ -72,8 +72,11 @@ export default {
 
 <style>
 .header {
-    height: 25px;
     width: 100%;
+}
+.sponsor-editview {
+    margin:5px;
+    border: 2px solid grey;
 }
 </style>
 
