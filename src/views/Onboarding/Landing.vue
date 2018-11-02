@@ -24,7 +24,7 @@
   <img src="@/assets/low_poly_spike_bg.svg" id="bg-spikes">
 
   <h1 class="light-blue title" style="margin-bottom:10px;">Welcome Back!</h1>
-  <task-circle-display 
+  <task-circle-display
   :tags="['finance', 'development', 'promotion', 'design', 'general']">
   </task-circle-display><br>
 
@@ -210,7 +210,7 @@ export default {
         while (this.$parent.userOrgs[0])
           this.$parent.userOrgs.pop();
 
-        this.$parent.loadOrgs();
+        //this.$parent.loadOrgs();
         this.hackathonInput = false;
         this.hackathonName = '';
       })
@@ -378,7 +378,7 @@ export default {
       color: white;
     }
   }
-  
+
   .expanded-org {
     transition-duration: 1s;
     max-height: 500px;

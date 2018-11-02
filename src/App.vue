@@ -24,7 +24,6 @@ export default {
       userId: '',
       db: db,
       user: null,
-      userOrgs: [],
       loadingUser: true,
       org: null,
       hackathon: null
@@ -68,7 +67,7 @@ export default {
         this.userId = user.uid;
         this.user = true;
         setTimeout(() => {
-          this.loadOrgs();
+          //this.loadOrgs();
           this.user = this.currentUser;
         }, 1000)
         this.loggedIn = true;
@@ -89,6 +88,9 @@ export default {
     },
     orgs() {
       return this.$store.getters['orgs/storeRef']
+    },
+    userOrgs() {
+      return this.$store.getters['orgs/userOrgs']('Hbd4Tr0wZtbsFnWvAw3GgUeexKo2')
     },
     hackathons() {
       return this.$store.getters['hackathons/storeRef']
@@ -188,7 +190,7 @@ export default {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    
+
   }
   .hover-shine {
     position: relative;
@@ -230,7 +232,7 @@ export default {
     color: white;
     background: $light-gray;
   }
-  
+
 
 /*  --------------- */
 /*  POPUP STYLING: */
