@@ -6,17 +6,18 @@
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Add Task</h2>
-            <div style="display: flex">
+            <div class="task-options">
               <div>
                 <p>Title:</p>
                 <input v-model="taskTitle" type="text" class="auth-textbox"
                       @keyup.enter=""/><br>
                 <p>Description:</p>
-                <input v-model="taskDesc" type="text" class="auth-textbox"
+                <textarea v-model="taskDesc" type="text" class="auth-textbox"
                       @keyup.enter=""/>
               </div>
 
               <div>
+                <p>Catagory:</p>
                 <div class="tag-picker">
                   <input type="checkbox" v-model="tags.promotion">
                   <label for="checkbox">  Promotion</label><br>
@@ -29,6 +30,7 @@
                   <input type="checkbox" v-model="tags.design">
                   <label for="checkbox">  Design</label><br>
                 </div>
+                <p>Deadline:</p>
                 <date-picker v-model="date" :first-day-of-week="1"
                 lang="en"></date-picker>
               </div>
@@ -144,9 +146,30 @@ import DatePicker from 'vue2-datepicker';
 <style scoped lang="scss">
 @import '@/GlobalVars.scss';
 
-/*  Note that this only applies to this page's material button: */
   .material-button-large {
     background: $gray;
     color: white;
   }
+  .tag-picker {
+    background: $gray;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: right;
+  }
+  .task-options {
+    display: flex;
+    justify-content: space-between;
+  }
+  .popup-table {
+    min-width: 450px;
+  }
+  .auth-textbox {
+    resize: none;
+  }
+</style>
+
+<style>
+.mx-calendar-icon {
+  display: none;
+}
 </style>

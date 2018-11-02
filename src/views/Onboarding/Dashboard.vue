@@ -1,5 +1,5 @@
 <template>
-  <div id="dashboard" v-if="$parent.user">
+  <div id="dashboard" v-if="$parent.user && this.hackathon">
 
   <div id="dash-nav">
     <div style="text-align:left">
@@ -88,6 +88,10 @@
   </div>
   <div v-else>
     <div id="calendar"></div>
+  </div>
+
+  <div id="dashboard" v-else-if="$parent.user">
+    <h1>Loading...</h1>
   </div>
 </template>
 
