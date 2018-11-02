@@ -68,7 +68,7 @@ export default {
         this.user = true;
         setTimeout(() => {
           //this.loadOrgs();
-          this.user = this.currentUser;
+          // this.user = this.currentUser;
         }, 1000)
         this.loggedIn = true;
         this.loginModule = false;
@@ -90,7 +90,7 @@ export default {
       return this.$store.getters['orgs/storeRef']
     },
     userOrgs() {
-      return this.$store.getters['orgs/userOrgs']('Hbd4Tr0wZtbsFnWvAw3GgUeexKo2')
+      return this.$store.getters['orgs/userOrgs'](this.userId)
     },
     hackathons() {
       return this.$store.getters['hackathons/storeRef']

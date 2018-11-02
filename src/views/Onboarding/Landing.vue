@@ -136,7 +136,8 @@ export default {
 
           // Create a new org and add it to the orgs collection
           var collabsList = [];
-          collabsList.push(this.currentUser.id);
+
+          collabsList.push(this.$parent.userId);
           const orgId = this.$store.getters['orgs/dbRef'].doc().id;
           this.$store.dispatch('orgs/insert', {
             id: orgId,
@@ -151,8 +152,8 @@ export default {
           var updateObj = {
             orgs: {}
           }
-          if (this.currentUser.orgs) {
-            updateObj.orgs = this.currentUser.orgs;
+          if (this.users[this.$parent.userId] && this.users[this.$parent.userId].orgs) {
+            updateObj.orgs = this.users[this.$parent.userId].orgs;
           }
           updateObj.orgs[orgId] = {
             role: 'admin'
@@ -164,9 +165,6 @@ export default {
             console.error("Problem updating user org list: ", err)
           })
 
-          // Updating org list populating screen
-          this.$parent.userOrgs.push(this.orgs[`${orgId}`]);
-          this.orgName = '';
         } else {
           alert("Sorry, organization: " + this.orgName + " is already in use");
         }
