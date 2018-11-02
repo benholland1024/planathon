@@ -34,6 +34,7 @@
     data() {
       return {
         showOrgModal: false,
+        hackathonId: '',
         collabIds: [],
         collabObjs: [],
         collabSearch: '',
@@ -84,30 +85,14 @@
         })
       },
       removeCollaborator(collabIdToRemove) {
+        // TODO: check if there is at least one collab in an org
         // Get the user object for the collaborator being removed
-        // this.$parent.$parent.db.collection('users').doc(collabIdToRemove).get()
-        // .then((result) => {
-        //   var collabToRemove = result.data();
-
-        //   // Remove the org from the user's orgs
-        //   var newOrgList = collabToRemove.orgs;
-        //   delete newOrgList[this.orgId];
-
-        //   var updateUserObj = {
-        //     orgs: newOrgList
-        //   }
-
-        //   this.$parent.$parent.db.collection('users').doc(collabToRemove.id).update(updateUserObj)
-        //   .then(() => {
-        //     console.log("Org removed from collaborator's orgs! Nice!")
-        //   }).catch(err => {
-        //     console.error("Error removing org from collaborator's orgs", err);
-        //   })
         var collabToRemove = this.users[`${collabIdToRemove}`]
 
         // Remove the org from the user's orgs
         var newOrgList = collabToRemove.orgs;
         delete newOrgList[this.orgId];
+        console.log(this.orgId, newOrgList)
 
         this.$store.dispatch('users/set', {[`${collabIdToRemove}`]: {
           orgs: newOrgList
@@ -125,74 +110,57 @@
         }}).catch(err => {
           console.error("Error removing collaborator from org ", err)
         })
-
-        // var updateOrgObj = {
-        //   collaborators: newCollabList
-        // }
-
-        // this.$parent.$parent.db.collection('orgs').doc(this.orgId).update(updateOrgObj)
-        // .then(() => {
-        //   console.log("collaborator removed from org! Nice!")
-        // }).catch(err => {
-        //   console.error("Error removing collaborator from org", err);
-        // })
-
       },
       addCollaborator(newCollabId) {
+        // TODO: add check to see if user is already a collab
         // Will need some sort of if statement here (if no results found...)
-        this.$parent.$parent.db.collection('users').doc(newCollabId).get()
-        .then((result) => {
-          var newCollab = result.data();
+        var newCollab = this.users[`${newCollabId}`];
 
-          // Used to update the new collaborator's list of orgs
-          var updateUserObj = {
-            orgs: {}
-          }
-          if (newCollab.orgs) {
-            updateUserObj.orgs = newCollab.orgs;
-          }
-          updateUserObj.orgs[this.orgId] = {
-            role: 'collaborator'
-          }
-          this.$parent.$parent.db.collection('users').doc(newCollab.id).update(updateUserObj)
-          .then(() => {
-            console.log("Org added to new collaborator's orgs! Nice!")
-          }).catch(err => {
-            console.error("Error adding org to new collaborator's orgs", err);
-          })
+        // Used to update the new collaborator's list of orgs
+        var updateUserObj = {
+          orgs: {}
+        }
+        if (newCollab.orgs) {
+          updateUserObj.orgs = newCollab.orgs;
+        }
+        updateUserObj.orgs[this.orgId] = {
+          role: 'collaborator'
+        }
 
-          // Used to update the org's list of collaborators
-          var newCollabList = this.collabIds;
-          newCollabList.push(newCollab.id);
-          var updateOrgObj = {
-            collaborators: newCollabList
-          }
+        this.$store.dispatch('users/set', {[`${newCollab.id}`]: {
+          orgs: updateUserObj.orgs
+        }}).catch(err => {
+          console.error("Error adding org to new collab's orgs ", err)
+        })
 
-          this.$parent.$parent.db.collection('orgs').doc(this.orgId).update(updateOrgObj)
-          .then(() => {
-            console.log("Collaborator added to org! Nice!")
-            this.collabObjs.push(newCollab);
-          }).catch(err => {
-            console.error("Error adding collaborator to org", err);
-          })
+        // Used to update the org's list of collaborators
+        var newCollabList = this.collabIds;
+        newCollabList.push(newCollab.id);
+
+        this.$store.dispatch('orgs/set', {[`${this.orgId}`]: {
+          collaborators: newCollabList
+        }}).then(() => {
+          this.collabObjs.push(newCollab)
+        }).catch(err => {
+          console.error("Error adding collaborator to org ", err)
         })
       },
       getNewCollabId() {
         // Make sure the user is an org collaborator
-        if (!this.collabIds.includes(this.$parent.$parent.user.id)) {
+        if (!this.collabIds.includes(this.$parent.$parent.userId)) {
           console.error("You must be an organization collaborator to add collaborators.");
           return;
         }
 
         // Try to find the account matching the email
-        this.$parent.$parent.db.collection('users').where("email", "==", this.collabSearch).get()
-        .then((data) => {
-          if (data.empty == true) {
+        this.$store.dispatch('users/fetch', {whereFilters: [['email', '==', this.collabSearch]]})
+        .then((querySnapshot) => {
+          if (querySnapshot.empty == true) {
             console.log("There is no account associated with this email.")
-            console.log("Please try again after an account has been made.");
+            console.log("Please try again after an account has been made.")
           }
           else {
-            this.addCollaborator(data.docs[0].id);
+            this.addCollaborator(querySnapshot.docs[0].id);
           }
         })
       },
@@ -215,6 +183,7 @@
           //If org has hackathons, delete all of them from firebase
           if (response.data().hackathons != undefined) {
             for (var id in response.data().hackathons) {
+              this.hackathonId = id;
               this.$parent.$parent.db.collection('hackathons').doc(id).delete()
               .then(() => {
                 console.log(id, "deleted successfully");
@@ -269,6 +238,9 @@
       },
       tasks() {
         return this.$store.getters['tasks/storeRef']
+      },
+      hackathonTasks() {
+        return this.$store.getters['tasks/hackathonTasks'](this.hackathonId)
       },
       hackathons() {
         return this.$store.getters['hackathons/storeRef']
