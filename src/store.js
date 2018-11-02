@@ -5,7 +5,6 @@ import orgs from './storeModules/orgs.js';
 import hackathons from './storeModules/hackathons.js';
 import tasks from './storeModules/tasks.js';
 import sponsors from './storeModules/sponsors.js';
-import sponsorship from './storeModules/sponsorship.js';
 
 Vue.use(Vuex)
 
@@ -16,7 +15,6 @@ export default new Vuex.Store({
     hackathons,
     tasks,
     sponsors,
-    sponsorship
   ],
   state: {
 
