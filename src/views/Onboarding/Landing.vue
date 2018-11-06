@@ -94,7 +94,7 @@ export default {
   name: 'Landing',
   data() {
     return {
-      start: '2014-06-11',
+      start: '2014-06-10',
       end: '2014-06-20',
       items: [
         {x: '2014-06-11', y: 10},

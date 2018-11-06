@@ -92,6 +92,21 @@ export default new Router({
       ]
     },
     {
+      path: '/fundingburndown',
+      name: 'FundingBurndown',
+      component: () => import('./components/Sponsorship/FundingBurndown.vue')
+    },
+    {
+      path: '/contacttracker',
+      name: 'ContactTracker',
+      component: () => import('./components/Sponsorship/ContactTracker.vue')
+    },
+    {
+      path: '/sponsorship/:hackathonId',
+      name: 'SponsorshipDashboard',
+      component: () => import('./views/Sponsorship.vue')
+    },
+    {
       path: '*',
       redirect: '/404'
     },
