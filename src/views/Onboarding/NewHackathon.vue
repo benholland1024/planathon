@@ -95,6 +95,8 @@ export default {
         id: this.hackathonId,
         name: this.name,
         org: this.orgId,
+        date: this.date,
+        attendance: this.attendance,
         timeline: taskList
       })
 
@@ -120,7 +122,12 @@ export default {
         //this.$parent.loadOrgs();
         this.hackathonInput = false;
         this.hackathonName = '';
-        this.$router.push('/')
+        this.$router.push({
+          name: 'dashboard',
+          params: {
+            hackathonId: this.hackathonId
+          }
+        })
       })
     },
   }

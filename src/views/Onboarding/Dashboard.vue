@@ -3,7 +3,7 @@
 
   <div id="dash-nav">
     <div style="text-align:left">
-      <h2>{{ this.hackathon.name }} - 127 Days Left</h2>
+      <h2>{{ hackathon.name }} - {{daysCountDown}} Days Left</h2>
       <h4>Keep up the good work!</h4>
     </div>
     <div style="display: flex;align-items: center;">
@@ -100,11 +100,14 @@ import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Tasks from '@/components/dashboardComponents/tasks.vue';
 
+import { dateDiffInDays } from '@/utils.js';
+
 export default {
   name: 'dashboard',
   data() {
     return {
       timeline: [],
+      today: new Date(),
     }
   },
   mounted() {
@@ -127,6 +130,20 @@ export default {
     },
     hackathon() {
       return this.hackathons[`${this.$route.params.hackathonId}`]
+    },
+
+    // Calculating data for the sidebar calendar: 
+    weeklyCalendar() {
+      return []
+    },
+    daysCountDown() {
+      if (typeof this.today.getMonth !== 'function') {
+        return false;
+      }
+      if (typeof this.hackathon.date.toDate().getMonth !== 'function') {
+        return false;
+      }
+      return dateDiffInDays(this.today, this.hackathon.date.toDate())
     }
   }
 }
