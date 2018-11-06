@@ -8,5 +8,12 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  mounted() {
+    this.$store.dispatch('users/openDBChannel')
+    this.$store.dispatch('orgs/openDBChannel')
+    this.$store.dispatch('hackathons/openDBChannel')
+    this.$store.dispatch('tasks/openDBChannel')
+    this.$store.dispatch('sponsors/openDBChannel')
+  }
 }).$mount('#app')

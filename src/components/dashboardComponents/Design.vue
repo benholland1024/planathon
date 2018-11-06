@@ -1,7 +1,7 @@
 <template>
   <div class="widget-holder">
     <div class="dark-widget">
-        <h1>DESIGN!</h1>
+        <h1>Design!</h1>
     </div>
     <div class="dark-widget">
     </div>

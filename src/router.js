@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Home from './views/Onboarding/Landing.vue'
 import DoesNotExist from './views/notDone.vue'
 import notFound from './views/notFound.vue'
-import Vis from './views/Vis.vue'
 
 Vue.use(Router)
 
@@ -29,21 +28,25 @@ export default new Router({
       name: 'doesNotExist',
       component: DoesNotExist
     },
-    {
-      path: '/vis',
-      name: 'Vis',
-      component: Vis
-    },
+
     {
       path: '/register',
       name:'register',
       component: () => import('./components/Auth/Register.vue')
     },
+
     {
       path: '/login',
       name:'login',
       component: () => import('./components/Auth/Login.vue')
     },
+
+    {
+      path: '/new-hackathon',
+      name: 'new-hackathon',
+      component: () => import('./views/Onboarding/NewHackathon.vue')
+    },
+
     {
       path: '/dashboard/:hackathonId',
       name:'dashboard',
@@ -51,7 +54,7 @@ export default new Router({
       redirect: { name: 'finances' },
       children: [
         {
-          path: 'finance',
+          path: 'finances',
           component: () => import ('./components/dashboardComponents/Finances.vue'),
           name: 'finances',
           meta: { dash: true }
@@ -69,9 +72,9 @@ export default new Router({
           meta: { dash: true }
         },
         {
-          path: 'development',
-          component: () => import ('./components/dashboardComponents/Development.vue'),
-          name: 'development',
+          path: 'sponsors',
+          component: () => import ('./components/dashboardComponents/Sponsors.vue'),
+          name: 'sponsors',
           meta: { dash: true }
         },
         {
@@ -87,6 +90,21 @@ export default new Router({
           meta: { dash: true }
         }
       ]
+    },
+    {
+      path: '/fundingburndown',
+      name: 'FundingBurndown',
+      component: () => import('./components/Sponsorship/FundingBurndown.vue')
+    },
+    {
+      path: '/contacttracker',
+      name: 'ContactTracker',
+      component: () => import('./components/Sponsorship/ContactTracker.vue')
+    },
+    {
+      path: '/sponsorship/:hackathonId',
+      name: 'SponsorshipDashboard',
+      component: () => import('./views/Sponsorship.vue')
     },
     {
       path: '*',

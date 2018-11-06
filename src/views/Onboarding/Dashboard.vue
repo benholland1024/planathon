@@ -1,9 +1,9 @@
 <template>
-  <div id="dashboard" v-if="$parent.user">
+  <div id="dashboard" v-if="$parent.user && this.hackathon">
 
   <div id="dash-nav">
     <div style="text-align:left">
-      <h2>{{ this.currentHackathon.name }} - 127 Days Left</h2>
+      <h2>{{ this.hackathon.name }} - 127 Days Left</h2>
       <h4>Keep up the good work!</h4>
     </div>
     <div style="display: flex;align-items: center;">
@@ -22,42 +22,42 @@
       <div class="light-gray">Update me on: </div>
         <router-link class="catagory-tab yellow" tag="div"
           :to="{ name: 'finances', params: {
-            hackathonId: hackathonId
+            hackathon: hackathon
           } }"
           active-class="underlined"
           >Finances
         </router-link>
         <router-link class="catagory-tab orange" tag="div"
-          :to="{ name: 'development', params: {
-            hackathonId: hackathonId
+          :to="{ name: 'sponsors', params: {
+            hackathon: hackathon
           } }"
           active-class="underlined"
-          >Development
+          >Sponsors
         </router-link>
         <router-link class="catagory-tab pink" tag="div"
           :to="{ name: 'promotion', params: {
-            hackathonId: hackathonId
+            hackathon: hackathon
           } }"
           active-class="underlined"
           >Promotion
         </router-link>
         <router-link class="catagory-tab purple" tag="div"
           :to="{ name: 'design', params: {
-            hackathonId: hackathonId
+            hackathon: hackathon
           } }"
           active-class="underlined"
           >Design
         </router-link>
         <router-link class="catagory-tab blue" tag="div"
           :to="{ name: 'general', params: {
-            hackathonId: hackathonId
+            hackathon: hackathon
           } }"
           active-class="underlined"
           >General Logistics
         </router-link>
         <router-link class="catagory-tab" tag="div"
           :to="{ name: 'all', params: {
-            hackathonId: hackathonId
+            hackathon: hackathon
           } }"
           active-class="underlined"
           >All
@@ -89,6 +89,10 @@
   <div v-else>
     <div id="calendar"></div>
   </div>
+
+  <div id="dashboard" v-else-if="$parent.user">
+    <h1>Loading...</h1>
+  </div>
 </template>
 
 <script>
@@ -100,36 +104,30 @@ export default {
   name: 'dashboard',
   data() {
     return {
-      hackathonId: this.$route.params.hackathonId,
       timeline: [],
-      hackathonTasks: [],
-
-      currentHackathon: {},
     }
   },
   mounted() {
-    // Get the timeline for the hackathon
-    this.$parent.db.collection('hackathons').doc(this.hackathonId).get().then((doc) => {
-      this.timeline = doc.data().timeline;
-      this.currentHackathon = doc.data();
 
-      // For each task id in the timeline, get the actual task object
-      // and put the tasks in hackathonTasks
-      this.timeline.forEach((task) => {
-        this.$parent.db.collection('tasks').doc(task).get().then((doc) => {
-          this.hackathonTasks.push(doc.data());
-        }).catch((err) => {
-          console.error("Error getting the hackathon's tasks: ", err);
-        })
-      })
-    }).catch((err) => {
-      console.error("Error getting the hackathon's timeline: ", err);
-    })
   },
   components: {
     LineGraph,
     PolarGraph,
     Tasks
+  },
+  computed: {
+    tasks() {
+      return this.$store.getters['tasks/hackathonTasks'](this.hackathon.id)
+    },
+    task() {
+      return this.tasks[`${this.taskId}`]
+    },
+    hackathons() {
+      return this.$store.getters['hackathons/storeRef']
+    },
+    hackathon() {
+      return this.hackathons[`${this.$route.params.hackathonId}`]
+    }
   }
 }
 </script>

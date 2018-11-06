@@ -1,34 +1,65 @@
 <template>
   <transition name="modal">
     <div class="popup-background">
-      <div class="popup-wrapper">
-        <div class="popup-table purple-gradient" style="align: center">
+      <div class="popup-wrapper"  @click="$parent.showAddModal = false">
+        <!-- We use @click.stop on the next line to prevent showAddModal 
+        from being changed when clicking on the purple text -->
+        <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Add Task</h2>
-            <div style="display: flex">
+            <div class="task-options">
               <div>
                 <p>Title:</p>
                 <input v-model="taskTitle" type="text" class="auth-textbox"
                       @keyup.enter=""/><br>
                 <p>Description:</p>
-                <input v-model="taskDesc" type="text" class="auth-textbox"
+                <textarea v-model="taskDesc" type="text" class="auth-textbox"
                       @keyup.enter=""/>
               </div>
+
               <div>
-                <p>Tags:</p>
-                <input type="checkbox" v-model="promotion">
-                <label for="checkbox">  Promotion</label><br>
-                <input type="checkbox" v-model="general">
-                <label for="checkbox">  General</label><br>
-                <input type="checkbox" v-model="dev">
-                <label for="checkbox">  Dev</label><br>
-                <input type="checkbox" v-model="finance">
-                <label for="checkbox">  Finance</label><br>
-                <input type="checkbox" v-model="design">
-                <label for="checkbox">  Design</label><br>
+                <p>Catagory:</p>
+                <div class="tag-picker">
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.finance"
+                      color="#FFE16E"/>
+                    <label for="checkbox">  Finance</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.sponsors"
+                      color="#FF9A6E"/>
+                    <label for="checkbox">  Sponsors</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.promotion"
+                      color="#FF6EE0"/>
+                    <label for="checkbox">  Promotion</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.design"
+                      color="#BA68FF"/>
+                    <label for="checkbox">  Design</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.general"
+                      color="#7A8FFF"/>
+                    <label for="checkbox">  General</label>
+                  </div>
+
+                </div>
+                <p>Deadline:</p>
+                <date-picker v-model="date" :first-day-of-week="1"
+                lang="en"></date-picker>
               </div>
+              
             </div><br><br>
-            <button class="material-button-large" @click="saveTask()">Save</button><br><br>
-            <button class="material-button-large" @click="$emit('close')">Close</button>
+            <div>
+              <button class="material-button-large" @click="saveTask()">Add</button>
+              <button class="material-button-large" @click="$emit('close')">Back</button>
+            </div>
           </div>
         </div>
       </div>
@@ -37,93 +68,98 @@
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker';
+
   export default {
     data() {
       return {
         showAddModal: false,
         taskTitle: '',
         taskDesc: '',
-        promotion: false,
-        general: false,
-        design: false,
-        dev: false,
-        finance: false
+        tags: {
+          promotion: false,
+          general: false,
+          design: false,
+          sponsors: false,
+          finance: false,
+        },
+
+        date: new Date()
       }
     },
+
+    components: {
+      DatePicker
+    },
+
     props: {
-      timeline: {
-        type: Array,
-        required: true
-      },
       hackathonId: {
         type: String,
         required: true
       }
     },
+
     mounted() {
 
     },
+
     methods: {
       saveTask() {
 
         // Create an array to keep track of task tags
         var updatedTags = [];
-        if (this.promotion) {
-          updatedTags.push("promotion");
+        // List of all the tags you have to check:
+        const tagsToCheck = ['finance', 'sponsors', 'promotion', 'design', 'general'];
+        // Iterate through all those tags, push their string to 
+        // 'updatedTags' if the corresponding bool is true
+        for (var i in tagsToCheck) {
+          if (this.tags[tagsToCheck[i]]) {
+            updatedTags.push(tagsToCheck[i])
+          }
         }
-        if (this.finance) {
-          updatedTags.push("finance");
-        }
-        if (this.general) {
-          updatedTags.push("general");
-        }
-        if (this.dev) {
-          updatedTags.push("development");
-        }
-        if (this.design) {
-          updatedTags.push("design");
-        }
+        // updatedTags should now be an array that looks similar to this:
+        // ['sponsors', 'promotion', 'design']
+        
+        // Manually generates a new id in tasks collection
+        const taskId = this.$store.getters['tasks/dbRef'].doc().id;
 
         // Create and add the new task
-        this.$parent.$parent.$parent.$parent.db.collection('tasks').add({
+        this.$store.dispatch('tasks/insert', {
+          id: taskId,
           title: this.taskTitle,
           description: this.taskDesc,
           tags: updatedTags,
           hackathon: this.hackathonId
         })
-        .then((docRef) => {
-          console.log("Task saved! Nice!")
-
-          // This is used to update the new task to hold it's id
-          var updateTaskObj = {
-            id: docRef.id
-          }
-
-          // Update the new task
-          this.$parent.$parent.$parent.$parent.db.collection('tasks').doc(docRef.id).update(updateTaskObj)
-          .then(() => {
-            console.log(" Id added to task! Nice!")
-          }).catch(err => {
-            console.error("error: ", err);
-          })
-
-          // This is used to update the hackathon to include the new task
-          var newTimeline = this.timeline;
-          newTimeline.push(docRef.id);
-          var updateHackObj = {
-            timeline: newTimeline
-          }
-
-          this.$parent.$parent.$parent.$parent.db.collection('hackathons').doc(this.hackathonId).update(updateHackObj)
-          .then(() => {
-            console.log(" Id added to task! Nice!")
-          }).catch(err => {
-            console.error("error: ", err);
-          })
-
-        }).catch(err => {
-          console.error("error: ", err);
+        .catch(err => {
+          console.error("Oops: ", err)
         })
+
+        // This is used to update the hackathon to include the new task
+        var newTimeline = this.hackathon.timeline;
+        newTimeline.push(taskId);
+
+        // Updates the hackathon specified by hackathonId
+        this.$store.dispatch('hackathons/set', {[`${this.hackathonId}`]: {timeline: newTimeline}})
+        .then(() => {
+          this.$emit('close')
+        })
+        .catch(err => {
+          console.error("Whoops: ", err)
+        })
+      }
+    },
+
+    computed: {
+      tasks() {
+        return this.$store.getters['tasks/storeRef']
+      },
+      hackathons() {
+        return this.$store.getters['hackathons/storeRef']
+      },
+      hackathon() {
+        var id = this.hackathonId;
+        return this.hackathons[id]
       }
     }
   }
@@ -132,9 +168,40 @@
 <style scoped lang="scss">
 @import '@/GlobalVars.scss';
 
-/*  Note that this only applies to this page's material button: */
   .material-button-large {
     background: $gray;
     color: white;
+    margin: 0px 10px;
   }
+  .tag-picker {
+    background: $gray;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: right;
+  }
+  .task-options {
+    display: flex;
+    justify-content: space-between;
+  }
+  .popup-table {
+    min-width: 450px;
+  }
+  .auth-textbox {
+    resize: none;
+  }
+</style>
+
+<style>
+.mx-calendar-icon {
+  display: none;
+}
+.tag-toggle {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.v-switch-core {
+  transform: scale(.7);
+}
 </style>
