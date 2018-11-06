@@ -9,11 +9,9 @@
             <div class="task-options">
               <div>
                 <p>Title:</p>
-                <input v-model="taskTitle" type="text" class="auth-textbox"
-                      @keyup.enter=""/><br>
+                <input v-model="taskTitle" type="text" class="auth-textbox"/><br>
                 <p>Description:</p>
-                <textarea v-model="taskDesc" type="text" class="auth-textbox"
-                      @keyup.enter=""/>
+                <textarea v-model="taskDesc" type="text" class="auth-textbox"/>
               </div>
 
               <div>

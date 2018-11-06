@@ -9,7 +9,6 @@
       </div>
     </div>
     <div class="dark-widget">
-      
     </div>
   </div>
 </template>

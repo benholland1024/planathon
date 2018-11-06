@@ -42,7 +42,7 @@ export default new Router({
     },
 
     {
-      path: '/new-hackathon',
+      path: '/:orgId/new-hackathon',
       name: 'new-hackathon',
       component: () => import('./views/Onboarding/NewHackathon.vue')
     },
