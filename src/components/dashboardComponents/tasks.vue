@@ -32,6 +32,7 @@
     <button id="show-add-modal" class="hover-shine" 
       @click="showAddModal = true">+ Add Task</button>
     <task-add-modal :hackathonId="hackathonId" v-if="showAddModal == true"
+                    :hackathonDate="hackathonDate"
           @close="showAddModal = false">
     </task-add-modal>
   </div>

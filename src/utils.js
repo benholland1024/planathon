@@ -16,7 +16,6 @@ export function dateDiffInDays(a, b) {
 // Takes an integer 'daysBefore' and a date 'date', 
 // returns a date object
 export function dateObjFromDaysBefore(daysBefore, date) {
-  console.log(date)
   var d = date;
   d.setDate(d.getDate() - daysBefore);
   return d;
@@ -28,4 +27,9 @@ export function getMonthFromDate(date) {
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
   return monthNames[date.getMonth()];
+}
+
+// Submit two date objects, get the difference in days.
+export function getDaysBeforeFromDate(date, hackDate) {
+  return Math.floor(( hackDate - date ) / 86400000); 
 }

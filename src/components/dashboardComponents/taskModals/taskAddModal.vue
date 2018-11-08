@@ -68,6 +68,8 @@
 <script>
 import DatePicker from 'vue2-datepicker';
 
+import {getDaysBeforeFromDate} from '@/utils.js';
+
   export default {
     data() {
       return {
@@ -93,6 +95,10 @@ import DatePicker from 'vue2-datepicker';
     props: {
       hackathonId: {
         type: String,
+        required: true
+      },
+      hackathonDate: {
+        type: Object,
         required: true
       }
     },
@@ -120,6 +126,11 @@ import DatePicker from 'vue2-datepicker';
         
         // Manually generates a new id in tasks collection
         const taskId = this.$store.getters['tasks/dbRef'].doc().id;
+
+        // Getting how many days prior to the hackathon the date is:
+        var daysBefore = getDaysBeforeFromDate(this.date.getDate(), this.hackathonDate.toDate());
+        console.log("DaysBefore: ", daysBefore);
+        return;
 
         // Create and add the new task
         this.$store.dispatch('tasks/insert', {
