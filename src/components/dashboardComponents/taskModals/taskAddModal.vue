@@ -128,9 +128,8 @@ import {getDaysBeforeFromDate} from '@/utils.js';
         const taskId = this.$store.getters['tasks/dbRef'].doc().id;
 
         // Getting how many days prior to the hackathon the date is:
-        var daysBefore = getDaysBeforeFromDate(this.date.getDate(), this.hackathonDate.toDate());
+        var daysBefore = getDaysBeforeFromDate(this.date, this.hackathonDate.toDate());
         console.log("DaysBefore: ", daysBefore);
-        return;
 
         // Create and add the new task
         this.$store.dispatch('tasks/insert', {
@@ -138,7 +137,8 @@ import {getDaysBeforeFromDate} from '@/utils.js';
           title: this.taskTitle,
           description: this.taskDesc,
           tags: updatedTags,
-          hackathon: this.hackathonId
+          hackathon: this.hackathonId,
+          daysBefore
         })
         .catch(err => {
           console.error("Oops: ", err)

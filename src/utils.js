@@ -31,5 +31,7 @@ export function getMonthFromDate(date) {
 
 // Submit two date objects, get the difference in days.
 export function getDaysBeforeFromDate(date, hackDate) {
+  console.log("Date1: ", hackDate);
+  console.log("Date2: ", date);
   return Math.floor(( hackDate - date ) / 86400000); 
 }
