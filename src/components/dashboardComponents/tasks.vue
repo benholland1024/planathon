@@ -117,7 +117,6 @@ export default {
   position: relative;
   box-shadow: $box-shading;
   display: flex;
-  justify-content: space-between;
 }
 
 
