@@ -67,13 +67,12 @@
           console.error("You must be an organization collaborator to remove collaborators.");
           return;
         }
-
+        
         // Get the id(s) of the selected collab(s) and call removeCollaborator for each
         this.collabSelect.forEach((element) => {
-
           // Try to find the account matching the email (collabSelect will contain emails)
           this.$store.dispatch('users/fetch', {whereFilters: [['email', '==', element]]})
-          .then(querySnapshot => {
+          .then((querySnapshot) => {
             if (querySnapshot.empty == true) {
               console.log("There is no account associated with this email.");
               console.log("Please try again after an account has been made");
@@ -85,9 +84,15 @@
         })
       },
       removeCollaborator(collabIdToRemove) {
-        // TODO: check if there is at least one collab in an org
         // Get the user object for the collaborator being removed
         var collabToRemove = this.users[`${collabIdToRemove}`]
+
+        // Checks to see if there is at least one collaborator in the org
+        if (this.collabIds.length == 1) {
+          console.error("You are the last collaborator in this org")
+          console.error("Please delete the org instead")
+          return;
+        }
 
         // Remove the org from the user's orgs
         var newOrgList = collabToRemove.orgs;
@@ -112,9 +117,14 @@
         })
       },
       addCollaborator(newCollabId) {
-        // TODO: add check to see if user is already a collab
         // Will need some sort of if statement here (if no results found...)
         var newCollab = this.users[`${newCollabId}`];
+
+        // Checks to see if user is already collab
+        if (this.collabIds.includes(newCollab.id)) {
+          console.error("User is already a collaborator of this org");
+          return;
+        }
 
         // Used to update the new collaborator's list of orgs
         var updateUserObj = {
@@ -141,6 +151,7 @@
           collaborators: newCollabList
         }}).then(() => {
           this.collabObjs.push(newCollab)
+          
         }).catch(err => {
           console.error("Error adding collaborator to org ", err)
         })
@@ -160,6 +171,7 @@
             console.log("Please try again after an account has been made.")
           }
           else {
+            this.collabSearch = '';
             this.addCollaborator(querySnapshot.docs[0].id);
           }
         })
@@ -206,6 +218,7 @@
         this.$store.dispatch('orgs/delete', this.orgId)
         .then(() => {
           console.log("Org deleted successfully")
+          this.$emit('close');
         }).catch(err => {
           console.error("Cannot delete org: ", err)
         })
