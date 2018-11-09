@@ -1,8 +1,10 @@
 <template>
   <div class="widget-holder">
-    <div class="dark-widget">
-        <h1>Promo!</h1>
-    </div>
+    <tasks :hackathonId="$route.params.hackathonId"
+           :hackathonTasks="this.promotionTasks"
+           :hackathonDate="$parent.hackathon.date">
+
+    </tasks>
     <div class="dark-widget">
     </div>
   </div>
@@ -15,6 +17,13 @@ export default {
   name: 'promotion',
   components: {
     Tasks
+  },
+  computed: {
+    promotionTasks() {
+      return this.$parent.tasks.filter(task => {
+        return task.tags.includes("promotion");
+      })
+    }
   }
 }
 </script>
