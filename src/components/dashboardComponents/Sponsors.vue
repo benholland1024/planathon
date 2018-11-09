@@ -5,7 +5,7 @@
       <sponsor-editor :sponsor="sponsorToAdd" id="sponsToAdd"></sponsor-editor>
       <button value="Add" @click="addSponsor"/>
       <div v-for="(sponsor, index) in filteredSponsorList" :key="index">
-        <sponsor-editor :sponsor="sponsor"></sponsor-editor>
+        <sponsor-editor :sponsor="sponsor" :hackathonId="$parent.hackathon.id"></sponsor-editor>
       </div>
     </div>
     <div class="dark-widget">
@@ -49,7 +49,6 @@ export default {
   },
   methods: {
     addSponsor() {
-      console.log('test')
       this.sponsorToAdd = Sponsor(this.$parent.hackathon.id, '<new>')
     }
   }

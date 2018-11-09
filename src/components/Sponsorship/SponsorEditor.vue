@@ -26,15 +26,19 @@
         <label for="sponsPaid" >Date Paid</label><input type="date" v-model="sponsor.sponsored.datePaid" id="sponsPaid"/><br>
         <input type="button" @click="watchThisSponsor" value="Watch" />
         <input type="submit" value="Save"/>
+        <contact-tracker :sponsor="sponsor"></contact-tracker>
     </form>
-
 </div>
 </template>
 
 <script>
 import { Sponsor, Contact, Interaction } from './Sponsor'
+import ContactTracker from  '@/components/Sponsorship/ContactTracker.vue'
 
 export default {
+    components: {
+        ContactTracker
+    },
     data() {
         return {
             isExpanded: false
@@ -43,6 +47,7 @@ export default {
     props: {
         sponsor: {
             type: Object,
+            required: true,
             default: function() {
                 return Sponsor();
             }

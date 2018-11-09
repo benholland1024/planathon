@@ -56,15 +56,12 @@ export default Vue.extend({
                 .filter( x => x.sponsored.amount > 0)
                 .reverse()
                 .map( x => {
-                    console.log(x.sponsored.amount)
                     runningPoints = runningPoints + Number.parseInt(x.sponsored.amount)
                     return {
                         x: x.sponsored.dateCommitted,
                         y: runningPoints
                     }
-                })
-
-            console.log(dataPoints)
+                });
 
             let dataset = new vis.DataSet(dataPoints);
             let options = {
