@@ -6,7 +6,7 @@
         <img src="@/assets/edit.png" @click="showEditModal = index">
         <img src="@/assets/trash.png" @click="showDeleteModal = index">
       </div>
-      
+
       <task-circle-display :tags="task.tags"></task-circle-display>
       <!--<h3>{{ dateObjFromDaysBefore(task.daysBefore, hackathonDate.toDate()) }}</h3>-->
       <div class="task-date-container">
@@ -29,7 +29,7 @@
       </task-delete-modal>
 
     </div>
-    <button id="show-add-modal" class="hover-shine" 
+    <button id="show-add-modal" class="hover-shine"
       @click="showAddModal = true">+ Add Task</button>
     <task-add-modal :hackathonId="hackathonId" v-if="showAddModal == true"
                     :hackathonDate="hackathonDate"
@@ -66,10 +66,6 @@ export default {
     },
   },
   props: {
-    timeline: {
-      type: Array,
-      required: true
-    },
     hackathonTasks: {
       type: Array,
       required: true
