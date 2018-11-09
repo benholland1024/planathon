@@ -92,7 +92,7 @@
         // Remove the org from the user's orgs
         var newOrgList = collabToRemove.orgs;
         delete newOrgList[this.orgId];
-        console.log(this.orgId, newOrgList)
+        console.log(collabIdToRemove, this.orgId, newOrgList)
 
         this.$store.dispatch('users/set', {[`${collabIdToRemove}`]: {
           orgs: newOrgList
@@ -166,7 +166,7 @@
       },
       deleteOrg(org) {
         // Make sure the user is an org collaborator
-        if (!collabIds.includes(this.$parent.$parent.user.id)) {
+        if (!this.collabIds.includes(this.$parent.$parent.userId)) {
           console.error("You must be an organization collaborator to delete the organization.");
           return;
         }
@@ -177,51 +177,79 @@
         }
 
         //Getting list of hackathons from org
-        this.$parent.$parent.db.collection('orgs').doc(this.orgId).get()
-        .then((response) => {
-
-          //If org has hackathons, delete all of them from firebase
-          if (response.data().hackathons != undefined) {
-            for (var id in response.data().hackathons) {
-              this.hackathonId = id;
-              this.$parent.$parent.db.collection('hackathons').doc(id).delete()
-              .then(() => {
-                console.log(id, "deleted successfully");
-              });
+        // this.$parent.$parent.db.collection('orgs').doc(this.orgId).get()
+        // .then((response) => {
+        if (this.orgs[`${this.orgId}`].hackathons != undefined) {
+          for (var id in this.orgs[`${this.orgId}`].hackathons) {
+            this.hackathonId = id;
+            //console.log("Old: ", this.hackathonTasks)
+            let localTasks = this.hackathonTasks
+            for (var taskId in localTasks) {
+              this.$store.dispatch('tasks/delete', localTasks[taskId].id)
+              //.then(() => {console.log("New: ", this.hackathonTasks)})
             }
-          }
-
-          //Removing org from user data
-          var newUserOrgs = {
-            orgs: {}
-          };
-          this.$parent.$parent.db.collection('users').doc(this.$parent.$parent.user.id).get()
-          .then((user) => {
-            for (var orgId in user.data().orgs)
-              if (this.orgId != orgId)
-                newUserOrgs.orgs[orgId] = {role: user.data().orgs[orgId].role};
-              //Update user orgs with new org list
-            this.$parent.$parent.db.collection('users').doc(this.$parent.$parent.user.id).update(newUserOrgs);
-          })
-
-          //Deleting org from firebase
-          this.$parent.$parent.db.collection('orgs').doc(this.orgId).delete()
-          .then(() => {
-            console.log("Org deleted successfully");
-          }).catch((err) => {
-            console.log("Error: ", err);
-          });
-        }).catch((err) => {
-          console.log("Cannot get org", err);
-        });
-
-         //Find the index of the org in userOrgs to auto refresh the page
-        for (var i in this.$parent.$parent.userOrgs) {
-          if (this.$parent.$parent.userOrgs[i].id == this.orgId) {
-            this.$parent.$parent.userOrgs.splice(i, 1);
-            break;
+            //console.log("New: ", this.hackathonTasks)
+            this.$store.dispatch('hackathons/delete', this.hackathonId)
           }
         }
+
+        //   //If org has hackathons, delete all of them from firebase
+        //   if (response.data().hackathons != undefined) {
+        //     for (var id in response.data().hackathons) {
+        //       this.hackathonId = id;
+        //       this.$parent.$parent.db.collection('hackathons').doc(id).delete()
+        //       .then(() => {
+        //         console.log(id, "deleted successfully");
+        //       });
+        //     }
+        //   }
+
+        //   //Removing org from user data
+        //   var newUserOrgs = {
+        //     orgs: {}
+        //   };
+        //   this.$parent.$parent.db.collection('users').doc(this.$parent.$parent.user.id).get()
+        //   .then((user) => {
+        //     for (var orgId in user.data().orgs)
+        //       if (this.orgId != orgId)
+        //         newUserOrgs.orgs[orgId] = {role: user.data().orgs[orgId].role};
+        //       //Update user orgs with new org list
+        //     this.$parent.$parent.db.collection('users').doc(this.$parent.$parent.user.id).update(newUserOrgs);
+        //   })
+        var newUserOrgs = {
+          orgs: {}
+        };
+        for (var orgDelete in this.currentUser.orgs){
+          console.warn(orgDelete)
+          if (this.orgId != orgDelete)
+            newUserOrgs.orgs[orgDelete] = {role: this.currentUser.orgs[orgDelete].role};
+        }
+        this.$store.dispatch('users/set', {[`${this.currentUser.id}`]: {
+          orgs: newUserOrgs.orgs
+        }})
+        //   //Deleting org from firebase
+        //   this.$parent.$parent.db.collection('orgs').doc(this.orgId).delete()
+        //   .then(() => {
+        //     console.log("Org deleted successfully");
+        //   }).catch((err) => {
+        //     console.log("Error: ", err);
+        //   });
+        // }).catch((err) => {
+        //   console.log("Cannot get org", err);
+        // });
+        this.$store.dispatch('orgs/delete', this.orgId)
+        .then(() => {
+          console.log("Org deleted successfully")
+        }).catch(err => {
+          console.error("Cannot delete org: ", err)
+        })
+        //  //Find the index of the org in userOrgs to auto refresh the page
+        // for (var i in this.$parent.$parent.userOrgs) {
+        //   if (this.$parent.$parent.userOrgs[i].id == this.orgId) {
+        //     this.$parent.$parent.userOrgs.splice(i, 1);
+        //     break;
+        //   }
+        // }
       },
       getSearchResults() {
         this.collabResults = this.collabObjs.filter((collabObj) => {
@@ -232,6 +260,9 @@
     computed: {
       users() {
         return this.$store.getters['users/storeRef']
+      },
+      currentUser() {
+        return this.users[`${this.$parent.$parent.userId}`]
       },
       orgs() {
         return this.$store.getters['orgs/storeRef']
