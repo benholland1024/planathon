@@ -177,45 +177,20 @@
         }
 
         //Getting list of hackathons from org
-        // this.$parent.$parent.db.collection('orgs').doc(this.orgId).get()
-        // .then((response) => {
+        //If org has hackathons/tasks, delete all of them from firebase
         if (this.orgs[`${this.orgId}`].hackathons != undefined) {
           for (var id in this.orgs[`${this.orgId}`].hackathons) {
             this.hackathonId = id;
-            //console.log("Old: ", this.hackathonTasks)
             let localTasks = this.hackathonTasks
-            for (var taskId in localTasks) {
+
+            for (var taskId in localTasks) 
               this.$store.dispatch('tasks/delete', localTasks[taskId].id)
-              //.then(() => {console.log("New: ", this.hackathonTasks)})
-            }
-            //console.log("New: ", this.hackathonTasks)
+            
             this.$store.dispatch('hackathons/delete', this.hackathonId)
           }
         }
 
-        //   //If org has hackathons, delete all of them from firebase
-        //   if (response.data().hackathons != undefined) {
-        //     for (var id in response.data().hackathons) {
-        //       this.hackathonId = id;
-        //       this.$parent.$parent.db.collection('hackathons').doc(id).delete()
-        //       .then(() => {
-        //         console.log(id, "deleted successfully");
-        //       });
-        //     }
-        //   }
-
-        //   //Removing org from user data
-        //   var newUserOrgs = {
-        //     orgs: {}
-        //   };
-        //   this.$parent.$parent.db.collection('users').doc(this.$parent.$parent.user.id).get()
-        //   .then((user) => {
-        //     for (var orgId in user.data().orgs)
-        //       if (this.orgId != orgId)
-        //         newUserOrgs.orgs[orgId] = {role: user.data().orgs[orgId].role};
-        //       //Update user orgs with new org list
-        //     this.$parent.$parent.db.collection('users').doc(this.$parent.$parent.user.id).update(newUserOrgs);
-        //   })
+        //Removing org from user data
         var newUserOrgs = {
           orgs: {}
         };
@@ -227,29 +202,13 @@
         this.$store.dispatch('users/set', {[`${this.currentUser.id}`]: {
           orgs: newUserOrgs.orgs
         }})
-        //   //Deleting org from firebase
-        //   this.$parent.$parent.db.collection('orgs').doc(this.orgId).delete()
-        //   .then(() => {
-        //     console.log("Org deleted successfully");
-        //   }).catch((err) => {
-        //     console.log("Error: ", err);
-        //   });
-        // }).catch((err) => {
-        //   console.log("Cannot get org", err);
-        // });
+        //Deleting org from firebase
         this.$store.dispatch('orgs/delete', this.orgId)
         .then(() => {
           console.log("Org deleted successfully")
         }).catch(err => {
           console.error("Cannot delete org: ", err)
         })
-        //  //Find the index of the org in userOrgs to auto refresh the page
-        // for (var i in this.$parent.$parent.userOrgs) {
-        //   if (this.$parent.$parent.userOrgs[i].id == this.orgId) {
-        //     this.$parent.$parent.userOrgs.splice(i, 1);
-        //     break;
-        //   }
-        // }
       },
       getSearchResults() {
         this.collabResults = this.collabObjs.filter((collabObj) => {
