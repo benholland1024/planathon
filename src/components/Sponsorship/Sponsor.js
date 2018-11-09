@@ -23,7 +23,7 @@ export function Sponsor(eventId='', company='') {
         watchers: [ ],
         sponsored: {
             amount: 0,
-            dateCommited: '',
+            dateCommitted: '',
             datePaid: ''
         }
     };

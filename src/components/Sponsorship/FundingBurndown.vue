@@ -1,6 +1,7 @@
 <template>
 <div>
     <div id="burndown"></div>
+    {{ sponsorList }}
 </div>
 </template>
 
@@ -9,56 +10,69 @@ import Vue from 'vue';
 import vis from 'vis';
 import firebase from 'firebase';
 
+
 export default Vue.extend({
     data() {
         return {
-            hackathonId: 'jkVV4jCvDWwAzx9OiAHn',
             container: {},
-            dataset: null
         }
+    },
+    props: {
+        hackathonId: {
+            type: String,
+            required: true
+        }
+    },
+    computed: {
+        async hackathon() {
+            let hackathons = await this.$store.getters['hackathons/storeRef']
+            return hackathons[this.hackathonId]
+        },
+        async sponsorList() {
+            let sponsors = await this.$store.getters['sponsors/hackathonSponsors'](
+                (await this.hackathon).id
+            );
+            return sponsors;
+        },
     },
     mounted() {
         this.container = document.getElementById('burndown');
-        this.getSponsorData()
+        this.renderChart();
     },
     methods: {
-        renderChart: function(dataPoints) {
-            if (!this.dataset) {
-                this.dataset = new vis.DataSet(dataPoints);
-                let options = {
-                    start: '2018-05-30', // TODO: Date first sponsor activity happened
-                    end: '2018-10-25' // TODO: Funding due date
-                };
+        renderChart: async function() {
+            let rawPoints = await this.sponsorList
+            
+            let rawStartDate = new Date(0);
+                rawStartDate.setUTCSeconds((await this.hackathon).created_at.seconds);
+            let rawEndDate = new Date(0);
+                rawEndDate.setUTCSeconds((await this.hackathon).date.seconds);
 
-                let burndownChart = new vis.Graph2d(this.container, this.dataset, options);
-            } else {
-                this.dataset.clear();
-                this.dataset.add(dataPoints);      
-            }      
-        },
-        getSponsorData: async function() {
-            try {
-                let req = await this.$parent.db
-                    .collection('sponsors')
-                    .where('hackathonId', '==', this.hackathonId)
-                    .orderBy('sponsored.dateCommitted')
-                    .get();
-                let totalPaid = 0;
-                let sponsors = [];
-                req.forEach(element => { 
-                    let s = element.data()
-                    totalPaid += s.amountPaid
-                    sponsors.push({
-                        x: s.sponsorDate.toDate().toISOString().substring(0, 10),
-                        y: totalPaid
-                    });
-                });
-                
-                console.log('Point data', sponsors)
-                this.renderChart(sponsors)
-            } catch (e) {
-                console.log(e)
-            }
+            let startDate = rawStartDate.toISOString().substring(0, 10);
+            let endDate = rawEndDate.toISOString().substring(0,10);
+
+            let runningPoints = 0
+            let dataPoints = rawPoints
+                .filter( x => x.sponsored.amount > 0)
+                .reverse()
+                .map( x => {
+                    console.log(x.sponsored.amount)
+                    runningPoints = runningPoints + Number.parseInt(x.sponsored.amount)
+                    return {
+                        x: x.sponsored.dateCommitted,
+                        y: runningPoints
+                    }
+                })
+
+            console.log(dataPoints)
+
+            let dataset = new vis.DataSet(dataPoints);
+            let options = {
+                start: startDate,
+                end: endDate
+            };
+
+            let burndownChart = new vis.Graph2d(this.container, dataset, options);   
         },
     }
 })

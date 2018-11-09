@@ -9,6 +9,7 @@
       </div>
     </div>
     <div class="dark-widget">
+      <funding-burndown :hackathonId="$parent.hackathon.id"></funding-burndown>
     </div>
   </div>
 </template>
@@ -17,12 +18,14 @@
 import Tasks from '@/components/dashboardComponents/tasks.vue';
 import SponsorEditor from '@/components/Sponsorship/SponsorEditor.vue';
 import { Sponsor } from '@/components/Sponsorship/Sponsor.js'
+import FundingBurndown from '@/components/Sponsorship/FundingBurndown.vue'
 
 export default {
   name: 'development',
   components: {
     Tasks,
-    SponsorEditor
+    SponsorEditor,
+    FundingBurndown
   },
   data() {
     return {
