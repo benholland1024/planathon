@@ -163,7 +163,7 @@ export default {
           .catch(err => {
             console.error("Problem updating user org list: ", err)
           })
-
+          this.orgName = '';
         } else {
           alert("Sorry, organization: " + this.orgName + " is already in use");
         }
