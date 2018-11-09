@@ -1,5 +1,5 @@
 <template>
-<div id="graphContainer"></div>
+<div ref="container"></div>
 </template>
 
 <script>
@@ -26,10 +26,24 @@ export default{
     mounted(){
         this.options.start=this.start;
         this.options.end=this.end
-        this.container = document.getElementById('graphContainer');
+        this.container = this.$refs.container;
         this.dataset = new vis.DataSet(this.items);
         this.graph = new vis.Graph2d(this.container, this.dataset, this.options);
     },
+    methods:{
+        addDataPoint: function(point){
+            return this.dataset.add();
+        },
+        reloadData: function(newData){
+            if(!this.dataset){
+                this.dataset=new vis.DataSet(newData);
+                this.graph=new vis.Graph2d(this.container,this.dataset,this.options);
+            } else{
+                this.dataset.clear();
+                this.dataset.add(newData);
+            }
+        }
+    }
 }
 </script>
 <style scoped>

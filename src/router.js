@@ -42,7 +42,7 @@ export default new Router({
     },
 
     {
-      path: '/new-hackathon',
+      path: '/:orgId/new-hackathon',
       name: 'new-hackathon',
       component: () => import('./views/Onboarding/NewHackathon.vue')
     },
@@ -90,6 +90,21 @@ export default new Router({
           meta: { dash: true }
         }
       ]
+    },
+    {
+      path: '/fundingburndown',
+      name: 'FundingBurndown',
+      component: () => import('./components/Sponsorship/FundingBurndown.vue')
+    },
+    {
+      path: '/contacttracker',
+      name: 'ContactTracker',
+      component: () => import('./components/Sponsorship/ContactTracker.vue')
+    },
+    {
+      path: '/sponsorship/:hackathonId',
+      name: 'SponsorshipDashboard',
+      component: () => import('./views/Sponsorship.vue')
     },
     {
       path: '*',

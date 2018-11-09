@@ -2,7 +2,9 @@
   <div class="widget-holder">
     <tasks :timeline="$parent.timeline"
             :hackathonId="$route.params.hackathonId"
-            :hackathonTasks="$parent.tasks">
+            :hackathonTasks="$parent.tasks"
+            :hackathonDate="$parent.hackathon.date">
+            
     </tasks>
     <div class="dark-widget">
     </div>

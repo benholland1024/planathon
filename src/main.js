@@ -15,6 +15,5 @@ new Vue({
     this.$store.dispatch('hackathons/openDBChannel')
     this.$store.dispatch('tasks/openDBChannel')
     this.$store.dispatch('sponsors/openDBChannel')
-    this.$store.dispatch('sponsorship/openDBChannel')
   }
 }).$mount('#app')

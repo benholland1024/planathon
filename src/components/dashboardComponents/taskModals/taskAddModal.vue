@@ -9,11 +9,9 @@
             <div class="task-options">
               <div>
                 <p>Title:</p>
-                <input v-model="taskTitle" type="text" class="auth-textbox"
-                      @keyup.enter=""/><br>
+                <input v-model="taskTitle" type="text" class="auth-textbox"/><br>
                 <p>Description:</p>
-                <textarea v-model="taskDesc" type="text" class="auth-textbox"
-                      @keyup.enter=""/>
+                <textarea v-model="taskDesc" type="text" class="auth-textbox"/>
               </div>
 
               <div>
@@ -70,6 +68,8 @@
 <script>
 import DatePicker from 'vue2-datepicker';
 
+import {getDaysBeforeFromDate} from '@/utils.js';
+
   export default {
     data() {
       return {
@@ -95,6 +95,10 @@ import DatePicker from 'vue2-datepicker';
     props: {
       hackathonId: {
         type: String,
+        required: true
+      },
+      hackathonDate: {
+        type: Object,
         required: true
       }
     },
@@ -123,13 +127,18 @@ import DatePicker from 'vue2-datepicker';
         // Manually generates a new id in tasks collection
         const taskId = this.$store.getters['tasks/dbRef'].doc().id;
 
+        // Getting how many days prior to the hackathon the date is:
+        var daysBefore = getDaysBeforeFromDate(this.date, this.hackathonDate.toDate());
+        console.log("DaysBefore: ", daysBefore);
+
         // Create and add the new task
         this.$store.dispatch('tasks/insert', {
           id: taskId,
           title: this.taskTitle,
           description: this.taskDesc,
           tags: updatedTags,
-          hackathon: this.hackathonId
+          hackathon: this.hackathonId,
+          daysBefore
         })
         .catch(err => {
           console.error("Oops: ", err)

@@ -8,8 +8,19 @@
       </div>
       
       <task-circle-display :tags="task.tags"></task-circle-display>
-      <h3>{{ task.title }}</h3>
-      <h4>{{ task.description }}</h4>
+      <!--<h3>{{ dateObjFromDaysBefore(task.daysBefore, hackathonDate.toDate()) }}</h3>-->
+      <div class="task-date-container">
+        <h3>
+          {{dateObjFromDaysBefore(task.daysBefore, hackathonDate.toDate()).getDate()}}
+        </h3>
+        <h4>
+          {{getMonthFromDate(dateObjFromDaysBefore(task.daysBefore, hackathonDate.toDate()))}}
+        </h4>
+      </div>
+      <div class="task-description-container">
+        <h3>{{ task.title }}</h3>
+        <h4>{{ task.description }}</h4>
+      </div>
 
       <task-edit-modal :task="task" v-if="showEditModal == index" @close="showEditModal = -1">
       </task-edit-modal>
@@ -21,6 +32,7 @@
     <button id="show-add-modal" class="hover-shine" 
       @click="showAddModal = true">+ Add Task</button>
     <task-add-modal :hackathonId="hackathonId" v-if="showAddModal == true"
+                    :hackathonDate="hackathonDate"
           @close="showAddModal = false">
     </task-add-modal>
   </div>
@@ -33,6 +45,9 @@ import TaskDeleteModal from '@/components/dashboardComponents/taskModals/taskDel
 
 import TaskCircleDisplay from '@/components/dashboardComponents/taskModals/taskCircleDisplay.vue';
 
+import { dateObjFromDaysBefore } from '@/utils.js';
+import { getMonthFromDate } from '@/utils.js';
+
 export default {
   data() {
     return {
@@ -40,6 +55,15 @@ export default {
       showDeleteModal: -1,
       showAddModal: false
     }
+  },
+  methods: {
+    dateObjFromDaysBefore(daysBefore, date) {
+      // This function is defined in utils.js
+      return dateObjFromDaysBefore(daysBefore, date);
+    },
+    getMonthFromDate(date) {
+      return getMonthFromDate(date);
+    },
   },
   props: {
     timeline: {
@@ -52,6 +76,10 @@ export default {
     },
     hackathonId: {
       type: String,
+      required: true
+    },
+    hackathonDate: {
+      type: Object,
       required: true
     }
   },
@@ -88,6 +116,7 @@ export default {
   text-align: left;
   position: relative;
   box-shadow: $box-shading;
+  display: flex;
 }
 
 
@@ -128,6 +157,25 @@ h4 {
   border: none;
   box-shadow: $box-shading;
   cursor: pointer;
+}
+
+.task-date-container {
+  margin-right: 20px;
+  padding-top: 20px;
+  opacity: .4;
+  text-align: center;
+  h3 {
+    font-size: 40px;
+    margin: 0px;
+    padding: 0px;
+  }
+  h4 {
+    margin: 0px;
+    padding: 0px;
+  }
+}
+.task-description-container {
+  padding-top: 15px;
 }
 
 </style>
