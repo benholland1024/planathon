@@ -5,10 +5,11 @@
       <sponsor-editor :sponsor="sponsorToAdd" id="sponsToAdd"></sponsor-editor>
       <button value="Add" @click="addSponsor"/>
       <div v-for="(sponsor, index) in filteredSponsorList" :key="index">
-        <sponsor-editor :sponsor="sponsor"></sponsor-editor>
+        <sponsor-editor :sponsor="sponsor" :hackathonId="$parent.hackathon.id"></sponsor-editor>
       </div>
     </div>
     <div class="dark-widget">
+      <funding-burndown :hackathonId="$parent.hackathon.id"></funding-burndown>
     </div>
   </div>
 </template>
@@ -17,12 +18,14 @@
 import Tasks from '@/components/dashboardComponents/tasks.vue';
 import SponsorEditor from '@/components/Sponsorship/SponsorEditor.vue';
 import { Sponsor } from '@/components/Sponsorship/Sponsor.js'
+import FundingBurndown from '@/components/Sponsorship/FundingBurndown.vue'
 
 export default {
   name: 'development',
   components: {
     Tasks,
-    SponsorEditor
+    SponsorEditor,
+    FundingBurndown
   },
   data() {
     return {
@@ -46,7 +49,6 @@ export default {
   },
   methods: {
     addSponsor() {
-      console.log('test')
       this.sponsorToAdd = Sponsor(this.$parent.hackathon.id, '<new>')
     }
   }

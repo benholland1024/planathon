@@ -18,7 +18,19 @@ const sponsorsDataModule = {
             sponsorList.push(state.docs[sponsObj]);
           }
         }
-        return sponsorList;
+
+        // Sort the sponsors in time order that they sponsored
+        return sponsorList.sort((a,b) => {
+          let aD = Date.parse(a);
+          let bD = Date.parse(b);
+          
+          if (aD === bD)
+            return 0;
+          else if (aD > bD)
+            return 1;
+          else 
+            return -1;
+        });
       }
     }
   }
