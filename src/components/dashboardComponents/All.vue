@@ -1,8 +1,10 @@
 <template>
   <div class="widget-holder">
-    <div class="dark-widget">
-        <h1>All!</h1>
-    </div>
+    <tasks :hackathonId="$route.params.hackathonId"
+           :hackathonTasks="$parent.tasks"
+           :hackathonDate="$parent.hackathon.date">
+
+    </tasks>
     <div class="dark-widget">
     </div>
   </div>
