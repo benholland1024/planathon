@@ -69,7 +69,9 @@ export default Vue.extend({
             let dataset = new vis.DataSet(dataPoints);
             let options = {
                 start: startDate,
-                end: endDate
+                end: endDate,
+                zoomable: false,
+                moveable: false
             };
 
             let burndownChart = new vis.Graph2d(this.container, dataset, options);   
