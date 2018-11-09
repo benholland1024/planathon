@@ -43,7 +43,7 @@ export default {
       // (which was stored in the User's table)
       for (let id in this.currentUser.orgs) {
         this.org = this.orgs[`${id}`]
-        this.userOrgs.push(this.orgs[`${id}`])
+        //this.userOrgs.push(this.orgs[`${id}`])
         for (var i in this.orgs[`${id}`].hackathons) {
           this.loadHackathon(this.userOrgs.length -1, this.orgs[`${id}`].hackathons[i].id);
         }
