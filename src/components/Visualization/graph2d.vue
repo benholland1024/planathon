@@ -4,7 +4,8 @@
 
 <script>
 import vis from 'vis';
-import 'vis/dist/vis.min.css';
+import 'vis/dist/vis.css';
+//import '../../styles/vis.css'
 
 export default{
     props: {

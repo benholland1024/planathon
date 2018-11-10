@@ -114,5 +114,10 @@ export default new Router({
       path: '/404',
       name: '404',
       component: notFound
-    },]
+    },
+    {
+      path: '/sandbox',
+      name: 'sandbox',
+      component: ()=> import('./views/sandbox.vue')
+    }]
 })
