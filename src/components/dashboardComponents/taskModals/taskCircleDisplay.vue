@@ -2,7 +2,7 @@
 <div style="display: flex;position: absolute;">
 <div class="task-circle" v-for="tag in tags"
   :class="[tag]">
-</div>  
+</div>
 </div>
 </template>
 

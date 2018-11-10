@@ -65,23 +65,11 @@
     </div>
 
   <!--Calendar on the side -- TODO: Abstract to a component?-->
-    <div id="calendar">
-      <div id="day-labels">
-        <span>M</span>
-        <span>T</span>
-        <span>W</span>
-        <span>R</span>
-        <span>F</span>
-        <span>S</span>
-        <span>S</span>
-      </div>
-      <div id="day-nodes">
-        <div class="week-node" v-for="week in 35">
-          <div v-for="i in 7" class="day-node">
-          </div>
-        </div>
-      </div>
-    </div>
+    <calendar :daysCountDown="daysCountDown"
+              :hackathonDate="hackathon.date"
+              :today="today"
+              :tasks="tasks">
+    </calendar>
 
     <router-view></router-view>
 
@@ -99,6 +87,7 @@
 import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Tasks from '@/components/dashboardComponents/tasks.vue';
+import Calendar from '@/components/dashboardComponents/Calendar.vue';
 
 import { dateDiffInDays } from '@/utils.js';
 
@@ -116,7 +105,8 @@ export default {
   components: {
     LineGraph,
     PolarGraph,
-    Tasks
+    Tasks,
+    Calendar
   },
   computed: {
     tasks() {
@@ -132,7 +122,7 @@ export default {
       return this.hackathons[`${this.$route.params.hackathonId}`]
     },
 
-    // Calculating data for the sidebar calendar: 
+    // Calculating data for the sidebar calendar:
     weeklyCalendar() {
       return []
     },
@@ -153,7 +143,7 @@ export default {
 @import '@/GlobalVars.scss';
 
 #dashboard {
-  
+
   width: calc(100% - 180px);
   margin-right: 0px;
   margin-left: auto;
