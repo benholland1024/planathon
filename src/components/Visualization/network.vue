@@ -31,24 +31,48 @@ export default{
         this.recalculate();
     },
     methods:{
+        nodeID2Index: function(id){
+            //O(n) search.  TODO: Replace with O(log(n)) time binary search
+            let res=0;
+            while(this.nodes[res].id!=id){
+                res++
+                if(res==this.nodes.length) break;
+            }
+            return res;
+        },
         addTask: function(taskName,parentID){
             this.maxID++;
             this.nodes.push({id:this.maxID,label:taskName});
             this.edges.push({from:this.maxID,to:parentID});
             this.recalculate();
+            return true;
         },
         removeTask: function(id){
-            //Find the task, if it doesn't exist, return
+            let indexOfTarget=this.nodeID2Index(id);
+            if(indexOfTarget==this.nodes.length) return false;
+
+            let edgesToRemove=[];
+            let otherNodes=[];
+
+            for(i in this.edges){
+                if(this.edges[i].to==id){
+                    edgesToRemove.push(i)
+                    otherNodes.push(this.edges[i].from);
+                }
+            }
             
-            //Find any edges that connect to the task, push them into a list
-            //For each item in said list, if its a "child" task, call removeTask recursively
-            //remove each edges from this.edges
-            //remove the node itself
+            for(i in otherNodes)
+                this.removeTask(otherNodes[i]);
+            
+            for(i in edgesToRemove)
+                this.edges.splice(edgesToRemove[i],1);
+
+            this.nodes.splice(indexOfTarget,1);
+
+            return true;
         },
         reassignDependency:function(nodeID,dependencyID,newID){
             //Find the edge where t=o=nodeID and from==dependencyID and remove it.
-        }
-
         },
         recalculate:function(){
             if(this.network!=null) for (var i in this.network.body.nodes){
