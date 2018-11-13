@@ -19,7 +19,7 @@
             <button class="material-button-large" @click="getCollabIdToRemove()">Remove Collaborator</button>
           </div>
           <br>
-          <div style="display: flex">
+          <div style="display: flex;justify-content: space-between">
             <button class="material-button-large" @click="deleteOrg()">Delete Organization</button>
             <button class="material-button-large" @click="$emit('close')">Close</button>
           </div>
@@ -259,9 +259,13 @@
 <style scoped lang="scss">
 @import '@/GlobalVars.scss';
 
-/*  Note that this only applies to this page's material button: */
   .material-button-large {
     background: $gray;
     color: white;
   }
+
+  .popup-table {
+    min-width: 50%;
+  }
+
 </style>

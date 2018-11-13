@@ -12,9 +12,10 @@
     <div id="day-nodes">
 
       <div class="week-node" v-for="week in Math.ceil((simplifiedTasks.length / 7))">
-        <div v-for="tasks in simplifiedTasks.slice((week - 1) * 7, week * 7)" class="day-node">
+        <div v-for="day in simplifiedTasks.slice((week - 1) * 7, week * 7)" class="day-node"
+          v-tooltip="getMonthFromDate(day.date) + ' ' + day.date.getDate()">
 
-          <div v-show="tasks.length != 0">
+          <div v-show="day.tasks.length != 0">
             <!-- We will probably want to make a square component eventually
                  that can handle an array of tasks for the day.
                  tags is hard coded here. -->
@@ -31,6 +32,7 @@
 
 <script>
 import TaskCircleDisplay from '@/components/dashboardComponents/taskModals/taskCircleDisplay.vue';
+import {dateObjFromDaysBefore, getMonthFromDate} from '@/utils';
 
 export default {
   name: 'calendar',
@@ -60,15 +62,41 @@ export default {
       required: true
     }
   },
+  methods: {
+    getMonthFromDate(date) {
+      return getMonthFromDate(date);
+    }
+  },
   computed: {
     simplifiedTasks() {
+      // Our empty array - will ultimately store all of our days
       var v = [];
-      for (var i = 0; i != this.daysCountDown + (this.today.getDay() % 7) + (7 - (this.hackathonDate.toDate().getDay() % 7)); i++) {
-        v[i] = [];
+
+      // Days between today and the hackathon date
+      var daysInCalendar = this.daysCountDown; 
+
+      // We want our calendar to start on monday, so now we add the days between
+      // today and monday
+      daysInCalendar += (this.today.getDay() % 7);
+
+      // Now, we add the days AFTER the hackathon, to end on a Friday.
+      var daysAtEnd = (7 - (this.hackathonDate.toDate().getDay() % 7));
+      daysInCalendar += daysAtEnd;
+
+      for (var i = 0; i != daysInCalendar; i++) {
+        v[i] = {
+          tasks: [],
+          date: dateObjFromDaysBefore(daysInCalendar - i - daysAtEnd, this.hackathonDate.toDate())
+        };
       }
       this.tasks.forEach(task => {
-        v[task.daysBefore-1+(this.today.getDay() % 7)].push(task);
+        v[task.daysBefore-1+(this.today.getDay() % 7)].tasks.push(task);
       })
+
+      v[this.today.getDay() % 7].tasks.push({
+        id: 'today'
+      })
+
       console.log(v)
       return v;
     }
