@@ -7,7 +7,8 @@
 
 <script>
 import config from '@/config/config.js';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import VueFire from 'vuefire';
 import Vue from 'vue';
 
