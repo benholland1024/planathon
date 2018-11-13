@@ -43,7 +43,7 @@ export default {
           //   email: doc.user.email
           // })
           this.$store.dispatch('users/insert', {
-            id: doc.user.id,
+            id: doc.user.uid,
             email: doc.user.email
           })
 

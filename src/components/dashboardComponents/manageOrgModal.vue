@@ -54,6 +54,10 @@
 
       // Get the collaborator objects
       for (var collabId in this.collabIds) {
+        console.warn(this.collabIds[collabId]);
+        console.warn(this.users);
+        console.warn(this.users[this.collabIds[collabId]]);
+
         this.collabObjs.push({
           id: this.users[`${this.collabIds[collabId]}`].id,
           email: this.users[`${this.collabIds[collabId]}`].email

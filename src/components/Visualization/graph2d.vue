@@ -52,3 +52,9 @@ div {
     height: 100%;
 }
 </style>
+
+<style>
+.vis-time-axis, .vis-text {
+    color: white !important;
+}
+</style>
