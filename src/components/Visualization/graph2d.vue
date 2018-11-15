@@ -4,7 +4,8 @@
 
 <script>
 import vis from 'vis';
-import 'vis/dist/vis.min.css';
+import 'vis/dist/vis.css';
+//import '../../styles/vis.css'
 
 export default{
     props: {
@@ -52,9 +53,11 @@ div {
     height: 100%;
 }
 </style>
-
 <style>
-.vis-time-axis, .vis-text {
-    color: white !important;
+.vis-time-axis .vis-text {
+    color: #bebebe !important;
+}
+.vis-y-axis.vis-major{
+    color: #6e6e6e !important;
 }
 </style>
