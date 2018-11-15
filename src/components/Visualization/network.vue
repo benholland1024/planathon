@@ -40,6 +40,12 @@ export default{
             }
             return res;
         },
+        isParentOf(childID,parentID){
+            for(var i in this.edges)
+                if(this.edges[i].from==childID && this.edges[i].to==parentID)
+                    return true
+            return false;
+        },
         addTask: function(taskName,parentID){
             this.maxID++;
             this.nodes.push({id:this.maxID,label:taskName});
@@ -69,8 +75,11 @@ export default{
 
             return true;
         },
-        reassignDependency:function(nodeID,dependencyID,newID){
-            //Find the edge where t=o=nodeID and from==dependencyID and remove it.
+        reassignDependency:function(nodeID,parentID,newParentID){
+            if(this.nodeID2Index(nodeID)==this.nodes.length || this.nodeID2Index(parentID)==this.nodes.length || this.nodeID2Index(newParentID))
+                return false;
+            for(var i in this.edges)
+                if (this.edges[i].from==nodeID)
         },
         recalculate:function(){
             if(this.network!=null) for (var i in this.network.body.nodes){
