@@ -2,7 +2,9 @@
     <div>
         <div id="theGraph"><network v-bind:nodes="nodes" v-bind:edges="edges" ref="graph"></network ></div>
         <input type="button" value="add" @click="add()">
-        <input type="button" value="reload" @click="replace()">
+        <input type="button" value="remove" @click="remove()">
+        <br>
+        <input type="text" id="id1">
     </div>
 </template>
 
@@ -16,14 +18,15 @@
                 {id: 2, label: 'Node 2'},
                 {id: 3, label: 'Node 3'},
                 {id: 4, label: 'Node 4'},
-                {id: 5, label: 'Node 5'}
+                {id: 5, label: 'Node 5'},
+                {id: 6, label: 'Node 6'}
             ],
             edges: [
-                {from: 1, to: 3},
                 {from: 1, to: 2},
-                {from: 2, to: 4},
-                {from: 2, to: 5},
-                {from: 3, to: 3}
+                {from: 3, to: 1},
+                {from: 4, to: 2},
+                {from: 5, to: 2},
+                {from: 6, to: 1}
             ]
         }},
         components: {
@@ -34,15 +37,8 @@
             add: function(){
                 this.$refs.graph.addTask("New",4);
             },
-            replace: function(){
-                this.$refs.graph.reloadData([
-                    {x: '2014-06-11', y: 30},
-                    {x: '2014-06-12', y: 15},
-                    {x: '2014-06-13', y: 10},
-                    {x: '2014-06-14', y: 30},
-                    {x: '2014-06-15', y: 25},
-                    {x: '2014-06-16', y: 10}
-                ])
+            remove: function(){
+                this.$refs.graph.removeTask(document.getElementById("id1").value)
             }
         }
     }

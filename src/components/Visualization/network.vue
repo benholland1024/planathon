@@ -4,7 +4,7 @@
 
 <script>
 import vis from 'vis';
-import 'vis/dist/vis.min.css';
+//import 'vis/dist/vis.min.css';
 
 export default{
     props: {
@@ -48,26 +48,24 @@ export default{
             return true;
         },
         removeTask: function(id){
-            let indexOfTarget=this.nodeID2Index(id);
-            if(indexOfTarget==this.nodes.length) return false;
+            if(this.nodeID2Index(id)==this.nodes.length) return false; //For validation only
 
-            let edgesToRemove=[];
             let otherNodes=[];
 
-            for(i in this.edges){
-                if(this.edges[i].to==id){
-                    edgesToRemove.push(i)
-                    otherNodes.push(this.edges[i].from);
-                }
-            }
-            
-            for(i in otherNodes)
-                this.removeTask(otherNodes[i]);
-            
-            for(i in edgesToRemove)
-                this.edges.splice(edgesToRemove[i],1);
+            let i=0;
 
-            this.nodes.splice(indexOfTarget,1);
+            while(i<this.edges.length)
+                if(this.edges[i].to==id){
+                    otherNodes.push(this.edges[i].from);
+                    this.edges.splice(i,1);
+                } else 
+                    i++;
+
+            for(var j in otherNodes)
+                this.removeTask(otherNodes[j]);
+
+            this.nodes.splice(this.nodeID2Index(id),1);
+            this.recalculate();
 
             return true;
         },
@@ -100,4 +98,5 @@ div {
     width: 100%;
     height: 100%;
 }
+
 </style>

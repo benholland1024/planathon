@@ -53,3 +53,11 @@ div {
     height: 100%;
 }
 </style>
+<style>
+.vis-time-axis .vis-text {
+    color: #bebebe !important;
+}
+.vis-y-axis.vis-major{
+    color: #6e6e6e !important;
+}
+</style>
