@@ -225,6 +225,7 @@ export default {
 .day-node {
   width: 10px;
   height: 10px;
+  cursor: pointer;
   background: $lighter-gray;
 }
 .week-node {

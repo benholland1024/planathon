@@ -33,7 +33,7 @@
 
 <script>
 import { Sponsor, Contact, Interaction } from './Sponsor'
-import ContactTracker from  '@/components/Sponsorship/ContactTracker.vue'
+import ContactTracker from  '@/components/dashboardComponents/Sponsors/ContactTracker.vue'
 
 export default {
     components: {
@@ -41,7 +41,12 @@ export default {
     },
     data() {
         return {
-            isExpanded: false
+            isExpanded: false,
+            contact: {
+                name: '',
+                email: "",
+                notes: "",
+            }
         }
     },
     props: {

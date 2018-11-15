@@ -3,7 +3,7 @@
     <div class="dark-widget">
       <input v-model="companySearchText" />
       <sponsor-editor :sponsor="sponsorToAdd" id="sponsToAdd"></sponsor-editor>
-      <button value="Add" @click="addSponsor"/>
+      <button value="Add" @click="addSponsor">Add a new sponsor!</button>
       <div v-for="(sponsor, index) in filteredSponsorList" :key="index">
         <sponsor-editor :sponsor="sponsor" :hackathonId="$parent.hackathon.id"></sponsor-editor>
       </div>
@@ -16,9 +16,9 @@
 
 <script>
 import Tasks from '@/components/dashboardComponents/tasks.vue';
-import SponsorEditor from '@/components/Sponsorship/SponsorEditor.vue';
-import { Sponsor } from '@/components/Sponsorship/Sponsor.js'
-import FundingBurndown from '@/components/Sponsorship/FundingBurndown.vue'
+import SponsorEditor from '@/components/dashboardComponents/Sponsors/SponsorEditor.vue';
+import { Sponsor } from '@/components/dashboardComponents/Sponsors/Sponsor.js'
+import FundingBurndown from '@/components/dashboardComponents/Sponsors/FundingBurndown.vue'
 
 export default {
   name: 'development',

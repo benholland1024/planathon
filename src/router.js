@@ -73,13 +73,13 @@ export default new Router({
         },
         {
           path: 'sponsors',
-          component: () => import ('./components/dashboardComponents/Sponsors.vue'),
+          component: () => import ('./components/dashboardComponents/Sponsors/Sponsors.vue'),
           name: 'sponsors',
           meta: { dash: true }
         },
         {
           path: 'design',
-          component: () => import ('./components/dashboardComponents/Design.vue'),
+          component: () => import ('./components/dashboardComponents/Design/Design.vue'),
           name: 'design',
           meta: { dash: true }
         },
@@ -94,12 +94,12 @@ export default new Router({
     {
       path: '/fundingburndown',
       name: 'FundingBurndown',
-      component: () => import('./components/Sponsorship/FundingBurndown.vue')
+      component: () => import('./components/dashboardComponents/Sponsors/FundingBurndown.vue')
     },
     {
       path: '/contacttracker',
       name: 'ContactTracker',
-      component: () => import('./components/Sponsorship/ContactTracker.vue')
+      component: () => import('./components/dashboardComponents/Sponsors/ContactTracker.vue')
     },
     {
       path: '/sponsorship/:hackathonId',
