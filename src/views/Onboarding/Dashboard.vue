@@ -3,7 +3,7 @@
 
   <div id="dash-nav">
     <div style="text-align:left">
-      <h2>{{ this.hackathon.name }} - 127 Days Left</h2>
+      <h2>{{ hackathon.name }} - {{daysCountDown}} Days Left</h2>
       <h4>Keep up the good work!</h4>
     </div>
     <div style="display: flex;align-items: center;">
@@ -65,23 +65,11 @@
     </div>
 
   <!--Calendar on the side -- TODO: Abstract to a component?-->
-    <div id="calendar">
-      <div id="day-labels">
-        <span>M</span>
-        <span>T</span>
-        <span>W</span>
-        <span>R</span>
-        <span>F</span>
-        <span>S</span>
-        <span>S</span>
-      </div>
-      <div id="day-nodes">
-        <div class="week-node" v-for="week in 35">
-          <div v-for="i in 7" class="day-node">
-          </div>
-        </div>
-      </div>
-    </div>
+    <calendar :daysCountDown="daysCountDown"
+              :hackathonDate="hackathon.date"
+              :today="today"
+              :tasks="tasks">
+    </calendar>
 
     <router-view></router-view>
 
@@ -99,12 +87,16 @@
 import LineGraph from '@/components/Charts/LineGraph.js';
 import PolarGraph from '@/components/Charts/PolarGraph.js';
 import Tasks from '@/components/dashboardComponents/tasks.vue';
+import Calendar from '@/components/dashboardComponents/Calendar.vue';
+
+import { dateDiffInDays } from '@/utils.js';
 
 export default {
   name: 'dashboard',
   data() {
     return {
       timeline: [],
+      today: new Date(),
     }
   },
   mounted() {
@@ -113,7 +105,8 @@ export default {
   components: {
     LineGraph,
     PolarGraph,
-    Tasks
+    Tasks,
+    Calendar
   },
   computed: {
     tasks() {
@@ -127,6 +120,20 @@ export default {
     },
     hackathon() {
       return this.hackathons[`${this.$route.params.hackathonId}`]
+    },
+
+    // Calculating data for the sidebar calendar:
+    weeklyCalendar() {
+      return []
+    },
+    daysCountDown() {
+      if (typeof this.today.getMonth !== 'function') {
+        return false;
+      }
+      if (typeof this.hackathon.date.toDate().getMonth !== 'function') {
+        return false;
+      }
+      return dateDiffInDays(this.today, this.hackathon.date.toDate())
     }
   }
 }
@@ -136,7 +143,7 @@ export default {
 @import '@/GlobalVars.scss';
 
 #dashboard {
-  
+
   width: calc(100% - 180px);
   margin-right: 0px;
   margin-left: auto;

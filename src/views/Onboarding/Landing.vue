@@ -52,12 +52,12 @@
         <h4>No hackathons yet!</h4>
       </div>
       <br>
-      <div class="new-hackathon-opt opt hover-shine" @click="hackathonInput = true">
-        <span v-if="!hackathonInput">
+      <router-link tag="div" class="new-hackathon-opt opt hover-shine" 
+        :to="{ name: 'new-hackathon', params: { orgId: org.id }}">
+        <span>
           + New Hackathon
         </span>
-        <input v-else v-model="hackathonName" @keyup.enter="addNewTasks()" ref="newHackathon">
-      </div>
+      </router-link>
 
       <!-- manageOrgModal -->
       <div class="hackathon-item manage-org-opt opt hover-shine" @click="showOrgModal = true">
@@ -106,7 +106,6 @@ export default {
       ],
       orgInput: false,
       orgName: '',
-      hackathonInput: false,
       hackathonName: '',
       hackathonId: '',
       selectedOrg: '',
@@ -164,7 +163,7 @@ export default {
           .catch(err => {
             console.error("Problem updating user org list: ", err)
           })
-
+          this.orgName = '';
         } else {
           alert("Sorry, organization: " + this.orgName + " is already in use");
         }
@@ -203,7 +202,7 @@ export default {
       }
 
       // Updating org list and resetting org data for reloading
-      this.$store.dispatch('orgs/set', {[`${this.$parent.org.id}`]: {hackathons: updateObj.hackathons}})
+      this.$store.dispatch('orgs/set', {[`${this.$parent.org.id}`]: { hackathons: updateObj.hackathons }})
       .then(() => {
         while (this.$parent.userOrgs[0])
           this.$parent.userOrgs.pop();
