@@ -8,14 +8,18 @@
     <div class="vertical-widget-holder">
       <div class="hamburger-dark-widget">
         <h3>Color Palette:</h3>
-        <div class="color-widget">
+        <div class="color-widget" v-for="(color, index) in colors"
+          :key="index">
 
           <div class="color-info">#123123</div>
-          <div class="color-info">rgba(16,55,46)</div>
+          <div class="color-info">{{index}}</div>
+          
+          <chrome v-model="colors[index]" v-if="colorPickerDisp == index"/>
 
-          <input type="color" ref="colorDisp"> <!-- Note that this input is actually
-          invisible! It gets selected when you click on color-disp -->
-          <div class="color-disp"  @click="$refs.colorDisp.click()"></div>
+          <div class="color-disp"  @click="colorPickerDisp = index"
+            :style="{
+                background: color.hex
+              }"></div>
 
           <img src="@/assets/trash.png" class="delete-icon">
         </div>
@@ -28,11 +32,28 @@
 
 <script>
 import Tasks from '@/components/dashboardComponents/tasks.vue';
+import { Chrome } from 'vue-color';
+
 
 export default {
   name: 'design',
   components: {
-    Tasks
+    Tasks,
+    Chrome
+  },
+  data() {
+    return {
+      colorPickerDisp: -1,
+      colors: [
+        {
+          hex: '#194d33',
+          hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
+          hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+          rgba: { r: 25, g: 77, b: 51, a: 1 },
+          a: 1
+        }
+      ]
+    }
   },
   computed: {
     designTasks() {
@@ -48,7 +69,7 @@ export default {
 @import '@/GlobalVars.scss';
 
 input[type=color] {
-    display: none;
+    // display: none;
   }
 
 .color-widget {
@@ -72,7 +93,6 @@ input[type=color] {
   width: 20px;
   height: 20px;
   box-shadow: $box-shading;
-  background: pink;
 }
 .delete-icon {
   width: 15px;
