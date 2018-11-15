@@ -3,8 +3,11 @@
         <div id="theGraph"><network v-bind:nodes="nodes" v-bind:edges="edges" ref="graph"></network ></div>
         <input type="button" value="add" @click="add()">
         <input type="button" value="remove" @click="remove()">
+        <input type="button" value="change parent" @click="reassign()">
         <br>
-        <input type="text" id="id1">
+        ID1:<input type="text" id="id1"><br>
+        ID2:<input type="text" id="id2"><br>
+        ID3:<input type="text" id="id3"><br>
     </div>
 </template>
 
@@ -35,10 +38,16 @@
         },
         methods: {
             add: function(){
-                this.$refs.graph.addTask("New",4);
+                this.$refs.graph.addTask("Node 7",4);
             },
             remove: function(){
                 this.$refs.graph.removeTask(document.getElementById("id1").value)
+            },
+            reassign: function(){
+                let ID1=document.getElementById("id1").value;
+                let ID2=document.getElementById("id2").value;
+                let ID3=document.getElementById("id3").value;
+                this.$refs.graph.reassignParent(ID1,ID2,ID3)
             }
         }
     }

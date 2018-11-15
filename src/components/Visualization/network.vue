@@ -75,11 +75,16 @@ export default{
 
             return true;
         },
-        reassignDependency:function(nodeID,parentID,newParentID){
+        reassignParent: function(nodeID,parentID,newParentID){
             if(this.nodeID2Index(nodeID)==this.nodes.length || this.nodeID2Index(parentID)==this.nodes.length || this.nodeID2Index(newParentID))
                 return false;
             for(var i in this.edges)
-                if (this.edges[i].from==nodeID)
+                if (this.edges[i].from==nodeID || this.edges[i].to==parentID){
+                    this.edges[i].to=newParentID;
+                    this.recalculate();
+                    return true;
+                }
+            return false;
         },
         recalculate:function(){
             if(this.network!=null) for (var i in this.network.body.nodes){
