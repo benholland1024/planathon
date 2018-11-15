@@ -175,6 +175,22 @@ export default {
   height: 500px;
   margin-top: 25px;
 }
+.vertical-widget-holder {
+  display: flex;
+  position: relative;
+  height: 525px;
+  width: 40%;
+  margin: 0px;
+  flex-flow: column;
+}
+.hamburger-dark-widget {
+  background-color: $dark-gray;
+  // min-height: 232.5px;
+  position: relative;
+  height: 50%;
+  width: 100%;
+  margin-top: 25px;
+}
 
 .task-widget {
   background-color: $gray;
