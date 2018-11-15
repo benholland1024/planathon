@@ -16,7 +16,7 @@ import Vue from 'vue';
 import ToggleButton from 'vue-js-toggle-button'
 Vue.use(ToggleButton)
 
-// Tooltip popups 
+// Tooltip popups
 import VTooltip from 'v-tooltip'
 Vue.use(VTooltip);
 
@@ -152,6 +152,9 @@ export default {
     color: $light-blue;
   }
 
+  .all {
+    background-color: white;
+  }
   .finance {
     background-color: $yellow;
   }
@@ -415,4 +418,3 @@ export default {
 }
 
 </style>
-

@@ -21,7 +21,7 @@
     <div id="catagory-tabs">
       <div class="light-gray">Update me on: </div>
         <router-link class="catagory-tab yellow" tag="div"
-          :to="{ name: 'finances', params: {
+          :to="{ name: 'finance', params: {
             hackathon: hackathon
           } }"
           active-class="underlined"

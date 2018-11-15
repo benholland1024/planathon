@@ -14,6 +14,9 @@
       <div class="week-node" v-for="week in Math.ceil((simplifiedTasks.length / 7))">
         <div v-for="day in simplifiedTasks.slice((week - 1) * 7, week * 7)" class="day-node"
           v-tooltip="getMonthFromDate(day.date) + ' ' + day.date.getDate()">
+          <div v-for="task in day.tasks"
+            v-tooltip="task.tags">
+          </div>
 
           <div v-show="day.tasks.length != 0">
             <!-- We will probably want to make a square component eventually
@@ -73,7 +76,7 @@ export default {
       var v = [];
 
       // Days between today and the hackathon date
-      var daysInCalendar = this.daysCountDown; 
+      var daysInCalendar = this.daysCountDown;
 
       // We want our calendar to start on monday, so now we add the days between
       // today and monday
@@ -90,14 +93,22 @@ export default {
         };
       }
       this.tasks.forEach(task => {
-        v[task.daysBefore-1+(this.today.getDay() % 7)].tasks.push(task);
+        if (task.tags.includes( this.$route.name ) || this.$route.name == "all") {
+          v[daysInCalendar-(task.daysBefore-2+(this.today.getDay() % 7))].tasks.push(task);
+        }
       })
 
       v[this.today.getDay() % 7].tasks.push({
         id: 'today'
       })
 
-      console.log(v)
+      if (this.$route.name != 'all') {
+        this.tags = [this.$route.name];
+      }
+      else {
+        this.tags = ['all'];
+      }
+
       return v;
     }
   }

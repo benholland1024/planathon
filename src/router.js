@@ -51,12 +51,12 @@ export default new Router({
       path: '/dashboard/:hackathonId',
       name:'dashboard',
       component: () => import('./views/Onboarding/Dashboard.vue'),
-      redirect: { name: 'finances' },
+      redirect: { name: 'finance' },
       children: [
         {
-          path: 'finances',
+          path: 'finance',
           component: () => import ('./components/dashboardComponents/Finances.vue'),
-          name: 'finances',
+          name: 'finance',
           meta: { dash: true }
         },
         {
