@@ -153,6 +153,8 @@ export default {
   }
 
   .all {
+    // experimented with making this green
+    // background-color: #49BFB0;
     background-color: white;
   }
   .finance {

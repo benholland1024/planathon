@@ -11,8 +11,8 @@
     </div>
     <div id="day-nodes">
 
-      <div class="week-node" v-for="week in Math.ceil((simplifiedTasks.length / 7))">
-        <div v-for="day in simplifiedTasks.slice((week - 1) * 7, week * 7)" class="day-node"
+      <div class="week-node" v-for="(week, weekIndex) in Math.ceil((simplifiedTasks.length / 7))">
+        <div v-for="(day, dayIndex) in simplifiedTasks.slice((week - 1) * 7, week * 7)" class="day-node"
           v-tooltip="getMonthFromDate(day.date) + ' ' + day.date.getDate()">
           <div v-for="task in day.tasks"
             v-tooltip="task.tags">
@@ -22,8 +22,12 @@
             <!-- We will probably want to make a square component eventually
                  that can handle an array of tasks for the day.
                  tags is hard coded here. -->
-            <task-circle-display :tags="tags">
-            </task-circle-display>
+            <task-square-display :tags="tags">
+            </task-square-display>
+            
+          </div>
+
+          <div class="strike-through" v-show="weekIndex == 0 && dayIndex < (today.getDay() % 7)">
           </div>
 
         </div>
@@ -34,7 +38,7 @@
 </template>
 
 <script>
-import TaskCircleDisplay from '@/components/dashboardComponents/taskModals/taskCircleDisplay.vue';
+import TaskSquareDisplay from '@/components/dashboardComponents/taskModals/taskSquareDisplay.vue';
 import {dateObjFromDaysBefore, getMonthFromDate} from '@/utils';
 
 export default {
@@ -45,7 +49,7 @@ export default {
     }
   },
   components: {
-    TaskCircleDisplay
+    TaskSquareDisplay
   },
   props: {
     daysCountDown: {
@@ -98,10 +102,6 @@ export default {
         }
       })
 
-      v[this.today.getDay() % 7].tasks.push({
-        id: 'today'
-      })
-
       if (this.$route.name != 'all') {
         this.tags = [this.$route.name];
       }
@@ -114,3 +114,18 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+.strike-through {
+  position: relative;
+  overflow: hidden;
+  width: 3px;
+  height: 20px;
+  transform: rotate(45deg);
+  background: black;
+  top: -4.1px;
+  right: -3px;
+}
+
+</style>

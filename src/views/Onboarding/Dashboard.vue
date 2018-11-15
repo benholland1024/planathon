@@ -226,6 +226,7 @@ export default {
   width: 10px;
   height: 10px;
   background: $lighter-gray;
+  overflow: hidden;
 }
 .week-node {
   display: flex;
