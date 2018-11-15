@@ -101,3 +101,9 @@ div {
     height: 100%;
 }
 </style>
+
+<style>
+.vis-time-axis .vis-text {
+  color: #ff0000 !important;
+}
+</style>
