@@ -47,30 +47,6 @@
                     <label for="checkbox">  Logistics</label>
                   </div>
 
-                <div class="tag-toggle">
-                  <toggle-button v-model="tags.sponsors"
-                    color="#FF9A6E"/>
-                  <label for="checkbox">  Sponsors</label>
-                </div>
-
-                <div class="tag-toggle">
-                  <toggle-button v-model="tags.promotion"
-                    color="#FF6EE0"/>
-                  <label for="checkbox">  Promotion</label>
-                </div>
-
-                <div class="tag-toggle">
-                  <toggle-button v-model="tags.design"
-                    color="#BA68FF"/>
-                  <label for="checkbox">  Design</label>
-                </div>
-
-                <div class="tag-toggle">
-                  <toggle-button v-model="tags.general"
-                    color="#7A8FFF"/>
-                  <label for="checkbox">  General</label>
-                </div>
-
               </div>
               <p>Deadline:</p>
               <date-picker v-model="date" :first-day-of-week="1"
