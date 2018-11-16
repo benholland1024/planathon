@@ -5,59 +5,58 @@
         <!-- We use @click.stop on the next line to prevent showAddModal
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
-          <h2>Add Task</h2>
-            <div class="task-options">
-              <div>
-                <p>Title:</p>
-                <input v-model="taskTitle" type="text" class="auth-textbox"/><br>
-                <p>Description:</p>
-                <textarea v-model="taskDesc" type="text" class="auth-textbox"/>
-              </div>
-
-              <div>
-                <p>Catagory:</p>
-                <div class="tag-picker">
-                  <div class="tag-toggle">
-                    <toggle-button v-model="tags.finance"
-                      color="#FFE16E"/>
-                    <label for="checkbox">  Finance</label>
-                  </div>
-
-                  <div class="tag-toggle">
-                    <toggle-button v-model="tags.sponsors"
-                      color="#FF9A6E"/>
-                    <label for="checkbox">  Sponsors</label>
-                  </div>
-
-                  <div class="tag-toggle">
-                    <toggle-button v-model="tags.promotion"
-                      color="#FF6EE0"/>
-                    <label for="checkbox">  Promotion</label>
-                  </div>
-
-                  <div class="tag-toggle">
-                    <toggle-button v-model="tags.design"
-                      color="#BA68FF"/>
-                    <label for="checkbox">  Design</label>
-                  </div>
-
-                  <div class="tag-toggle">
-                    <toggle-button v-model="tags.general"
-                      color="#7A8FFF"/>
-                    <label for="checkbox">  General</label>
-                  </div>
-
-                </div>
-                <p>Deadline:</p>
-                <date-picker v-model="date" :first-day-of-week="1"
-                lang="en"></date-picker>
-              </div>
-
-            </div><br><br>
+        <h2>Add Task</h2>
+          <div class="task-options">
             <div>
-              <button class="material-button-large" @click="saveTask()">Add</button>
-              <button class="material-button-large" @click="$emit('close')">Back</button>
+              <p>Title:</p>
+              <input v-model="taskTitle" type="text" class="auth-textbox"/><br>
+              <p>Description:</p>
+              <textarea v-model="taskDesc" type="text" class="auth-textbox"/>
             </div>
+
+            <div>
+              <p>Catagory:</p>
+              <div class="tag-picker">
+                <div class="tag-toggle">
+                  <toggle-button v-model="tags.finance"
+                    color="#FFE16E"/>
+                  <label for="checkbox">  Finance</label>
+                </div>
+
+                <div class="tag-toggle">
+                  <toggle-button v-model="tags.sponsors"
+                    color="#FF9A6E"/>
+                  <label for="checkbox">  Sponsors</label>
+                </div>
+
+                <div class="tag-toggle">
+                  <toggle-button v-model="tags.promotion"
+                    color="#FF6EE0"/>
+                  <label for="checkbox">  Promotion</label>
+                </div>
+
+                <div class="tag-toggle">
+                  <toggle-button v-model="tags.design"
+                    color="#BA68FF"/>
+                  <label for="checkbox">  Design</label>
+                </div>
+
+                <div class="tag-toggle">
+                  <toggle-button v-model="tags.general"
+                    color="#7A8FFF"/>
+                  <label for="checkbox">  General</label>
+                </div>
+
+              </div>
+              <p>Deadline:</p>
+              <date-picker v-model="date" :first-day-of-week="1"
+              lang="en"></date-picker>
+            </div>
+
+          </div><br><br>
+          <div>
+            <button class="material-button-large" @click="saveTask()">Add</button>
+            <button class="material-button-large" @click="$emit('close')">Back</button>
           </div>
         </div>
       </div>
@@ -138,6 +137,7 @@ import {getDaysBeforeFromDate} from '@/utils.js';
           description: this.taskDesc,
           tags: updatedTags,
           hackathon: this.hackathonId,
+          progress: 'not started',
           daysBefore
         })
         .catch(err => {
