@@ -59,4 +59,7 @@ export default {
 #sponsToAdd {
   background-color: green;
 }
+.dark-widget {
+  overflow-y: scroll;
+}
 </style>
