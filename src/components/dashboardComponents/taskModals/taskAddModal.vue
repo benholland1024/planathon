@@ -44,7 +44,7 @@
                   <div class="tag-toggle">
                     <toggle-button v-model="tags.general"
                       color="#7A8FFF"/>
-                    <label for="checkbox">  General</label>
+                    <label for="checkbox">  Logistics</label>
                   </div>
 
                 </div>

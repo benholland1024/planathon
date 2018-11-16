@@ -103,9 +103,8 @@
         delete newOrgList[this.orgId];
         console.log(collabIdToRemove, this.orgId, newOrgList)
 
-        this.$store.dispatch('users/set', {[`${collabIdToRemove}`]: {
-          orgs: newOrgList
-        }}).catch(err => {
+        this.$store.dispatch('users/delete', `${collabIdToRemove}.orgs.${this.orgId}`
+        ).catch(err => {
           console.error("Error removing org from collaborator's orgs", err)
         })
 
@@ -207,17 +206,8 @@
         }
 
         //Removing org from user data
-        var newUserOrgs = {
-          orgs: {}
-        };
-        for (var orgDelete in this.currentUser.orgs){
-          console.warn(orgDelete)
-          if (this.orgId != orgDelete)
-            newUserOrgs.orgs[orgDelete] = {role: this.currentUser.orgs[orgDelete].role};
-        }
-        this.$store.dispatch('users/set', {[`${this.currentUser.id}`]: {
-          orgs: newUserOrgs.orgs
-        }})
+        this.$store.dispatch('users/delete', `${this.currentUser.id}.orgs.${this.orgId}`)
+
         //Deleting org from firebase
         this.$store.dispatch('orgs/delete', this.orgId)
         .then(() => {
