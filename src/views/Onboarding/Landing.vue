@@ -43,10 +43,15 @@
       <span>{{org.name}}</span>
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
-        <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons"
+        <div v-for="hackathon in org.hackathons" style="display: flex;flex-direction: column">
+          <div style="display: flex;flex-direction: row;">
+            <router-link tag="div" :to="'/dashboard/' + hackathon.id"
                     :key="hackathon.id" class="hackathon-opt opt hover-shine">
-          {{ hackathon.name }}
-        </router-link>
+              {{ hackathon.name }}
+            </router-link>
+            <img src="@/assets/trash.png" style="height: 20px;width: 20px;" @click="deleteHackathon(hackathon.id)">
+          </div>
+        </div>
       </div>
       <div v-else>
         <h4>No hackathons yet!</h4>
@@ -230,6 +235,7 @@ export default {
       taskList.push(taskId1)
       this.$store.dispatch('tasks/set', {
         id: taskId1,
+        progress: "not started",
         hackathon: this.hackathonId,
         title: "Swag: T-shirts",
         description: "Design and order t-shirts for the event.",
@@ -244,6 +250,7 @@ export default {
       taskList.push(taskId2)
       this.$store.dispatch('tasks/set', {
         id: taskId2,
+        progress: "not started",
         hackathon: this.hackathonId,
         title: "Second wave of sponsor emails",
         description: "Remind sponsors why you're worth it.",
@@ -254,6 +261,28 @@ export default {
       })
       this.addNewHackathon(taskList);
       console.log(taskList, taskId1, taskId2)
+    },
+    deleteHackathon(id) {
+      if (!confirm('Are you sure you want to delete this hackathon? This can\'t be undone!')) {
+          return;
+        }
+
+      // Remove tasks connected to hackathon
+      this.$store.dispatch('tasks/fetch', {whereFilters: [['hackathon', '==', id]]})
+      .then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          this.$store.dispatch('tasks/delete', doc.id)
+        })
+      })
+
+      // Update org list
+      this.$store.dispatch('orgs/delete', `${this.$parent.org.id}.hackathons.${id}`)
+
+      // Deleting hackathon  
+      this.$store.dispatch('hackathons/delete', id)
+      .catch(err => {
+        console.error("Error deleting hackathon: ", err)
+      })
     }
   },
   components: {
@@ -392,6 +421,7 @@ export default {
 
   .hackathon-opt {
     background: $gray;
+    //display: flex;
   }
 
   .opt {
