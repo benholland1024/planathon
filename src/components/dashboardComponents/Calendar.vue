@@ -14,9 +14,6 @@
       <div class="week-node" v-for="(week, weekIndex) in Math.ceil((simplifiedTasks.length / 7))">
         <div v-for="(day, dayIndex) in simplifiedTasks.slice((week - 1) * 7, week * 7)" class="day-node"
           v-tooltip="getMonthFromDate(day.date) + ' ' + day.date.getDate()">
-          <div v-for="task in day.tasks"
-            v-tooltip="task.tags">
-          </div>
 
           <div v-show="day.tasks.length != 0">
             <task-square-display :tags="tags">
@@ -101,7 +98,7 @@ export default {
       this.tasks.forEach(task => {
         if (task.tags.includes( this.$route.name ) || this.$route.name == "all") {
           if (task.daysBefore <= daysInCalendar) {
-            v[daysInCalendar-(task.daysBefore-2+(this.today.getDay() % 7))].tasks.push(task);
+            v[daysInCalendar-(task.daysBefore+daysAtEnd)].tasks.push(task);
           }
         }
       })
