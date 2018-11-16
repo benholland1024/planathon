@@ -8,15 +8,15 @@
     <input v-model="password" type="password" class="auth-textbox"
           @keyup.enter="signIn()"/> <br><br>
     <button @click="signIn()" class="material-button-large ">Login!</button> <br><br>
-    
+
     <p class="err-text">{{err}}</p>
-    
-    <p>Don't have an account yet? 
+
+    <p>Don't have an account yet?
       <router-link to="/register" tag="span" class="inline-link">
         Register!
       </router-link>
     </p>
-    
+
   </div>
 </template>
 
@@ -39,7 +39,6 @@ export default {
               this.$router.push('/');
             }).catch((error) => {
                 this.err = error.message;
-                console.error("Error signing you in!")
             });
         }
     }
@@ -50,9 +49,9 @@ export default {
 @import '@/GlobalVars.scss';
 
   #login {
-    
+
   }
-  
+
 /*  Note that this only applies to this page's material button: */
   .material-button-large {
     background: $gray;
