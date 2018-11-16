@@ -2,7 +2,7 @@
   <transition name="modal">
     <div class="popup-background">
       <div class="popup-wrapper" @click="$parent.showEditModal = -1">
-        <!-- We use @click.stop on the next line to prevent showEditModal 
+        <!-- We use @click.stop on the next line to prevent showEditModal
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Edit Task</h2>
@@ -110,7 +110,7 @@
          this.task.tags = updatedTags;
          this.$emit('close');
         }).catch(err => {
-         console.error("error: ", err);
+          this.$parent.$parent.$parent.$parent.messages.push("Could not edit task: " + err.message);
         })
       }
     },

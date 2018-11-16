@@ -6,9 +6,9 @@
   <p>Password:</p>
   <input v-model="password" type="password" class="auth-textbox"/> <br><br>
   <button @click="signIn()" class="material-button-large ">Let's Go!</button> <br><br>
-  
+
   <p class="err-text">{{err}}</p>
-  
+
   <p>Already have an account?
     <router-link to="/login" tag="span" class="inline-link">
       Login!
@@ -52,8 +52,6 @@ export default {
         }).catch((error) => {
         // Catching errors:
         this.err = error.message;
-        console.error("Error signing you in!")
-//            throw error;
         });
       }
     },
