@@ -11,20 +11,29 @@
         <div class="color-widget" v-for="(color, index) in colors"
           :key="index">
 
-          <div class="color-info">#123123</div>
-          <div class="color-info">{{index}}</div>
-          
-          <chrome v-model="colors[index]" v-if="colorPickerDisp == index"/>
+          <div class="color-info">{{color.hex}}</div>
+          <div class="color-info">rgba({{color.rgba.r}},{{color.rgba.g}},{{color.rgba.b}},{{color.rgba.a}})</div>
 
           <div class="color-disp"  @click="colorPickerDisp = index"
             :style="{
                 background: color.hex
               }"></div>
 
-          <img src="@/assets/trash.png" class="delete-icon">
+          <img src="@/assets/trash.png" class="delete-icon"
+            @click="deleteColor(index)">
         </div>
+        <button id="color-add-modal" class="hover-shine"
+          @click="addColor()">+</button>
       </div>
       <div class="hamburger-dark-widget">
+        
+        <div class="sample-color" 
+          :style=" {
+            background: tempColor.hex
+            }"></div>
+        <button @click="" class="color-save-button">Save</button>
+        <chrome v-model="tempColor" 
+            class="color-picker" />
       </div>
     </div>
   </div>
@@ -44,15 +53,34 @@ export default {
   data() {
     return {
       colorPickerDisp: -1,
-      colors: [
-        {
-          hex: '#194d33',
-          hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
-          hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
-          rgba: { r: 25, g: 77, b: 51, a: 1 },
-          a: 1
-        }
-      ]
+      tempColor: {
+        hex: '#194d33',
+        hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
+        hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+        rgba: { r: 25, g: 77, b: 51, a: 1 },
+        a: 1
+      }
+    }
+  },
+  methods: {
+    deleteColor(index) {
+
+    },
+    addColor() {
+      var colorId = this.$store.getters['tasks/dbRef'].doc().id;
+
+      this.$store.dispatch('colors/insert', {
+        id: colorId,
+        hex: '#194d33',
+        hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
+        hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+        rgba: { r: 25, g: 77, b: 51, a: 1 },
+        a: 1,
+        hackathon: this.$route.params.hackathonId,
+      })
+      .catch(err => {
+        console.error("Oops: ", err)
+      })
     }
   },
   computed: {
@@ -60,7 +88,10 @@ export default {
       return this.$parent.tasks.filter(task => {
         return task.tags.includes("design");
       })
-    }
+    },
+    colors() {
+      return this.$store.getters['colors/hackathonColors'](this.$route.params.hackathonId)
+    },
   }
 }
 </script>
@@ -93,6 +124,7 @@ input[type=color] {
   width: 20px;
   height: 20px;
   box-shadow: $box-shading;
+  cursor: pointer;
 }
 .delete-icon {
   width: 15px;
@@ -100,4 +132,51 @@ input[type=color] {
   opacity: .5;
 }
 
+#color-add-modal {
+  padding: 10px 20px;
+  background: $gray;
+  color: $lighter-gray;
+  font-size: 18px;
+  font-weight: bolder;
+  margin-right: 5%;
+  margin-top: 15px;
+  margin-left: auto;
+  display: block;
+  border: none;
+  box-shadow: $box-shading;
+  cursor: pointer;
+}
+
+.sample-color {
+  position: absolute;
+  width: 25%;
+  right: 10%;
+  height: 100px;
+  top: 10%;
+}
+
+.color-save-button {
+  position: absolute;
+  width: 25%;
+  right: 10%;
+  height: 40px;
+  bottom: 25%;
+  
+  padding: 10px 20px;
+  background: $gray;
+  color: $lighter-gray;
+  font-size: 18px;
+  font-weight: bolder;
+  display: block;
+  border: none;
+  box-shadow: $box-shading;
+  cursor: pointer;
+}
+
+</style>
+
+<style>
+.color-picker {
+  transform: scale(.8);
+}
 </style>

@@ -190,6 +190,7 @@ export default {
   height: 50%;
   width: 100%;
   margin-top: 25px;
+  overflow-y: scroll;
 }
 
 .task-widget {
