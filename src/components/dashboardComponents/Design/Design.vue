@@ -9,12 +9,23 @@
       <div class="hamburger-dark-widget">
         <h3>Color Palette:</h3>
         <div class="color-widget" v-for="(color, index) in colors"
+          
           :key="index">
 
-          <div class="color-info">{{color.hex}}</div>
-          <div class="color-info">rgba({{color.rgba.r}},{{color.rgba.g}},{{color.rgba.b}},{{color.rgba.a}})</div>
+          <div class="color-info"
+            :class="{
+              selected: index == colorPickerDisp
+            }">
+            {{color.hex}}
+          </div>
+          <div class="color-info"
+            :class="{
+              selected: index == colorPickerDisp
+            }">
+            rgba({{color.rgba.r}},{{color.rgba.g}},{{color.rgba.b}},{{color.rgba.a}})
+          </div>
 
-          <div class="color-disp"  @click="colorPickerDisp = index"
+          <div class="color-disp"  @click="selectColor(index)"
             :style="{
                 background: color.hex
               }"></div>
@@ -31,7 +42,7 @@
           :style=" {
             background: tempColor.hex
             }"></div>
-        <button @click="" class="color-save-button">Save</button>
+        <button @click="updateColor()" class="color-save-button">Save</button>
         <chrome v-model="tempColor" 
             class="color-picker" />
       </div>
@@ -52,7 +63,7 @@ export default {
   },
   data() {
     return {
-      colorPickerDisp: -1,
+      colorPickerDisp: 0,
       tempColor: {
         hex: '#194d33',
         hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
@@ -63,11 +74,25 @@ export default {
     }
   },
   methods: {
+    selectColor(index) {
+      this.colorPickerDisp = index;
+    },
     deleteColor(index) {
+      if (confirm("Are you sure?")){
+        this.$store.dispatch('colors/delete', this.colors[this.colorPickerDisp].id);
+      }
+
+    },
+    updateColor() {
+      this.$store.dispatch('colors/set', {
+        ...this.tempColor,
+        id: this.colors[this.colorPickerDisp].id,
+        hackathon: this.$route.params.hackathonId,
+      })
 
     },
     addColor() {
-      var colorId = this.$store.getters['tasks/dbRef'].doc().id;
+      var colorId = this.$store.getters['colors/dbRef'].doc().id;
 
       this.$store.dispatch('colors/insert', {
         id: colorId,
@@ -117,7 +142,7 @@ input[type=color] {
   align-items: center;
 }
 
-.color-info {
+.color-info:not(.selected) {
   opacity: .5;
 }
 .color-disp {
@@ -130,6 +155,7 @@ input[type=color] {
   width: 15px;
   height: 15px;
   opacity: .5;
+  cursor: pointer;
 }
 
 #color-add-modal {
@@ -141,6 +167,7 @@ input[type=color] {
   margin-right: 5%;
   margin-top: 15px;
   margin-left: auto;
+  margin-bottom: 20px;
   display: block;
   border: none;
   box-shadow: $box-shading;
