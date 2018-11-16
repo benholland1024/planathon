@@ -42,7 +42,7 @@ export default {
       loadingUser: true,
       org: null,
       hackathon: null,
-      message: 'Error Message'
+      message: ''
     }
   },
   components: {
