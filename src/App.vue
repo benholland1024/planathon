@@ -159,6 +159,9 @@ export default {
   .light-blue {
     color: $light-blue;
   }
+  .lighter-gray {
+    color: $lighter-gray;
+  }
 
   .all {
     background-color: white;
@@ -210,7 +213,11 @@ export default {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-
+  }
+  .gray-button {
+    background: $gray;
+    color: $lighter-gray;
+    margin-top: 20px;
   }
   .hover-shine {
     position: relative;
@@ -254,6 +261,11 @@ export default {
   .yellow-gradient {
     background: $yellow-gradient;
     color: white;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
   }
 
   #app {

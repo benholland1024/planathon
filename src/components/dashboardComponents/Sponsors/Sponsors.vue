@@ -1,9 +1,13 @@
 <template>
   <div class="widget-holder">
     <div class="dark-widget">
-      <input v-model="companySearchText" />
+      <div class="search-bar">
+        <img src="@/assets/search.png" class="icon" >
+        <input v-model="companySearchText"  />
+      </div>
       <sponsor-editor :sponsor="sponsorToAdd" id="sponsToAdd"></sponsor-editor>
-      <button value="Add" @click="addSponsor">Add a new sponsor!</button>
+      <button value="Add" @click="addSponsor"
+        class="material-button-large gray-button">Add a new sponsor!</button>
       <div v-for="(sponsor, index) in filteredSponsorList" :key="index">
         <sponsor-editor :sponsor="sponsor" :hackathonId="$parent.hackathon.id"></sponsor-editor>
       </div>
@@ -49,17 +53,35 @@ export default {
   },
   methods: {
     addSponsor() {
-      this.sponsorToAdd = Sponsor(this.$parent.hackathon.id, '<new>')
+      this.sponsorToAdd = Sponsor(this.$parent.hackathon.id, 'Company Name')
     }
   }
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+@import '@/GlobalVars.scss';
+
 #sponsToAdd {
-  background-color: green;
+  background-color: $gray;
+  box-shadow: $box-shading;
 }
 .dark-widget {
   overflow-y: scroll;
+}
+
+.search-bar {
+  display: flex; 
+  align-items:center; 
+  justify-content: center;
+  margin: 20px;
+  input {
+    background: none;
+    outline: none;
+    border: none;
+    border-bottom: solid 3px $lighter-gray;
+    color: $lighter-gray;
+    font-size: 20px;
+  }
 }
 </style>
