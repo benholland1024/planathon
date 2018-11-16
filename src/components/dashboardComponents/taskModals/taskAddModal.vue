@@ -14,14 +14,38 @@
               <textarea v-model="taskDesc" type="text" class="auth-textbox"/>
             </div>
 
-            <div>
-              <p>Catagory:</p>
-              <div class="tag-picker">
-                <div class="tag-toggle">
-                  <toggle-button v-model="tags.finance"
-                    color="#FFE16E"/>
-                  <label for="checkbox">  Finance</label>
-                </div>
+              <div>
+                <p>Catagory:</p>
+                <div class="tag-picker">
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.finance"
+                      color="#FFE16E"/>
+                    <label for="checkbox">  Finance</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.sponsors"
+                      color="#FF9A6E"/>
+                    <label for="checkbox">  Sponsors</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.promotion"
+                      color="#FF6EE0"/>
+                    <label for="checkbox">  Promotion</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.design"
+                      color="#BA68FF"/>
+                    <label for="checkbox">  Design</label>
+                  </div>
+
+                  <div class="tag-toggle">
+                    <toggle-button v-model="tags.general"
+                      color="#7A8FFF"/>
+                    <label for="checkbox">  Logistics</label>
+                  </div>
 
                 <div class="tag-toggle">
                   <toggle-button v-model="tags.sponsors"

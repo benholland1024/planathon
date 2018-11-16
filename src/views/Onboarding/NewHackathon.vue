@@ -8,7 +8,7 @@
 
       <div>Anticipated date for your hackathon:</div>
       <div style="opacity:.5;margin-bottom: 15px;"><i>You can always change this.</i></div>
-      <date-picker lang="en" v-model="date"></date-picker><br><br>
+      <date-picker lang="en" v-model="date" :not-before="today"></date-picker><br><br>
 
       <div>Estimated guess for your hackathon's attendance:</div>
       <div class="description"><i>If you don't know, just guess! </i></div>
@@ -29,7 +29,9 @@ export default {
       date: new Date(),
       attendance: 100,
       orgId: this.$route.params.orgId,
-      hackathonId: ''
+      hackathonId: '',
+
+      today: new Date()
     }
   },
   components: {
@@ -42,6 +44,12 @@ export default {
   },
   methods: {
     addNewTasks() {
+
+      if (!this.name) {
+        this.$parent.messages.push("Your hackathon must have a name!");
+        return;
+      }
+
       // Make sure the user is logged in
       if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");

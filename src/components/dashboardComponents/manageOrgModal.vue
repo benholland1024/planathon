@@ -14,13 +14,13 @@
             <option v-for="collab in collabResults">{{collab.email}}</option>
           </select>
           <br><br>
-          <div style="display: flex" justify-content>
+          <div style="display: flex;justify-content: space-between">
             <button class="material-button-large" @click="getNewCollabId()">Add Collaborator</button>
             <button class="material-button-large" @click="getCollabIdToRemove()">Remove Collaborator</button>
           </div>
           <br>
           <div style="display: flex;justify-content: space-between">
-            <button class="material-button-large" @click="deleteOrg()">Delete Organization</button>
+            <button class="material-button-large delete-button" @click="deleteOrg()">Delete Organization</button>
             <button class="material-button-large" @click="$emit('close')">Close</button>
           </div>
         </div>
@@ -54,9 +54,6 @@
 
       // Get the collaborator objects
       for (var collabId in this.collabIds) {
-        console.warn(this.collabIds[collabId]);
-        console.warn(this.users);
-        console.warn(this.users[this.collabIds[collabId]]);
 
         this.collabObjs.push({
           id: this.users[`${this.collabIds[collabId]}`].id,
@@ -77,7 +74,9 @@
           // Try to find the account matching the email (collabSelect will contain emails)
           this.$store.dispatch('users/fetch', {whereFilters: [['email', '==', element]]})
           .then((querySnapshot) => {
-            if (querySnapshot.empty == true) {
+            if (querySnapshot.empty == true || !querySnapshot.docs) {
+              var errMsg = "There is no account associated with this email. Please try again after an account has been made.";
+              this.$parent.$parent.messages.push(errMsg);
               console.log("There is no account associated with this email.");
               console.log("Please try again after an account has been made");
             }
@@ -93,8 +92,9 @@
 
         // Checks to see if there is at least one collaborator in the org
         if (this.collabIds.length == 1) {
-          console.error("You are the last collaborator in this org")
-          console.error("Please delete the org instead")
+          var errMsg = "You are the last collaborator in this org. Please delete this org instead.";
+          this.$parent.$parent.messages.push(errMsg);
+          console.error(errMsg)
           return;
         }
 
@@ -103,9 +103,8 @@
         delete newOrgList[this.orgId];
         console.log(collabIdToRemove, this.orgId, newOrgList)
 
-        this.$store.dispatch('users/set', {[`${collabIdToRemove}`]: {
-          orgs: newOrgList
-        }}).catch(err => {
+        this.$store.dispatch('users/delete', `${collabIdToRemove}.orgs.${this.orgId}`
+        ).catch(err => {
           console.error("Error removing org from collaborator's orgs", err)
         })
 
@@ -170,7 +169,9 @@
         // Try to find the account matching the email
         this.$store.dispatch('users/fetch', {whereFilters: [['email', '==', this.collabSearch]]})
         .then((querySnapshot) => {
-          if (querySnapshot.empty == true) {
+          if (querySnapshot.empty == true ||  !querySnapshot.docs) {
+            var errMsg = "There is no account associated with this email. Please try again after an account has been made.";
+              this.$parent.$parent.messages.push(errMsg);
             console.log("There is no account associated with this email.")
             console.log("Please try again after an account has been made.")
           }
@@ -183,7 +184,9 @@
       deleteOrg(org) {
         // Make sure the user is an org collaborator
         if (!this.collabIds.includes(this.$parent.$parent.userId)) {
-          console.error("You must be an organization collaborator to delete the organization.");
+          var errMsg = "You must be an organization collaborator to delete the organization.";
+          this.$parent.$parent.messages.push(errMsg);
+          console.error(errMsg);
           return;
         }
 
@@ -207,17 +210,8 @@
         }
 
         //Removing org from user data
-        var newUserOrgs = {
-          orgs: {}
-        };
-        for (var orgDelete in this.currentUser.orgs){
-          console.warn(orgDelete)
-          if (this.orgId != orgDelete)
-            newUserOrgs.orgs[orgDelete] = {role: this.currentUser.orgs[orgDelete].role};
-        }
-        this.$store.dispatch('users/set', {[`${this.currentUser.id}`]: {
-          orgs: newUserOrgs.orgs
-        }})
+        this.$store.dispatch('users/delete', `${this.currentUser.id}.orgs.${this.orgId}`)
+
         //Deleting org from firebase
         this.$store.dispatch('orgs/delete', this.orgId)
         .then(() => {
@@ -262,6 +256,11 @@
   .material-button-large {
     background: $gray;
     color: white;
+    font-size: 16px;
+    width: 40%;
+  }
+  .delete-button {
+    background: $red;
   }
 
   .popup-table {
