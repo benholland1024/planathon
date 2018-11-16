@@ -69,10 +69,10 @@
     </div>
     <div class="material-button-large orange-gradient new-org hover-shine"
           @click="selectOrgInput()">
-      <span v-if="!orgInput">
+      <span v-if="!orgInput" id="newOrgBtn">
         + New Organization
       </span>
-      <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
+      <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg" id="newOrgName">
     </div>
 
   </div>
