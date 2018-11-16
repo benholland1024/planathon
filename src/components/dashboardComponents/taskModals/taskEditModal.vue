@@ -21,8 +21,8 @@
                 <label for="checkbox">  Promotion</label><br>
                 <input type="checkbox" v-model="general">
                 <label for="checkbox">  General</label><br>
-                <input type="checkbox" v-model="dev">
-                <label for="checkbox">  Dev</label><br>
+                <input type="checkbox" v-model="sponsors">
+                <label for="checkbox">  Sponsors</label><br>
                 <input type="checkbox" v-model="finance">
                 <label for="checkbox">  Finance</label><br>
                 <input type="checkbox" v-model="design">
@@ -47,7 +47,7 @@
         promotion: false,
         general: false,
         design: false,
-        dev: false,
+        sponsors: false,
         finance: false
       }
     },
@@ -71,8 +71,8 @@
       if (this.task.tags.includes("finance")) {
         this.finance = true;
       }
-      if (this.task.tags.includes("development")) {
-        this.dev = true;
+      if (this.task.tags.includes("sponsors")) {
+        this.sponsors = true;
       }
 
       // These variables are used for reverting changes when cancelling and edit
@@ -91,8 +91,8 @@
         if (this.general) {
           updatedTags.push("general");
         }
-        if (this.dev) {
-          updatedTags.push("development");
+        if (this.sponsors) {
+          updatedTags.push("sponsors");
         }
         if (this.design) {
           updatedTags.push("design");
