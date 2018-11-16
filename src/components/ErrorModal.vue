@@ -4,7 +4,7 @@
       <div class="error-popup-wrapper">
         <div class="error-popup-table blue-gradient" style="align: center" @click.stop>
           <h2>Uh oh, there seems to have been an error</h2>
-          <p>{{message}}</p>
+          <p v-for="message in messages">{{message}}</p>
 
             <button class="material-button-large" @click="$emit('close')">Close</button>
 
@@ -17,8 +17,8 @@
 <script>
   export default {
     props: {
-      message: {
-        type: String,
+      messages: {
+        type: Array,
         required: true
       }
     },

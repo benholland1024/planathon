@@ -44,6 +44,12 @@ export default {
   },
   methods: {
     addNewTasks() {
+
+      if (!this.name) {
+        this.$parent.messages.push("Your hackathon must have a name!");
+        return;
+      }
+
       // Make sure the user is logged in
       if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");

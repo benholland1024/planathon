@@ -2,9 +2,9 @@
   <div id="app" class="full-page">
     <menu-bar :user="user"></menu-bar>
     <error-modal
-      v-if="message != ''"
-      :message="message"
-      @close="message = ''">
+      v-if="messages.length > 0"
+      :messages="messages"
+      @close="messages = []">
     </error-modal>
     <router-view/>
   </div>
@@ -42,7 +42,7 @@ export default {
       loadingUser: true,
       org: null,
       hackathon: null,
-      message: ''
+      messages: []
     }
   },
   components: {
