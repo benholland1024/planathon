@@ -1,11 +1,13 @@
 <template>
 <div class="sponsor-editview">
-    <div class="header" @click="toggleExpand" >
-        <h1>{{ sponsor.company }}</h1>
+    <div class="header"  v-if="sponsor.company">
+        <label>Company name:</label><br>
+        <input class="company-name" v-model="sponsor.company">
+        <div class="lighter-gray" style="cursor:pointer;" @click="toggleExpand">
+            Toggle Details
+        </div>
     </div>
     <form @submit.prevent="saveSponsor" v-if="isExpanded">
-        <label for="hackid" >HackID</label><input v-model="sponsor.hackathonId" id="hackid" readonly/><br>
-        <label for="company" >Company</label><input v-model="sponsor.company" id="company"/><br>
         <h3>Contacts</h3>
         <div v-for="contact in sponsor.contacts" 
                 v-bind:key="contact.email">
@@ -80,13 +82,24 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+@import '@/GlobalVars.scss';
+
 .header {
     width: 100%;
 }
 .sponsor-editview {
-    margin:5px;
-    border: 2px solid grey;
+    width: 80%;
+    padding: 5%;
+    margin: 0 auto;
+}
+.company-name {
+    background: none;
+    font-size: 25px;
+    padding: 5px 10px;
+    border: none;
+    border-bottom: 3px solid $lighter-gray;
+    color: $lighter-gray;
 }
 </style>
 
