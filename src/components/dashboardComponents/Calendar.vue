@@ -9,8 +9,8 @@
       <span>F</span>
       <span>S</span>
     </div>
-    <div id="day-nodes">
 
+    <div id="day-nodes">
       <div class="week-node" v-for="(week, weekIndex) in Math.ceil((simplifiedTasks.length / 7))">
         <div v-for="(day, dayIndex) in simplifiedTasks.slice((week - 1) * 7, week * 7)" class="day-node"
           v-tooltip="getMonthFromDate(day.date) + ' ' + day.date.getDate()">
@@ -19,21 +19,23 @@
           </div>
 
           <div v-show="day.tasks.length != 0">
-            <!-- We will probably want to make a square component eventually
-                 that can handle an array of tasks for the day.
-                 tags is hard coded here. -->
             <task-square-display :tags="tags">
             </task-square-display>
-            
+
           </div>
 
           <div class="strike-through" v-show="weekIndex == 0 && dayIndex < (today.getDay() % 7)">
           </div>
+          <div class="day-of"
+            v-show="weekIndex == Math.ceil(simplifiedTasks.length / 7)-1
+              && dayIndex == (hackathonDate.toDate().getDay() % 7)">
+              *
+          </div>
 
         </div>
       </div>
-
     </div>
+
   </div>
 </template>
 
@@ -98,7 +100,9 @@ export default {
       }
       this.tasks.forEach(task => {
         if (task.tags.includes( this.$route.name ) || this.$route.name == "all") {
-          v[daysInCalendar-(task.daysBefore-2+(this.today.getDay() % 7))].tasks.push(task);
+          if (task.daysBefore <= daysInCalendar) {
+            v[daysInCalendar-(task.daysBefore-2+(this.today.getDay() % 7))].tasks.push(task);
+          }
         }
       })
 
@@ -126,6 +130,15 @@ export default {
   background: black;
   top: -4.1px;
   right: -3px;
+}
+
+.day-of {
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  position: relative;
+  top: -5px;
+  right: 1.1px;
 }
 
 </style>
