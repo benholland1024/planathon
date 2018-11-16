@@ -1,6 +1,11 @@
 <template>
   <div id="app" class="full-page">
     <menu-bar :user="user"></menu-bar>
+    <error-modal
+      v-if="message != ''"
+      :message="message"
+      @close="message = ''">
+    </error-modal>
     <router-view/>
   </div>
 </template>
@@ -11,6 +16,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import VueFire from 'vuefire';
 import Vue from 'vue';
+import ErrorModal from '@/components/ErrorModal.vue';
 
 // Fancy switches for textboxes 😛
 import ToggleButton from 'vue-js-toggle-button'
@@ -35,11 +41,13 @@ export default {
       user: null,
       loadingUser: true,
       org: null,
-      hackathon: null
+      hackathon: null,
+      message: 'Error Message'
     }
   },
   components: {
-    MenuBar
+    MenuBar,
+    ErrorModal
   },
   methods: {
     loadOrgs() {
@@ -153,8 +161,6 @@ export default {
   }
 
   .all {
-    // experimented with making this green
-    // background-color: #49BFB0;
     background-color: white;
   }
   .finance {
@@ -233,8 +239,20 @@ export default {
     background: $purple-gradient;
     color: white;
   }
+  .pink-gradient {
+    background: $pink-gradient;
+    color: white;
+  }
   .orange-gradient {
     background: $orange-gradient;
+    color: white;
+  }
+  .blue-gradient {
+    background: $blue-gradient;
+    color: white;
+  }
+  .yellow-gradient {
+    background: $yellow-gradient;
     color: white;
   }
 
@@ -270,6 +288,35 @@ export default {
   }
 
   .popup-table{
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: $box-shading;
+  }
+
+/*  -------------------- */
+/*  ERROR POPUP STYLING: */
+/*  -------------------- */
+
+  .error-popup-background {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .4s ease;
+  }
+
+  .error-popup-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .error-popup-table{
     width: 400px;
     margin: 0 auto;
     padding: 20px;
