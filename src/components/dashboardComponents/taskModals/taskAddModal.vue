@@ -2,7 +2,7 @@
   <transition name="modal">
     <div class="popup-background">
       <div class="popup-wrapper"  @click="$parent.showAddModal = false">
-        <!-- We use @click.stop on the next line to prevent showAddModal 
+        <!-- We use @click.stop on the next line to prevent showAddModal
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Add Task</h2>
@@ -52,7 +52,7 @@
                 <date-picker v-model="date" :first-day-of-week="1"
                 lang="en"></date-picker>
               </div>
-              
+
             </div><br><br>
             <div>
               <button class="material-button-large" @click="saveTask()">Add</button>
@@ -114,7 +114,7 @@ import {getDaysBeforeFromDate} from '@/utils.js';
         var updatedTags = [];
         // List of all the tags you have to check:
         const tagsToCheck = ['finance', 'sponsors', 'promotion', 'design', 'general'];
-        // Iterate through all those tags, push their string to 
+        // Iterate through all those tags, push their string to
         // 'updatedTags' if the corresponding bool is true
         for (var i in tagsToCheck) {
           if (this.tags[tagsToCheck[i]]) {
@@ -123,7 +123,7 @@ import {getDaysBeforeFromDate} from '@/utils.js';
         }
         // updatedTags should now be an array that looks similar to this:
         // ['sponsors', 'promotion', 'design']
-        
+
         // Manually generates a new id in tasks collection
         const taskId = this.$store.getters['tasks/dbRef'].doc().id;
 
@@ -141,7 +141,7 @@ import {getDaysBeforeFromDate} from '@/utils.js';
           daysBefore
         })
         .catch(err => {
-          console.error("Oops: ", err)
+          this.$parent.$parent.$parent.$parent.messages.push("Could create new task: " + err.message);
         })
 
         // This is used to update the hackathon to include the new task
@@ -154,7 +154,7 @@ import {getDaysBeforeFromDate} from '@/utils.js';
           this.$emit('close')
         })
         .catch(err => {
-          console.error("Whoops: ", err)
+          this.$parent.$parent.$parent.$parent.messages.push("Could not update hackathon tasks: " + err.message);
         })
       }
     },

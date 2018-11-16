@@ -2,7 +2,7 @@
   <transition name="modal">
     <div class="popup-background">
       <div class="popup-wrapper" @click="$parent.showDeleteModal = -1">
-        <!-- We use @click.stop on the next line to prevent showDeleteModal 
+        <!-- We use @click.stop on the next line to prevent showDeleteModal
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Delete Task</h2>
@@ -39,7 +39,7 @@
         // Delete the task from the tasks collection
         this.$store.dispatch('tasks/delete', `${this.taskId}`)
         .catch(err => {
-          console.error("Could not delete task: ", err)
+          this.$parent.$parent.$parent.$parent.messages.push("Could not delete task: " + err.message);
         })
 
         var indexOfTask = this.hackathon.timeline.indexOf(this.taskId);
@@ -51,7 +51,7 @@
           this.$emit('close');
         })
         .catch(err => {
-          console.error("Could not remove task from hackathon: ", err)
+          this.$parent.$parent.$parent.$parent.messages.push("Could not remove task from hackathon: " + err.message);
         })
       }
     },
