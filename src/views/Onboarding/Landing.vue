@@ -133,7 +133,13 @@ export default {
         return;
       }
 
-      //Check to see if org name is already in use
+      // Check to see if the name is blank
+      if (this.orgName == '') {
+        this.$parent.messages.push("Cannot create organization without a name!");
+        return;
+      }
+
+      // Check to see if org name is already in use
       this.$store.dispatch('orgs/fetch', {whereFilters: [['name', '==', this.orgName]]})
       .then(querySnapshot => {
         if (querySnapshot.empty == true) {
@@ -183,6 +189,12 @@ export default {
       // Make sure the user is logged in
       if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
+        return;
+      }
+
+      // Check to see if name is blank
+      if (this.hackathonName == '') {
+        this.$parent.messages.push("Cannot create hackathon without a name!");
         return;
       }
 

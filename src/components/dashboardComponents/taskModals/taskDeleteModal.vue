@@ -46,7 +46,7 @@
         if (indexOfTask !== -1) this.hackathon.timeline.splice(indexOfTask, 1);
 
         // Delete the task from the hackathon's timeline
-        this.$store.dispatch('hackathons/set', {[`${this.hackathonId}`]: {timeline: this.hackathon.timeline}})
+        this.$store.dispatch('hackathons/patch', {[`${this.hackathonId}`]: {timeline: this.hackathon.timeline}})
         .then(() => {
           this.$emit('close');
         })

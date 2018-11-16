@@ -21,7 +21,10 @@ export default {
   computed: {
     financeTasks() {
       return this.$parent.tasks.filter(task => {
-        return task.tags.includes("finance");
+        if (task.tags.includes("finance") || task.tags.includes("sponsors"))
+          return true;
+        else 
+          return false;
       })
     }
   }
