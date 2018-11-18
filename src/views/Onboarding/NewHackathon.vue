@@ -67,11 +67,13 @@ export default {
       taskList.push(taskId1)
       this.$store.dispatch('tasks/set', {
         id: taskId1,
+        progress: "not started",
+        dependencies: [],
         hackathon: this.hackathonId,
         title: "Swag: T-shirts",
         description: "Design and order t-shirts for the event.",
-        tags: ["finance", "design"], 
-        daysBefore: 60,
+        tags: ["finance", "design"],
+        daysBefore: 90,
       }).catch(err => {
         console.error("Error initializing task: ", err)
       })
@@ -81,11 +83,13 @@ export default {
       taskList.push(taskId2)
       this.$store.dispatch('tasks/set', {
         id: taskId2,
+        progress: "not started",
+        dependencies: [taskId1],
         hackathon: this.hackathonId,
         title: "Second wave of sponsor emails",
         description: "Remind sponsors why you're worth it.",
         tags: ["promotion"],
-        daysBefore: 90,
+        daysBefore: 60,
       }).catch(err => {
         console.error("Error initializing task: ", err)
       })
