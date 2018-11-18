@@ -17,6 +17,16 @@ const tasksDataModule = {
           }
         }
         return hackathonTasks;
+      },
+      taskDeps: (state) => (taskId) => {
+        var task = state.docs[taskId]
+        var taskDeps = []
+        for (var key in state.docs) {
+          if (task.dependencies.includes(key)) {
+            taskDeps.push(state.docs[key])
+          }
+        }
+        return taskDeps;
       }
     }
 
