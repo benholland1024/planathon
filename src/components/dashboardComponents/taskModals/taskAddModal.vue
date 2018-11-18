@@ -138,6 +138,7 @@ import {getDaysBeforeFromDate} from '@/utils.js';
           tags: updatedTags,
           hackathon: this.hackathonId,
           progress: 'not started',
+          dependencies: [],
           daysBefore
         })
         .catch(err => {
