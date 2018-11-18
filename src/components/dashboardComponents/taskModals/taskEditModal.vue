@@ -28,8 +28,36 @@
                 <input type="checkbox" v-model="design">
                 <label for="checkbox">  Design</label><br>
               </div>
-            </div><br><br>
-            <button class="material-button-large" @click="saveTask()">Save</button><br><br>
+            </div><br>
+
+
+            <p>Task Search</p>
+            <input type="text" v-model="taskSearch">
+            </input><br>
+            <div style="display: flex">
+              <div>
+                <p>All Tasks:</p>
+                <select v-if="taskSearch == ''" v-model="taskSelect" multiple>
+                  <option v-for="task in tasks">{{task.title}}</option>
+                </select>
+                <select v-if="!taskSearch == ''" v-model="taskSelect" multiple>
+                  <option v-for="result in taskResults">{{result.title}}</option>
+                </select>
+              </div>
+              <div>
+                <p>Current Dependencies:</p>
+                <select v-if="taskSearch == ''" v-model="depSelect" multiple>
+                  <option v-for="dep in taskDeps">{{dep.title}}</option>
+                </select>
+                <select v-if="!taskSearch == ''" v-model="depSelect" multiple>
+                  <option v-for="result in depResults">{{result.title}}</option>
+                </select>
+              </div>
+            </div>
+            <br>
+
+
+            <button class="material-button-large" @click="saveTask()">Save</button><br>
             <button class="material-button-large" @click="$emit('close')">Close</button>
           </div>
         </div>
@@ -48,7 +76,10 @@
         general: false,
         design: false,
         sponsors: false,
-        finance: false
+        finance: false,
+        taskSearch: '',
+        taskSelect: [],
+        depSelect: []
       }
     },
     props: {
@@ -115,7 +146,20 @@
     },
     computed: {
       tasks() {
-        return this.$store.getters['tasks/storeRef']
+        return this.$store.getters['tasks/hackathonTasks'](this.task.hackathon)
+      },
+      taskDeps() {
+        return this.$store.getters['tasks/taskDeps'](this.task.id)
+      },
+      taskResults() {
+        return this.tasks.filter((task) => {
+          return task.title.toLowerCase().includes(this.taskSearch.toLowerCase());
+        })
+      },
+      depResults() {
+        return this.taskDeps.filter((dep) => {
+          return dep.title.toLowerCase().includes(this.taskSearch.toLowerCase());
+        })
       }
     }
   }
