@@ -145,14 +145,15 @@ export default {
         if (querySnapshot.empty == true) {
 
           // Create a new org and add it to the orgs collection
-          var collabsList = [];
+          var adminsList = [];
 
-          collabsList.push(this.$parent.userId);
+          adminsList.push(this.$parent.userId);
           const orgId = this.$store.getters['orgs/dbRef'].doc().id;
           this.$store.dispatch('orgs/insert', {
             id: orgId,
             name: this.orgName,
-            collaborators: collabsList
+            collaborators: [],
+            admins: adminsList
           }).catch(err => {
             console.error("Problem adding new org: ", err)
           })
