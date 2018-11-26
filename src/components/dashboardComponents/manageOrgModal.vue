@@ -157,6 +157,51 @@
           return;
         }
 
+        // initialize vars to keep track of new collab/admin lists
+        var newAdminIds = this.adminIds;
+        var newAdminObjs = this.adminObjs;
+        var newCollabIds = this.collabIds;
+        var newCollabObjs = this.collabObjs;
+
+        // since users can promote more than one collab at one, loop through selected collabs
+        this.adminSelect.forEach(admin => {
+
+          // add id to org collabs list
+          newCollabIds.push(admin.id);
+          newCollabObjs.push({
+            id: admin.id,
+            email: admin.email
+          });
+
+          // remove id from org admins list
+          var indexOfAdmin = newAdminIds.indexOf(admin.id);
+          if (indexOfAdmin !== -1) newAdminIds.splice(indexOfAdmin, 1);
+          indexOfAdmin = newAdminObjs.indexOf(admin.id);
+          if (indexOfAdmin !== -1) newAdminObjs.splice(indexOfAdmin, 1);
+
+          // update org collabs/admins once lists have been updated
+          this.$store.dispatch('orgs/set', {[`${this.orgId}`]: {
+            collaborators: newCollabIds,
+            admins: newAdminIds
+          }}).then(() => {
+            this.collabIds = newCollabIds;
+            this.collabObjs = newCollabObjs;
+            this.adminIds = newAdminIds;
+            this.adminObjs = newAdminObjs;
+          }).catch(err => {
+            var errMsg = "Error updating organization collaborators and admins: " + err;
+            this.$parent.$parent.messages.push(errMsg);
+          });
+
+          // update user role to collab
+          this.$store.dispatch('users/set', {[`${admin.id}`]: {
+            role: "collaborator"
+          }}).catch(err => {
+            var errMsg = "Error demoting admin: " + err;
+            this.$parent.$parent.messages.push(errMsg);
+          })
+        });
+
       },
       removeCollaborator() {
         // Make sure the user is an org admin
@@ -182,17 +227,18 @@
           ).catch(err => {
             console.error("Error removing org from collaborator's orgs", err)
           })
-        })
 
-        // make one call after the org collabs list is updated
-        this.$store.dispatch('orgs/set', {[`${this.orgId}`]: {
-          collaborators: newCollabIds
-        }}).then(() => {
-          this.collabIds = newCollabIds;
-          this.collabObjs = newCollabObjs;
-          console.log("updating vars");
-        }).catch(err => {
-          console.error("Error removing collaborator from org ", err)
+          // make one call after the org collabs list is updated
+          this.$store.dispatch('orgs/set', {[`${this.orgId}`]: {
+            collaborators: newCollabIds
+          }}).then(() => {
+            this.collabIds = newCollabIds;
+            this.collabObjs = newCollabObjs;
+            console.log("updating vars");
+          }).catch(err => {
+            console.error("Error removing collaborator from org ", err)
+          })
+
         })
 
       },
