@@ -8,7 +8,7 @@
 
       <div>Anticipated date for your hackathon:</div>
       <div style="opacity:.5;margin-bottom: 15px;"><i>You can always change this.</i></div>
-      <date-picker lang="en" v-model="date"></date-picker><br><br>
+      <date-picker lang="en" v-model="date" :not-before="today"></date-picker><br><br>
 
       <div>Estimated guess for your hackathon's attendance:</div>
       <div class="description"><i>If you don't know, just guess! </i></div>
@@ -29,7 +29,9 @@ export default {
       date: new Date(),
       attendance: 100,
       orgId: this.$route.params.orgId,
-      hackathonId: ''
+      hackathonId: '',
+
+      today: new Date()
     }
   },
   components: {
@@ -42,6 +44,12 @@ export default {
   },
   methods: {
     addNewTasks() {
+
+      if (!this.name) {
+        this.$parent.messages.push("Your hackathon must have a name!");
+        return;
+      }
+
       // Make sure the user is logged in
       if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
@@ -59,11 +67,13 @@ export default {
       taskList.push(taskId1)
       this.$store.dispatch('tasks/set', {
         id: taskId1,
+        progress: "not started",
+        dependencies: [],
         hackathon: this.hackathonId,
         title: "Swag: T-shirts",
         description: "Design and order t-shirts for the event.",
-        tags: ["finance", "design"], 
-        daysBefore: 60,
+        tags: ["finance", "design"],
+        daysBefore: 90,
       }).catch(err => {
         console.error("Error initializing task: ", err)
       })
@@ -73,11 +83,13 @@ export default {
       taskList.push(taskId2)
       this.$store.dispatch('tasks/set', {
         id: taskId2,
+        progress: "not started",
+        dependencies: [taskId1],
         hackathon: this.hackathonId,
         title: "Second wave of sponsor emails",
         description: "Remind sponsors why you're worth it.",
         tags: ["promotion"],
-        daysBefore: 90,
+        daysBefore: 60,
       }).catch(err => {
         console.error("Error initializing task: ", err)
       })

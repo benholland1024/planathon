@@ -9,6 +9,8 @@ $pink: #FF6EE0;
 $purple: #BA68FF;
 $blue: #7A8FFF;
 
+$red: #7F3241;
+
 $light-yellow: lighten($yellow, 15%);
 $light-orange: lighten($orange, 15%);
 $light-pink: lighten($pink, 15%);
@@ -20,6 +22,7 @@ $mid-blue: lighten($dark-blue, 20%);
 
 $purple-gradient: linear-gradient(#7C11FF, #A358FF);
 $pink-gradient: linear-gradient(50deg, $orange, $pink);
+$blue-gradient-alternate: linear-gradient(75deg, $dark-blue, $red);
 $blue-gradient: linear-gradient(75deg, $dark-blue, $mid-blue);
 $yellow-gradient: linear-gradient($orange, $yellow);
 $orange-gradient: linear-gradient(to right, #CA6333, #B75A83);

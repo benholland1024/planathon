@@ -2,10 +2,10 @@
   <transition name="modal">
     <div class="popup-background">
       <div class="popup-wrapper" @click="$parent.showEditModal = -1">
-        <!-- We use @click.stop on the next line to prevent showEditModal 
+        <!-- We use @click.stop on the next line to prevent showEditModal
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
-          <h2>Edit Task</h2>
+          <!--<h2>Edit Task</h2>-->
             <div style="display: flex">
               <div>
                 <p>Title:</p>
@@ -21,20 +21,52 @@
                 <label for="checkbox">  Promotion</label><br>
                 <input type="checkbox" v-model="general">
                 <label for="checkbox">  General</label><br>
-                <input type="checkbox" v-model="dev">
-                <label for="checkbox">  Dev</label><br>
+                <input type="checkbox" v-model="sponsors">
+                <label for="checkbox">  Sponsors</label><br>
                 <input type="checkbox" v-model="finance">
                 <label for="checkbox">  Finance</label><br>
                 <input type="checkbox" v-model="design">
                 <label for="checkbox">  Design</label><br>
               </div>
-            </div><br><br>
-            <button class="material-button-large" @click="saveTask()">Save</button><br><br>
-            <button class="material-button-large" @click="$emit('close')">Close</button>
+            </div>
+
+
+            <p>Task Search</p>
+            <input type="text" v-model="taskSearch">
+            </input><br>
+            <div style="display: flex">
+              <div>
+                <p>All Tasks:</p>
+                <select v-if="taskSearch == ''" v-model="taskSelect" multiple>
+                  <option v-for="task in tasks" :value="task">{{task.title}}</option>
+                </select>
+                <select v-if="!taskSearch == ''" v-model="taskSelect" multiple>
+                  <option v-for="result in taskResults" :value="result">{{result.title}}</option>
+                </select>
+              </div>
+              <div>
+                <p>Current Dependencies:</p>
+                <select v-if="taskSearch == ''" v-model="depSelect" multiple>
+                  <option v-for="dep in taskDeps" :value="dep">{{dep.title}}</option>
+                </select>
+                <select v-if="!taskSearch == ''" v-model="depSelect" multiple>
+                  <option v-for="result in depResults" :value="result">{{result.title}}</option>
+                </select>
+              </div>
+            </div>
+            <br>
+
+            <div style="display: flex">
+              <button class="material-button-large" @click="addDeps()">Add Dependencies</button><br>
+              <button class="material-button-large" @click="removeDeps()">Remove Dependencies</button>
+            </div>
+            <div style="display: flex">
+              <button class="material-button-large" @click="saveTask()">Save</button><br>
+              <button class="material-button-large" @click="$emit('close')">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </transition>
 </template>
 
@@ -48,8 +80,12 @@
         promotion: false,
         general: false,
         design: false,
-        dev: false,
-        finance: false
+        sponsors: false,
+        finance: false,
+        taskSearch: '',
+        taskSelect: [],
+        depSelect: [],
+        newDepList: []
       }
     },
     props: {
@@ -72,8 +108,8 @@
       if (this.task.tags.includes("finance")) {
         this.finance = true;
       }
-      if (this.task.tags.includes("development")) {
-        this.dev = true;
+      if (this.task.tags.includes("sponsors")) {
+        this.sponsors = true;
       }
 
       // These variables are used for reverting changes when cancelling and edit
@@ -81,6 +117,25 @@
       this.taskDesc = this.task.description;
     },
     methods: {
+      // Makes the new list of dependencies, but won't save it until
+      // saveTask() is called.
+      // TODO - Check for cycles
+      addDeps() {
+        this.newDepList = this.taskDeps;
+        this.taskSelect.forEach(task => {
+          if (task.daysBefore >= this.task.daysBefore) {
+            this.newDepList.push(task);
+          }
+        });
+      },
+      // Similar to addDeps, won't save until saveTask is called.
+      removeDeps() {
+        this.newDepList = this.taskDeps;
+        this.depSelect.forEach(dep => {
+          var index = this.newDepList.indexOf(dep);
+          if (index !== -1) this.newDepList.splice(index, 1);
+        });
+      },
       saveTask() {
         var updatedTags = [];
         if (this.promotion) {
@@ -92,8 +147,8 @@
         if (this.general) {
           updatedTags.push("general");
         }
-        if (this.dev) {
-          updatedTags.push("development");
+        if (this.sponsors) {
+          updatedTags.push("sponsors");
         }
         if (this.design) {
           updatedTags.push("design");
@@ -110,13 +165,26 @@
          this.task.tags = updatedTags;
          this.$emit('close');
         }).catch(err => {
-         console.error("error: ", err);
+          this.$parent.$parent.$parent.$parent.messages.push("Could not edit task: " + err.message);
         })
       }
     },
     computed: {
       tasks() {
-        return this.$store.getters['tasks/storeRef']
+        return this.$store.getters['tasks/hackathonTasks'](this.task.hackathon)
+      },
+      taskDeps() {
+        return this.$store.getters['tasks/taskDeps'](this.task.id)
+      },
+      taskResults() {
+        return this.tasks.filter((task) => {
+          return task.title.toLowerCase().includes(this.taskSearch.toLowerCase());
+        })
+      },
+      depResults() {
+        return this.taskDeps.filter((dep) => {
+          return dep.title.toLowerCase().includes(this.taskSearch.toLowerCase());
+        })
       }
     }
   }

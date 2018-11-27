@@ -43,16 +43,21 @@
       <span>{{org.name}}</span>
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
-        <router-link tag="div" :to="'/dashboard/' + hackathon.id" v-for="hackathon in org.hackathons"
+        <div v-for="hackathon in org.hackathons" style="display: flex;flex-direction: column">
+          <div style="display: flex;flex-direction: row;">
+            <router-link tag="div" :to="'/dashboard/' + hackathon.id"
                     :key="hackathon.id" class="hackathon-opt opt hover-shine">
-          {{ hackathon.name }}
-        </router-link>
+              {{ hackathon.name }}
+            </router-link>
+            <img src="@/assets/trash.png" style="height: 20px;width: 20px;" @click="deleteHackathon(hackathon.id)">
+          </div>
+        </div>
       </div>
       <div v-else>
         <h4>No hackathons yet!</h4>
       </div>
       <br>
-      <router-link tag="div" class="new-hackathon-opt opt hover-shine" 
+      <router-link tag="div" class="new-hackathon-opt opt hover-shine"
         :to="{ name: 'new-hackathon', params: { orgId: org.id }}">
         <span>
           + New Hackathon
@@ -69,10 +74,10 @@
     </div>
     <div class="material-button-large orange-gradient new-org hover-shine"
           @click="selectOrgInput()">
-      <span v-if="!orgInput">
+      <span v-if="!orgInput" id="newOrgBtn">
         + New Organization
       </span>
-      <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg">
+      <input v-else v-model="orgName" @keyup.enter="addNewOrg()" ref="newOrg" id="newOrgName">
     </div>
 
   </div>
@@ -128,20 +133,27 @@ export default {
         return;
       }
 
-      //Check to see if org name is already in use
+      // Check to see if the name is blank
+      if (this.orgName == '') {
+        this.$parent.messages.push("Cannot create organization without a name!");
+        return;
+      }
+
+      // Check to see if org name is already in use
       this.$store.dispatch('orgs/fetch', {whereFilters: [['name', '==', this.orgName]]})
       .then(querySnapshot => {
         if (querySnapshot.empty == true) {
 
           // Create a new org and add it to the orgs collection
-          var collabsList = [];
+          var adminsList = [];
 
-          collabsList.push(this.$parent.userId);
+          adminsList.push(this.$parent.userId);
           const orgId = this.$store.getters['orgs/dbRef'].doc().id;
           this.$store.dispatch('orgs/insert', {
             id: orgId,
             name: this.orgName,
-            collaborators: collabsList
+            collaborators: [],
+            admins: adminsList
           }).catch(err => {
             console.error("Problem adding new org: ", err)
           })
@@ -174,86 +186,27 @@ export default {
       this.selectedOrg = index;
       this.$parent.org = org;
     },
-    addNewHackathon(taskList) {
-      // Make sure the user is logged in
-      if (!this.$parent.userId) {
-        console.error("We couldn't find your userID! This shouldn't be possible.");
-        return;
-      }
+    deleteHackathon(id) {
+      if (!confirm('Are you sure you want to delete this hackathon? This can\'t be undone!')) {
+          return;
+        }
 
-      // Create a new hackathon and add it to the hackathons collection
-      this.$store.dispatch('hackathons/insert', {
-        id: this.hackathonId,
-        name: this.hackathonName,
-        timeline: taskList
+      // Remove tasks connected to hackathon
+      this.$store.dispatch('tasks/fetch', {whereFilters: [['hackathon', '==', id]]})
+      .then((querySnapshot) => {
+        querySnapshot.docs.forEach((doc) => {
+          this.$store.dispatch('tasks/delete', doc.id)
+        })
       })
 
-      // Setting up an object to update the org's list of hackathons
-      var updateObj = {
-        hackathons: {}
-      }
-      if (this.$parent.org.hackathons) {
-        updateObj.hackathons = this.$parent.org.hackathons;
-      }
-      updateObj.hackathons[this.hackathonId] = {
-        id: this.hackathonId,
-        name: this.hackathonName,
-        timeline: taskList
-      }
+      // Update org list
+      this.$store.dispatch('orgs/delete', `${this.$parent.org.id}.hackathons.${id}`)
 
-      // Updating org list and resetting org data for reloading
-      this.$store.dispatch('orgs/set', {[`${this.$parent.org.id}`]: { hackathons: updateObj.hackathons }})
-      .then(() => {
-        while (this.$parent.userOrgs[0])
-          this.$parent.userOrgs.pop();
-
-        //this.$parent.loadOrgs();
-        this.hackathonInput = false;
-        this.hackathonName = '';
+      // Deleting hackathon
+      this.$store.dispatch('hackathons/delete', id)
+      .catch(err => {
+        console.error("Error deleting hackathon: ", err)
       })
-    },
-    addNewTasks() {
-      // Make sure the user is logged in
-      if (!this.$parent.userId) {
-        console.error("We couldn't find your userID! This shouldn't be possible.");
-        return;
-      }
-
-      // Initialize an array that will keep track of tasks of the new
-      // hackathon's timeline
-      var taskList = [];
-
-      this.hackathonId = this.$store.getters['hackathons/dbRef'].doc().id
-
-      // Create a new task and add it to the tasks collection
-      const taskId1 = this.$store.getters['tasks/dbRef'].doc().id;
-      taskList.push(taskId1)
-      this.$store.dispatch('tasks/set', {
-        id: taskId1,
-        hackathon: this.hackathonId,
-        title: "Swag: T-shirts",
-        description: "Design and order t-shirts for the event.",
-        tags: ["finance", "design"], 
-        daysBefore: 60,
-      }).catch(err => {
-        console.error("Error initializing task: ", err)
-      })
-
-      // Repeat process
-      const taskId2 = this.$store.getters['tasks/dbRef'].doc().id;
-      taskList.push(taskId2)
-      this.$store.dispatch('tasks/set', {
-        id: taskId2,
-        hackathon: this.hackathonId,
-        title: "Second wave of sponsor emails",
-        description: "Remind sponsors why you're worth it.",
-        tags: ["promotion"],
-        daysBefore: 90,
-      }).catch(err => {
-        console.error("Error initializing task: ", err)
-      })
-      this.addNewHackathon(taskList);
-      console.log(taskList, taskId1, taskId2)
     }
   },
   components: {
@@ -392,6 +345,7 @@ export default {
 
   .hackathon-opt {
     background: $gray;
+    //display: flex;
   }
 
   .opt {

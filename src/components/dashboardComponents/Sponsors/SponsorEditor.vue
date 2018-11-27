@@ -1,17 +1,29 @@
 <template>
 <div class="sponsor-editview">
-    <div class="header" @click="toggleExpand" >
-        <h1>{{ sponsor.company }}</h1>
+    <div class="header"  v-if="sponsor.company">
+        <label>Company name:</label><br>
+        <input class="company-name" v-model="sponsor.company">
+        <div class="lighter-gray" style="cursor:pointer;" @click="toggleExpand">
+            Toggle Details
+        </div>
     </div>
     <form @submit.prevent="saveSponsor" v-if="isExpanded">
-        <label for="hackid" >HackID</label><input v-model="sponsor.hackathonId" id="hackid" readonly/><br>
-        <label for="company" >Company</label><input v-model="sponsor.company" id="company"/><br>
         <h3>Contacts</h3>
         <div v-for="contact in sponsor.contacts" 
+                class="contact-card"
                 v-bind:key="contact.email">
-            <label for="contactName" >Name</label><input v-model="contact.name" id="contactName" /><br>
-            <label for="contactEmail" >Email</label><input v-model="contact.email" id="contactEmail" /><br>
-            <label for="contactNotes" >Notes</label><input v-model="contact.notes" id="contactNotes"/><br><br>
+            <div class="contact-input">
+                <label for="contactName" >Name:</label>
+                <input v-model="contact.name" id="contactName" placeholder="Joe Schmoe" />
+            </div>
+            <div class="contact-input">
+                <label for="contactEmail" >Email:</label>
+                <input v-model="contact.email" id="contactEmail" placeholder="joe@schmoe.com"/>
+            </div>
+            <div class="contact-input">
+                <label for="contactNotes" >Notes:</label>
+                <input v-model="contact.notes" id="contactNotes" placeholder="Likes to be called 'Lil Joey'"/>
+            </div>
         </div>
         <input type="button" @click="newContact" value="Add Contact"/><br>
         Interactions
@@ -80,13 +92,42 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+@import '@/GlobalVars.scss';
+
 .header {
     width: 100%;
 }
 .sponsor-editview {
-    margin:5px;
-    border: 2px solid grey;
+    width: 80%;
+    padding: 5%;
+    margin: 0 auto;
+}
+.company-name {
+    background: none;
+    font-size: 25px;
+    padding: 5px 10px;
+    border: none;
+    border-bottom: 3px solid $lighter-gray;
+    color: $lighter-gray;
+}
+
+.contact-input {
+    display: flex;
+    justify-content: space-around;
+}
+
+.contact-card {
+    background: $lighter-gray;
+    box-shadow: $box-shading;
+    color: $gray;
+    padding: 10px;
+    margin-bottom: 10px;
+    input {
+        background: none;
+        border: none;
+        border-bottom: solid 3px $gray;
+    }
 }
 </style>
 

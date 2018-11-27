@@ -8,7 +8,6 @@
       </div>
 
       <task-circle-display :tags="task.tags"></task-circle-display>
-      <!--<h3>{{ dateObjFromDaysBefore(task.daysBefore, hackathonDate.toDate()) }}</h3>-->
       <div class="task-date-container">
         <h3>
           {{dateObjFromDaysBefore(task.daysBefore, hackathonDate.toDate()).getDate()}}
@@ -20,6 +19,18 @@
       <div class="task-description-container">
         <h3>{{ task.title }}</h3>
         <h4>{{ task.description }}</h4>
+        <div style="display: flex">
+          <div class="check-box" @click="markNotStarted(task.id)">
+            <div class="check-box-fill"></div>
+          </div>
+          <div class="check-box" @click="markInProgress(task.id)">
+            <div class="check-box-fill" v-if="task.progress == 'in progress' || task.progress == 'completed'"></div>
+          </div>
+          <div class="check-box" @click="markCompleted(task.id)">
+            <div class="check-box-fill" v-if="task.progress == 'completed'"></div>
+          </div>
+          <p>{{task.progress}}</p>
+        </div>
       </div>
 
       <task-edit-modal :task="task" v-if="showEditModal == index" @close="showEditModal = -1">
@@ -57,6 +68,36 @@ export default {
     }
   },
   methods: {
+    markNotStarted(taskId) {
+      this.$store.dispatch('tasks/set', {[taskId]: {
+        progress: 'not started'
+      }})
+      .then(() => {
+
+      }).catch(err => {
+        this.$parent.$parent.$parent.$parent.messages.push("Could not edit task progress: " + err.message);
+      })
+    },
+    markInProgress(taskId) {
+      this.$store.dispatch('tasks/set', {[taskId]: {
+        progress: 'in progress'
+      }})
+      .then(() => {
+
+      }).catch(err => {
+        this.$parent.$parent.$parent.$parent.messages.push("Could not edit task progress: " + err.message);
+      })
+    },
+    markCompleted(taskId) {
+      this.$store.dispatch('tasks/set', {[taskId]: {
+        progress: 'completed'
+      }})
+      .then(() => {
+
+      }).catch(err => {
+        this.$parent.$parent.$parent.$parent.messages.push("Could not edit task progress: " + err.message);
+      })
+    },
     dateObjFromDaysBefore(daysBefore, date) {
       // This function is defined in utils.js
       return dateObjFromDaysBefore(daysBefore, date);
@@ -172,6 +213,23 @@ h4 {
 }
 .task-description-container {
   padding-top: 15px;
+}
+
+.check-box {
+  border-style: solid;
+  border-width: 2px, 2px, 2px, 2px;
+  border-color: white;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  margin-top: 10px;
+}
+.check-box-fill {
+  background-color: white;
+  width: 10px;
+  height: 10px;
+  margin: 0 auto;
+  margin-top: 2.5px;
 }
 
 </style>
