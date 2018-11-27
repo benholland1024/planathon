@@ -12,9 +12,7 @@ const orgsDataModule = {
         for (var key in state.docs) {
           //console.warn(state.docs[key])
           if (state.docs.hasOwnProperty(key)) {
-            if (state.docs[key].collaborators.includes(userId)) {
-              console.log("User ID: ", userId);
-              console.log("Is it included? ", )
+            if (state.docs[key].collaborators.includes(userId) || state.docs[key].admins.includes(userId)) {
               userOrgs.push(state.docs[key])
             }
           }
