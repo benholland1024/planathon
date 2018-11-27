@@ -125,9 +125,19 @@
           indexOfCollab = newCollabObjs.indexOf(collab.id);
           if (indexOfCollab !== -1) newCollabObjs.splice(indexOfCollab, 1);
 
+          var updateObj = {
+            orgs: {}
+          }
+          if (collab.orgs) {
+            updateObj.orgs = collab.orgs;
+          }
+          updateObj.orgs[this.orgId] = {
+            role: "admin"
+          }
+
           // update user role to admin
           this.$store.dispatch('users/set', {[`${collab.id}`]: {
-            role: "admin"
+            orgs: updateObj.orgs
           }}).catch(err => {
             var errMsg = "Error promoting collaborator: " + err;
             this.$parent.$parent.messages.push(errMsg);
@@ -193,9 +203,19 @@
             this.$parent.$parent.messages.push(errMsg);
           });
 
+          var updateObj = {
+            orgs: {}
+          }
+          if (admin.orgs) {
+            updateObj.orgs = admin.orgs;
+          }
+          updateObj.orgs[this.orgId] = {
+            role: "collaborator"
+          }
+
           // update user role to collab
           this.$store.dispatch('users/set', {[`${admin.id}`]: {
-            role: "collaborator"
+            orgs: updateObj.orgs
           }}).catch(err => {
             var errMsg = "Error demoting admin: " + err;
             this.$parent.$parent.messages.push(errMsg);
