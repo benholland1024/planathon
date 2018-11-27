@@ -33,7 +33,7 @@ export default{
     },
     methods:{
         addDataPoint: function(point){
-            return this.dataset.add();
+            return this.dataset.add(point);
         },
         reloadData: function(newData){
             if(!this.dataset){
