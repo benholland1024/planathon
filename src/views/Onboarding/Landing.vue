@@ -139,6 +139,8 @@ export default {
         return;
       }
 
+      this.orgInput = false;
+
       // Check to see if org name is already in use
       this.$store.dispatch('orgs/fetch', {whereFilters: [['name', '==', this.orgName]]})
       .then(querySnapshot => {
