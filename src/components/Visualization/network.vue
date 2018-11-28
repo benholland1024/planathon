@@ -4,6 +4,7 @@
 
 <script>
 import vis from 'vis';
+import { functions } from 'firebase';
 //import 'vis/dist/vis.min.css';
 
 export default{
@@ -40,7 +41,26 @@ export default{
             }
             return res;
         },
-        isParentOf(childID,parentID){
+        getDependencies: function(id){
+            let dependencies={}
+            for(var i in this.edges)
+                if(this.edges[i].from==id && !(this.edges[i] in dependencies))
+                    dependencies[this.edges[i].to]=true
+            let indirectDependencies={}
+            for(var dependency in dependencies){
+                let recursiveDependencies=getDependencies(dependency)
+                for(var indirectDependency in recursiveDependencies)
+                    if (! ((indirectDependency in dependencies) || (indirectDependency in indirectDependencies)))
+                        indirectDependencies[indirectDependency]=true 
+            }
+            for(var key in indirectDependencies)
+                dependencies[key]=true
+            return dependencies
+        },
+        dependsOnSelf: function(id){
+            return (id in this.getDependencies(id))
+        },
+        isParentOf: function(childID,parentID){
             for(var i in this.edges)
                 if(this.edges[i].from==childID && this.edges[i].to==parentID)
                     return true
@@ -57,7 +77,6 @@ export default{
             if(this.nodeID2Index(id)==this.nodes.length) return false; //For validation only
 
             let otherNodes=[];
-
             let i=0;
 
             while(i<this.edges.length)
@@ -78,6 +97,7 @@ export default{
         reassignParent: function(nodeID,parentID,newParentID){
             if(this.nodeID2Index(nodeID)==this.nodes.length || this.nodeID2Index(parentID)==this.nodes.length || this.nodeID2Index(newParentID))
                 return false;
+            if(nodeID in this.getDependencies(newParentID)) return false
             for(var i in this.edges)
                 if (this.edges[i].from==nodeID || this.edges[i].to==parentID){
                     this.edges[i].to=newParentID;
