@@ -12,6 +12,7 @@
     "@firebase/firestore": "^0.8.2",
     "chart.js": "^2.7.2",
     "firebase": "^5.5.2",
+    "google-charts": "^1.5.0",
     "v-tooltip": "^2.0.0-rc.33",
     "vis": "^4.21.0",
     "vue": "^2.5.17",
