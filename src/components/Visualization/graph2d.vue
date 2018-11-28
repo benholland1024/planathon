@@ -19,6 +19,7 @@ export default{
             end: '',
             width: '100%',
             height: '100%',
+            interpolation: false
         },
         dataset: '',
         container: '',

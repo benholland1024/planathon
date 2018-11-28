@@ -97,7 +97,10 @@ export default{
         reassignParent: function(nodeID,parentID,newParentID){
             if(this.nodeID2Index(nodeID)==this.nodes.length || this.nodeID2Index(parentID)==this.nodes.length || this.nodeID2Index(newParentID))
                 return false;
-            if(nodeID in this.getDependencies(newParentID)) return false
+            
+            if(nodeID in this.getDependencies(newParentID))
+                return false;
+
             for(var i in this.edges)
                 if (this.edges[i].from==nodeID || this.edges[i].to==parentID){
                     this.edges[i].to=newParentID;
