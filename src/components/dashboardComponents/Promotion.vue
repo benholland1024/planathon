@@ -16,7 +16,7 @@ import Tasks from '@/components/dashboardComponents/tasks.vue';
 export default {
   name: 'promotion',
   components: {
-    Tasks
+    Tasks,
   },
   computed: {
     promotionTasks() {
