@@ -44,13 +44,15 @@
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
         <div v-for="hackathon in org.hackathons" style="display: flex;flex-direction: column">
-          <div style="display: flex;flex-direction: row;">
+
+          <div class="hackathon-info-container">
             <router-link tag="div" :to="'/dashboard/' + hackathon.id"
                     :key="hackathon.id" class="hackathon-opt opt hover-shine">
               {{ hackathon.name }}
             </router-link>
             <img src="@/assets/trash.png" style="height: 20px;width: 20px;" @click="deleteHackathon(hackathon.id)">
           </div>
+
         </div>
       </div>
       <div v-else>
@@ -362,6 +364,7 @@ export default {
 
   .hackathon-opt {
     background: $gray;
+    width: 80%;
     //display: flex;
   }
 
@@ -382,5 +385,8 @@ export default {
   }
   .manage-org-opt {
     background: $blue;
+  }
+  .hackathon-info-container {
+    display: flex;
   }
 </style>
