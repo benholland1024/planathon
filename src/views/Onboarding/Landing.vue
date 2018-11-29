@@ -235,19 +235,27 @@ export default {
     },
     getBackup(org) {
       console.log("org:", org)
-      const rows = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
-      let csvContent = "data:text/csv;charset=utf-8,";
-      rows.forEach(function(rowArray){
-        let row = rowArray.join(",");
-        csvContent += row + "\r\n";
-      }); 
-      var encodedUri = encodeURI(csvContent);
-      var link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "my_data.csv");
-      document.body.appendChild(link); // Required for FF
+      // const rows = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
+      // let csvContent = "data:text/csv;charset=utf-8,";
+      // rows.forEach(function(rowArray){
+      //   let row = rowArray.join(",");
+      //   csvContent += row + "\r\n";
+      // }); 
+      // var encodedUri = encodeURI(csvContent);
+      // var link = document.createElement("a");
+      // link.setAttribute("href", encodedUri);
+      // link.setAttribute("download", "PlanathonOrgs.json");
+      // document.body.appendChild(link); // Required for FF
 
-      link.click(); // This will download the data file named "my_data.csv".
+      // link.click(); // This will download the data file named "my_data.csv".
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(org)));
+      var filename = org.name + '_planathon.json'
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
     }
   },
   components: {
