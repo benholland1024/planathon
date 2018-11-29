@@ -3,15 +3,16 @@
 </template>
 
 <script>
-import GoogleCharts from 'google-charts';
-export default{
-data(){ return{
-    chart: null,
-    container: null
-}},
-mounted(){
-    this.container=this.$refs.container;
-    GoogleCharts.load(drawChart);
+import {GoogleCharts} from 'google-charts';
+export default {
+    data() { 
+        return{
+            chart: null,
+            container: null
+        }},
+    mounted(){
+        this.container=this.$refs.container;
+        GoogleCharts.load(drawChart);
 },
 methods:{
     drawChart: function() {
@@ -26,7 +27,8 @@ methods:{
         
     }
 }
-}</script>
+}
+</script>
 <style scoped>
 div {
     width: 100%;

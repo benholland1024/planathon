@@ -44,13 +44,15 @@
       <div style="text-align: left;" v-if="org.hackathons">
         <h4 style="margin-left: -10px;">Hackathons:</h4>
         <div v-for="hackathon in org.hackathons" style="display: flex;flex-direction: column">
-          <div style="display: flex;flex-direction: row;">
+
+          <div class="hackathon-info-container">
             <router-link tag="div" :to="'/dashboard/' + hackathon.id"
                     :key="hackathon.id" class="hackathon-opt opt hover-shine">
               {{ hackathon.name }}
             </router-link>
             <img src="@/assets/trash.png" style="height: 20px;width: 20px;" @click="deleteHackathon(hackathon.id)">
           </div>
+
         </div>
       </div>
       <div v-else>
@@ -70,6 +72,12 @@
       </div>
       <manage-org-modal :orgId="org.id" v-if="showOrgModal == true" @close="showOrgModal = false">
       </manage-org-modal>
+
+      <!-- backup download button --> 
+
+      <div class="hackathon-item backup-opt opt hover-shine" @click="getBackup(org)">
+        Download Data Backup
+      </div>
 
     </div>
     <div class="material-button-large orange-gradient new-org hover-shine"
@@ -224,6 +232,22 @@ export default {
     async fetchMultipleTasks(id) {
       var querySnapshot = await this.$store.dispatch('tasks/fetch', {whereFilters: [['hackathon', '==', id]]})
       return querySnapshot 
+    },
+    getBackup(org) {
+      console.log("org:", org)
+      const rows = [["name1", "city1", "some other info"], ["name2", "city2", "more info"]];
+      let csvContent = "data:text/csv;charset=utf-8,";
+      rows.forEach(function(rowArray){
+        let row = rowArray.join(",");
+        csvContent += row + "\r\n";
+      }); 
+      var encodedUri = encodeURI(csvContent);
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "my_data.csv");
+      document.body.appendChild(link); // Required for FF
+
+      link.click(); // This will download the data file named "my_data.csv".
     }
   },
   components: {
@@ -362,6 +386,7 @@ export default {
 
   .hackathon-opt {
     background: $gray;
+    min-width: 100px;
     //display: flex;
   }
 
@@ -378,9 +403,22 @@ export default {
     width: 100%;
   }
   .new-hackathon-opt {
-    background: $blue;
+    background: $light-blue;
+    color: $gray;
   }
   .manage-org-opt {
-    background: $blue;
+    background: $light-pink;
+    color: $gray;
+  }
+  .hackathon-info-container {
+    display: flex;
+    align-items: center;
+    img {
+      filter: brightness(10%)
+    }
+  }
+  .backup-opt {
+    background: $light-orange;
+    color: $gray;
   }
 </style>

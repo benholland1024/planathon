@@ -4,10 +4,11 @@
       <div class="popup-wrapper" @click="$parent.showOrgModal = false">
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <h2>Manage Organization</h2>
+          <p>Search for a user by email, or enter a new email to invite someone to your team!</p>
 
           <input type="text" v-model="collabSearch" v-on:input="getSearchResults">
           </input><br><br>
-          <div style="display: flex">
+          <div style="display: flex;justify-content:space-around;">
             <div>
               <p>Admins:</p>
               <select v-if="collabSearch == ''" v-model="adminSelect" multiple>
@@ -121,9 +122,15 @@
 
           // remove id from org collabs list
           var indexOfCollab = newCollabIds.indexOf(collab.id);
-          if (indexOfCollab !== -1) newCollabIds.splice(indexOfCollab, 1);
-          indexOfCollab = newCollabObjs.indexOf(collab.id);
-          if (indexOfCollab !== -1) newCollabObjs.splice(indexOfCollab, 1);
+          if (indexOfCollab !== -1) {
+            newCollabIds.splice(indexOfCollab, 1);
+          }
+          indexOfCollab = newCollabObjs.findIndex((currentObj) => {
+            return (currentObj.id == collab.id);
+          });
+          if (indexOfCollab !== -1) {
+            newCollabObjs.splice(indexOfCollab, 1);
+          }
 
           var updateObj = {
             orgs: {}
@@ -186,7 +193,9 @@
           // remove id from org admins list
           var indexOfAdmin = newAdminIds.indexOf(admin.id);
           if (indexOfAdmin !== -1) newAdminIds.splice(indexOfAdmin, 1);
-          indexOfAdmin = newAdminObjs.indexOf(admin.id);
+          indexOfAdmin = newAdminObjs.findIndex((currentObj) => {
+            return currentObj.id == admin.id;
+          });
           if (indexOfAdmin !== -1) newAdminObjs.splice(indexOfAdmin, 1);
 
           // update org collabs/admins once lists have been updated
@@ -315,7 +324,7 @@
         .then((querySnapshot) => {
           // If no associated account is found, create error message
           if (querySnapshot.empty == true ||  !querySnapshot.docs) {
-            var errMsg = this.collabSearch + "There is no account associated with this email. Please try again after an account has been made.";
+            var errMsg = "There is no account associated with " + this.collabSearch + ". Please try again after an account has been made.";
               this.$parent.$parent.messages.push(errMsg);
           }
           // Otherwise, call the addCollaborator function with the associated id
