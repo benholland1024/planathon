@@ -364,7 +364,7 @@ export default {
 
   .hackathon-opt {
     background: $gray;
-    width: 80%;
+    min-width: 100px;
     //display: flex;
   }
 
@@ -388,5 +388,9 @@ export default {
   }
   .hackathon-info-container {
     display: flex;
+    align-items: center;
+    img {
+      filter: brightness(10%)
+    }
   }
 </style>
