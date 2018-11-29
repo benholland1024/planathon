@@ -6,6 +6,11 @@
       :messages="messages"
       @close="messages = []">
     </error-modal>
+    <failsafe
+      v-if="!connected"
+      :connected="connected"
+      @close="connected = true">
+    </failsafe>
     <router-view/>
   </div>
 </template>
@@ -17,6 +22,7 @@ import 'firebase/firestore';
 import VueFire from 'vuefire';
 import Vue from 'vue';
 import ErrorModal from '@/components/ErrorModal.vue';
+import Failsafe from '@/components/Failsafe.vue';
 
 // Fancy switches for textboxes 😛
 import ToggleButton from 'vue-js-toggle-button'
@@ -42,12 +48,14 @@ export default {
       loadingUser: true,
       org: null,
       hackathon: null,
-      messages: []
+      messages: [],
+      //connected: true
     }
   },
   components: {
     MenuBar,
-    ErrorModal
+    ErrorModal,
+    Failsafe
   },
   methods: {
     loadOrgs() {
@@ -76,17 +84,12 @@ export default {
     },
   },
   mounted() {
-
     firebase.auth().onAuthStateChanged((user) => {
       // This if statement will be true if the user is logged in
       // when the page loads! :)
       if (user){
         this.userId = user.uid;
         this.user = true;
-        setTimeout(() => {
-          //this.loadOrgs();
-          // this.user = this.currentUser;
-        }, 1000)
         this.loggedIn = true;
         this.loginModule = false;
         this.loadingUser = false;
@@ -97,6 +100,10 @@ export default {
 
   },
   computed: {
+    connected() {
+      console.log(navigator.onLine)
+      return navigator.onLine
+    },
     users() {
       return this.$store.getters['users/storeRef']
     },

@@ -8,7 +8,7 @@
     </div>
     <div style="display: flex;align-items: center;">
       <div style="text-align: right;margin-right:20px;">
-        <h3>Ben Holland</h3>
+        <h3>{{ name }}</h3>
         <h4>King of Promotional Material</h4>
       </div>
       <router-link :to="{ name: 'home' }">
@@ -100,7 +100,7 @@ export default {
     }
   },
   mounted() {
-
+    
   },
   components: {
     LineGraph,
@@ -109,6 +109,9 @@ export default {
     Calendar
   },
   computed: {
+    name() {
+      return this.$store.getters['users/storeRef'][`${this.$parent.userId}`].email.split('@')[0]
+    },
     tasks() {
       return this.$store.getters['tasks/hackathonTasks'](this.hackathon.id)
     },
