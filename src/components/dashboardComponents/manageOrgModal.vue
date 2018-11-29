@@ -122,9 +122,15 @@
 
           // remove id from org collabs list
           var indexOfCollab = newCollabIds.indexOf(collab.id);
-          if (indexOfCollab !== -1) newCollabIds.splice(indexOfCollab, 1);
-          indexOfCollab = newCollabObjs.indexOf(collab.id);
-          if (indexOfCollab !== -1) newCollabObjs.splice(indexOfCollab, 1);
+          if (indexOfCollab !== -1) {
+            newCollabIds.splice(indexOfCollab, 1);
+          }
+          indexOfCollab = newCollabObjs.findIndex((currentObj) => {
+            return (currentObj.id == collab.id);
+          });
+          if (indexOfCollab !== -1) {
+            newCollabObjs.splice(indexOfCollab, 1);
+          }
 
           var updateObj = {
             orgs: {}
@@ -187,7 +193,9 @@
           // remove id from org admins list
           var indexOfAdmin = newAdminIds.indexOf(admin.id);
           if (indexOfAdmin !== -1) newAdminIds.splice(indexOfAdmin, 1);
-          indexOfAdmin = newAdminObjs.indexOf(admin.id);
+          indexOfAdmin = newAdminObjs.findIndex((currentObj) => {
+            return currentObj.id == admin.id;
+          });
           if (indexOfAdmin !== -1) newAdminObjs.splice(indexOfAdmin, 1);
 
           // update org collabs/admins once lists have been updated
