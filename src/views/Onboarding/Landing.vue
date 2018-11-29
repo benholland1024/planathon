@@ -73,6 +73,12 @@
       <manage-org-modal :orgId="org.id" v-if="showOrgModal == true" @close="showOrgModal = false">
       </manage-org-modal>
 
+      <!-- backup download button --> 
+
+      <div class="hackathon-item backup-opt opt hover-shine" @click="getBackup(org)">
+        Download Data Backup
+      </div>
+
     </div>
     <div class="material-button-large orange-gradient new-org hover-shine"
           @click="selectOrgInput()">
@@ -226,6 +232,9 @@ export default {
     async fetchMultipleTasks(id) {
       var querySnapshot = await this.$store.dispatch('tasks/fetch', {whereFilters: [['hackathon', '==', id]]})
       return querySnapshot 
+    },
+    getBackup(org) {
+      console.log("org:", org)
     }
   },
   components: {
@@ -381,10 +390,12 @@ export default {
     width: 100%;
   }
   .new-hackathon-opt {
-    background: $blue;
+    background: $light-blue;
+    color: $gray;
   }
   .manage-org-opt {
-    background: $blue;
+    background: $light-pink;
+    color: $gray;
   }
   .hackathon-info-container {
     display: flex;
@@ -392,5 +403,9 @@ export default {
     img {
       filter: brightness(10%)
     }
+  }
+  .backup-opt {
+    background: $light-orange;
+    color: $gray;
   }
 </style>
