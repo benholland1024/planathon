@@ -110,7 +110,8 @@ export default {
   },
   computed: {
     name() {
-      return this.$store.getters['users/storeRef'][`${this.$parent.userId}`].email.split('@')[0]
+      var lower = this.$store.getters['users/storeRef'][`${this.$parent.userId}`].email.split('@')[0]
+      return lower.charAt(0).toUpperCase() + lower.slice(1)
     },
     tasks() {
       return this.$store.getters['tasks/hackathonTasks'](this.hackathon.id)
