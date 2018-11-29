@@ -19,6 +19,7 @@ export default{
             end: '',
             width: '100%',
             height: '100%',
+            interpolation: false
         },
         dataset: '',
         container: '',
@@ -33,7 +34,7 @@ export default{
     },
     methods:{
         addDataPoint: function(point){
-            return this.dataset.add();
+            return this.dataset.add(point);
         },
         reloadData: function(newData){
             if(!this.dataset){
