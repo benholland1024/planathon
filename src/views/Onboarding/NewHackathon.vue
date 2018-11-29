@@ -21,6 +21,7 @@
 
 <script>
 import DatePicker from 'vue2-datepicker';
+import { tasks } from '../../../tasks.json';
 
 export default {
   data() {
@@ -55,44 +56,22 @@ export default {
         console.error("We couldn't find your userID! This shouldn't be possible.");
         return;
       }
-
+      
       // Initialize an array that will keep track of tasks of the new
       // hackathon's timeline
       var taskList = [];
 
       this.hackathonId = this.$store.getters['hackathons/dbRef'].doc().id
 
-      // Create a new task and add it to the tasks collection
-      const taskId1 = this.$store.getters['tasks/dbRef'].doc().id;
-      taskList.push(taskId1)
-      this.$store.dispatch('tasks/set', {
-        id: taskId1,
-        progress: "not started",
-        dependencies: [],
-        hackathon: this.hackathonId,
-        title: "Swag: T-shirts",
-        description: "Design and order t-shirts for the event.",
-        tags: ["finance", "design"],
-        daysBefore: 90,
-      }).catch(err => {
-        console.error("Error initializing task: ", err)
+      // Grab all default tasks and add it to the db
+      tasks.forEach((task) => {
+        task.id = this.$store.getters['tasks/dbRef'].doc().id;
+        task.hackathon = this.hackathonId
+        task.progress = "not started"
+        taskList.push(task.id)
+        this.$store.dispatch('tasks/set', task)
       })
-
-      // Repeat process
-      const taskId2 = this.$store.getters['tasks/dbRef'].doc().id;
-      taskList.push(taskId2)
-      this.$store.dispatch('tasks/set', {
-        id: taskId2,
-        progress: "not started",
-        dependencies: [taskId1],
-        hackathon: this.hackathonId,
-        title: "Second wave of sponsor emails",
-        description: "Remind sponsors why you're worth it.",
-        tags: ["promotion"],
-        daysBefore: 60,
-      }).catch(err => {
-        console.error("Error initializing task: ", err)
-      })
+      
       this.addNewHackathon(taskList);
     },
     addNewHackathon(taskList) {

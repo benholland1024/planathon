@@ -196,18 +196,19 @@ export default {
       this.selectedOrg = index;
       this.$parent.org = org;
     },
-    deleteHackathon(id) {
+    async deleteHackathon(id) {
       if (!confirm('Are you sure you want to delete this hackathon? This can\'t be undone!')) {
           return;
         }
 
       // Remove tasks connected to hackathon
-      this.$store.dispatch('tasks/fetch', {whereFilters: [['hackathon', '==', id]]})
-      .then((querySnapshot) => {
-        querySnapshot.docs.forEach((doc) => {
+      var deleteTasks = await this.fetchMultipleTasks(id)
+      while(deleteTasks.empty == false) {
+        deleteTasks.docs.forEach((doc) => {
           this.$store.dispatch('tasks/delete', doc.id)
         })
-      })
+        deleteTasks = await this.fetchMultipleTasks(id)
+      }
 
       // Update org list
       this.$store.dispatch('orgs/delete', `${this.$parent.org.id}.hackathons.${id}`)
@@ -217,6 +218,10 @@ export default {
       .catch(err => {
         console.error("Error deleting hackathon: ", err)
       })
+    },
+    async fetchMultipleTasks(id) {
+      var querySnapshot = await this.$store.dispatch('tasks/fetch', {whereFilters: [['hackathon', '==', id]]})
+      return querySnapshot 
     }
   },
   components: {
