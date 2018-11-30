@@ -9,7 +9,7 @@
     <router-link to="/about" tag="h2" class="link light-blue faded-link menu-link">
       About
     </router-link>
-    <router-link to="/dne" tag="h2" class="link light-purple faded-link menu-link">
+    <router-link to="/features" tag="h2" class="link light-purple faded-link menu-link">
       Features
     </router-link>
   </div>
