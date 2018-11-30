@@ -42,4 +42,8 @@ export default {
   margin: 0 auto;
   margin-top: 50px;
 }
+
+.dark-widget {
+  overflow: scroll;
+}
 </style>
