@@ -4,331 +4,386 @@
 			"title": "Pick Venue",
 			"daysBefore": 180,
 			"description": "Contact potential venues and see if they'll host your hackathon!",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Make Sponsorship Packet",
 			"daysBefore": 165,
 			"description": "Why should companies sponsor your event",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Make List of Potential Sponsors",
 			"daysBefore": 157,
 			"description": "Find out which companies would be interested in your hackathon",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Assign Sponsors to Sponsorship Team",
 			"daysBefore": 157,
 			"description": "Split up the work needed to be done for sponsorship",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Make Email Template to Initiate Relationship",
 			"daysBefore": 153,
 			"description": "Draft an email to send out to every sponsor with your sponsorship packet attached",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Pick Theme for Hackathon (Optional)",
 			"daysBefore": 173,
 			"description": "Make your hackathon look unique!!",
-			"tags": ["design"]	
+			"dependencies": [],
+			"tags": ["design"]
 		},
 		{
 			"title": "Choose Color Palette",
 			"daysBefore": 170,
 			"description": "The design of your hackathon should stick to one color palette",
-			"tags": ["design"]	
+			"dependencies": [],
+			"tags": ["design"]
 		},
 		{
 			"title": "Send First Wave of Sponsor Emails",
 			"daysBefore": 150,
 			"description": "It's the big moment. Convince companies that your event is worth it",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Make Website",
 			"daysBefore": 120,
 			"description": "Give people something pretty to look at when searching for your event",
-			"tags": ["general", "design", "promotion"]	
+			"dependencies": [],
+			"tags": ["general", "design", "promotion"]
 		},
 		{
 			"title": "Debug Website",
 			"daysBefore": 100,
 			"description": "Make sure your website works 200%",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Setup Meeting with Venue",
 			"daysBefore": 30,
 			"description": "Discuss the general logistics of your hackathon with your venue",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Design T-Shirt",
 			"daysBefore": 45,
 			"description": "Get creative with your design and try to make people want to wear it way after your hackathon",
-			"tags": ["design"]	
+			"dependencies": [],
+			"tags": ["design"]
 		},
 		{
 			"title": "Find Apparel Company to Sponsor T-Shirts",
 			"daysBefore": 60,
 			"description": "Try to find a compnay that will knock a few dollars off of your swag",
-			"tags": ["sponsors", "design"]	
+			"dependencies": [],
+			"tags": ["sponsors", "design"]
 		},
 		{
 			"title": "Template Acceptance and Rejection Emails",
 			"daysBefore": 40,
 			"description": "You need a way to let people know they got in (or didn't) to your hackathon",
-			"tags": ["promotion"]	
+			"dependencies": [],
+			"tags": ["promotion"]
 		},
 		{
 			"title": "Template Application Completion Email (Optional)",
 			"daysBefore": 100,
 			"description": "You need a way to let people know they finished their application",
-			"tags": ["promotion"]	
+			"dependencies": [],
+			"tags": ["promotion"]
 		},
 		{
 			"title": "Open Applications Up to the Public",
 			"daysBefore": 60,
 			"description": "Cross your fingers and hope there are no bugs",
-			"tags": ["general", "promotion"]	
+			"dependencies": [],
+			"tags": ["general", "promotion"]
 		},
 		{
 			"title": "Create Application",
 			"daysBefore": 90,
 			"description": "Make a place on your website where people can tell you they're coming",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Debug Application",
 			"daysBefore": 60,
 			"description": "Make sure no data gets lost in the application process",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Send Second Wave of Sponsor Emails/Follow-Ups",
 			"daysBefore": 136,
 			"description": "^",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Design Logo",
 			"daysBefore": 170,
 			"description": "Your hackathon is a brand and every brand needs a logo",
-			"tags": ["design"]	
+			"dependencies": [],
+			"tags": ["design"]
 		},
 		{
 			"title": "Create Handouts for Publicity",
 			"daysBefore": 160,
 			"description": "Physical promotion is very effective",
-			"tags": ["promotion", "design"]	
+			"dependencies": [],
+			"tags": ["promotion", "design"]
 		},
 		{
 			"title": "Find Networking Events to Solicite at",
 			"daysBefore": 155,
 			"description": "Look on your school's website for career fairs or other various networking events to attend",
-			"tags": ["general", "promotion"]	
+			"dependencies": [],
+			"tags": ["general", "promotion"]
 		},
 		{
 			"title": "Assign Someone to Handle Travel Reimbursement",
 			"daysBefore": 60,
 			"description": "Travel reimbursement is a whole job in itself",
-			"tags": ["general", "finance"]	
+			"dependencies": [],
+			"tags": ["general", "finance"]
 		},
 		{
 			"title": "Sign Up to be an MLH Event (Optional)",
 			"daysBefore": 150,
 			"description": "MLH is a great resource to use and to have by your side",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Contact School to Get School-Wide Publicity",
 			"daysBefore": 145,
 			"description": "Getting advertised by your school is the best form of promotion",
-			"tags": ["promotion"]	
+			"dependencies": [],
+			"tags": ["promotion"]
 		},
 		{
 			"title": "Find Possible Mailing Lists to be Promoted",
 			"daysBefore": 90,
 			"description": "A lot of organizations like the idea of hackathons and will promote your event in their organizations",
-			"tags": ["promotion"]	
+			"dependencies": [],
+			"tags": ["promotion"]
 		},
 		{
 			"title": "Announce Registration Date",
 			"daysBefore": 67,
 			"description": "People need to know when to sign up for your hackathon",
-			"tags": ["promotion"]	
+			"dependencies": [],
+			"tags": ["promotion"]
 		},
 		{
 			"title": "Plan Meals",
 			"daysBefore": 30,
 			"description": "Your hackathon needs a menu!",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Talk to Food Vendors to Get a Price Check",
 			"daysBefore": 25,
 			"description": "Do some research to see that you're not getting ripped off. Look for local companies",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Pre-Order All Food",
 			"daysBefore": 7,
 			"description": "Most restaurants requires you to pay for food if they're catering",
-			"tags": ["general", "finance"]	
+			"dependencies": [],
+			"tags": ["general", "finance"]
 		},
 		{
 			"title": "Design Extra Swag",
 			"daysBefore": 40,
 			"description": "If you want to offer extra swag to people on the day of",
-			"tags": ["design"]	
+			"dependencies": [],
+			"tags": ["design"]
 		},
 		{
 			"title": "Order All Swag",
 			"daysBefore": 30,
 			"description": "Find websites to order swag at and compare prices between them",
-			"tags": ["finance"]	
+			"dependencies": [],
+			"tags": ["finance"]
 		},
 		{
 			"title": "Send Out Acceptance/Rejection Emails",
 			"daysBefore": 30,
 			"description": "Judge, jury, and executioner",
-			"tags": ["general", "promotion"]	
+			"dependencies": [],
+			"tags": ["general", "promotion"]
 		},
 		{
 			"title": "Create Signs for Hackathon",
 			"daysBefore": 2,
 			"description": "Your attendees need to know where to go during your event",
-			"tags": ["design"]	
+			"dependencies": [],
+			"tags": ["design"]
 		},
 		{
 			"title": "Create Mentor Sign Up Form",
 			"daysBefore": 50,
 			"description": "Form with: Times available, areas of expertise, company, name, form of contact",
-			"tags": ["general", "design"]	
+			"dependencies": [],
+			"tags": ["general", "design"]
 		},
 		{
 			"title": "Create Workshop Sign Up Form",
 			"daysBefore": 50,
 			"description": "Form with: name, company, form of contact, time available, topic",
-			"tags": ["general", "design"]	
+			"dependencies": [],
+			"tags": ["general", "design"]
 		},
 		{
 			"title": "Create Judging Sign Up Form (Or you can make it one form)",
 			"daysBefore": 50,
 			"description": "Form with: name, company, form of contact, areas of expertise",
-			"tags": ["general", "design"]	
+			"dependencies": [],
+			"tags": ["general", "design"]
 		},
 		{
 			"title": "Create Official Schedule",
 			"daysBefore": 21,
 			"description": "People need to know what's going on during your hackathon",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Send Mentor/Workshop/Judging Forms to Companies & Faculty",
 			"daysBefore": 45,
 			"description": "Find out of if professionals want to do any of these events",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Send Another Wave of Sponsor Emails/Follow-Ups",
 			"daysBefore": 122,
 			"description": "Keep selling your hackathon and raking in money",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Send Another Wave of Sponsor Emails/Follow-Ups",
 			"daysBefore": 108,
 			"description": "Keep selling your hackathon and raking in money",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Send Another Wave of Sponsor Emails/Follow-Ups",
 			"daysBefore": 94,
 			"description": "Keep selling your hackathon and raking in money",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Send Another Wave of Sponsor Emails/Follow-Ups",
 			"daysBefore": 80,
 			"description": "Keep selling your hackathon and raking in money",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Send Another Wave of Sponsor Emails/Follow-Ups",
 			"daysBefore": 66,
 			"description": "Keep selling your hackathon and raking in money",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Send Another Wave of Sponsor Emails/Follow-Ups",
 			"daysBefore": 52,
 			"description": "Keep selling your hackathon and raking in money",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Send Another Wave of Sponsor Emails/Follow-Ups",
 			"daysBefore": 38,
 			"description": "Keep selling your hackathon and raking in money",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Template Day-Of Email",
 			"daysBefore": 14,
 			"description": "People are going to need information on what to expect when they get to your hackathon",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Send Out Day-Of Emails",
 			"daysBefore": 7,
 			"description": "Give em what they need",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Create Shopping List of Snacks/Drinks for Event",
 			"daysBefore": 14,
 			"description": "Your attendees need a loooooot of snacks to keep them alive for the entirity of your hackathon",
-			"tags": ["general", "finance"]	
+			"dependencies": [],
+			"tags": ["general", "finance"]
 		},
 		{
 			"title": "Figure Out a Location to Store Snacks/Drinks",
 			"daysBefore": 8,
 			"description": "You are going to need a big enough room to hold this until your hackathon",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Bring team of People to Buy Snacks/Drinks",
 			"daysBefore": 7,
 			"description": "You are going to need at least 5 people to get everything you need efficiently",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Advertise That You Need Volunteers for Event",
 			"daysBefore": 90,
 			"description": "You are going to need a big team of people to help with day-of events",
-			"tags": ["general", "promotion"]	
+			"dependencies": [],
+			"tags": ["general", "promotion"]
 		},
 		{
 			"title": "Create Volunteer Schedule",
 			"daysBefore": 21,
 			"description": "Develop a schedule with shifts to man all stations during hackathon",
-			"tags": ["general"]	
+			"dependencies": [],
+			"tags": ["general"]
 		},
 		{
 			"title": "Contact Alumni",
 			"daysBefore": 100,
 			"description": "Alumni of the same field like to support events that are beneficial to their previous program",
-			"tags": ["sponsors"]	
+			"dependencies": [],
+			"tags": ["sponsors"]
 		},
 		{
 			"title": "Make a Plan for Environmental Awareness (Optional)",
 			"daysBefore": 60,
 			"description": "Some schools give more support to events that are eco-friendly because it makes the school look really good",
-			"tags": ["general", "finance"]	
+			"dependencies": [],
+			"tags": ["general", "finance"]
 		}
 	]
 }

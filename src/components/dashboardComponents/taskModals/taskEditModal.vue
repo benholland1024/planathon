@@ -124,7 +124,7 @@
         this.newDepList = this.taskDeps;
         this.taskSelect.forEach(task => {
           if (task.daysBefore >= this.task.daysBefore) {
-            this.newDepList.push(task);
+            this.newDepList.push(task.id);
           }
         });
       },
@@ -157,7 +157,8 @@
         this.$store.dispatch('tasks/set', {[`${this.task.id}`]: {
           title: this.taskTitle,
           description: this.taskDesc,
-          tags: updatedTags
+          tags: updatedTags,
+          dependencies: this.newDepList
         }})
         .then(() => {
          this.task.title = this.taskTitle;
