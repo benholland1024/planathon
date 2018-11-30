@@ -24,6 +24,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     },
     {
+      path: '/features',
+      name: 'features',
+      component: () => import('./views/Features.vue')
+    },
+    {
       path: '/dne',
       name: 'doesNotExist',
       component: DoesNotExist
