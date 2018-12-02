@@ -305,6 +305,8 @@ export default {
     padding: 20px;
     margin-top: 30px;
     box-shadow: $box-shading;
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
   }
 
 /*  -------------------- */

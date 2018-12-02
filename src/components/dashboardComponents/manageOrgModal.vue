@@ -6,24 +6,24 @@
           <h2>Manage Organization</h2>
           <p>Search for a user by email, or enter a new email to invite someone to your team!</p>
 
-          <input type="text" v-model="collabSearch" v-on:input="getSearchResults">
+          <input type="text" v-model="collabSearch" v-on:input="getSearchResults" class="auth-textbox">
           </input><br><br>
           <div style="display: flex;justify-content:space-around;">
             <div>
               <p>Admins:</p>
-              <select v-if="collabSearch == ''" v-model="adminSelect" multiple>
+              <select v-if="collabSearch == ''" v-model="adminSelect" class="auth-textbox" multiple>
                 <option v-for="admin in adminObjs" :value="admin">{{admin.email}}</option>
               </select>
-              <select v-if="!collabSearch == ''" v-model="adminSelect" multiple>
+              <select v-if="!collabSearch == ''" v-model="adminSelect" class="auth-textbox" multiple>
                 <option v-for="admin in adminResults" :value="admin">{{admin.email}}</option>
               </select>
             </div>
             <div>
               <p>Collaborators:</p>
-              <select v-if="collabSearch == ''" v-model="collabSelect" multiple>
+              <select v-if="collabSearch == ''" v-model="collabSelect" class="auth-textbox" multiple>
                 <option v-for="collab in collabObjs" :value="collab">{{collab.email}}</option>
               </select>
-              <select v-if="!collabSearch == ''" v-model="collabSelect" multiple>
+              <select v-if="!collabSearch == ''" v-model="collabSelect" class="auth-textbox" multiple>
                 <option v-for="collab in collabResults" :value="collab">{{collab.email}}</option>
               </select>
             </div>
@@ -420,6 +420,14 @@
 
   .popup-table {
     min-width: 50%;
+  }
+
+  .task-options {
+    display: flex;
+    justify-content: space-between;
+  }
+  .auth-textbox {
+    width: 225px;
   }
 
 </style>
