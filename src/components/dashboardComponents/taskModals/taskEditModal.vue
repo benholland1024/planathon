@@ -6,7 +6,7 @@
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
           <!--<h2>Edit Task</h2>-->
-            <div style="display: flex">
+            <div style="display: flex" class="task-options">
               <div>
                 <p>Title:</p>
                 <input v-model="taskTitle" type="text" class="auth-textbox"
@@ -17,50 +17,62 @@
               </div>
               <div>
                 <p>Tags:</p>
-                <input type="checkbox" v-model="promotion">
-                <label for="checkbox">  Promotion</label><br>
-                <input type="checkbox" v-model="general">
-                <label for="checkbox">  General</label><br>
-                <input type="checkbox" v-model="sponsors">
-                <label for="checkbox">  Sponsors</label><br>
-                <input type="checkbox" v-model="finance">
-                <label for="checkbox">  Finance</label><br>
-                <input type="checkbox" v-model="design">
-                <label for="checkbox">  Design</label><br>
+                <div class="tag-picker">
+                  <div class="tag-toggle">
+                    <toggle-button v-model="finance" color="#FFE16E"/>
+                    <label for="checkbox">  Finance</label>
+                  </div>
+                  <div class="tag-toggle">
+                    <toggle-button v-model="sponsors" color="#FF9A6E"/>
+                    <label for="checkbox">  Sponsors</label>
+                  </div>
+                  <div class="tag-toggle">
+                    <toggle-button v-model="promotion" color="#FF6EE0"/>
+                    <label for="checkbox">  Promotion</label>
+                  </div>
+                  <div class="tag-toggle">
+                    <toggle-button v-model="design" color="#BA68FF"/>
+                    <label for="checkbox">  Design</label>
+                  </div>
+                  <div class="tag-toggle">
+                    <toggle-button v-model="general" color="#7A8FFF"/>
+                    <label for="checkbox"> General</label>
+                  </div>
+                </div>
               </div>
             </div>
 
-
             <p>Task Search</p>
-            <input type="text" v-model="taskSearch">
+            <input type="text" v-model="taskSearch" class="auth-textbox">
             </input><br>
-            <div style="display: flex">
+
+            <div style="display: flex" class="task-options">
               <div>
                 <p>All Tasks:</p>
-                <select v-if="taskSearch == ''" v-model="taskSelect" multiple>
+                <select v-if="taskSearch == ''" v-model="taskSelect" class="auth-textbox" multiple>
                   <option v-for="task in tasks" :value="task">{{task.title}}</option>
                 </select>
-                <select v-if="!taskSearch == ''" v-model="taskSelect" multiple>
+                <select v-if="!taskSearch == ''" v-model="taskSelect" class="auth-textbox" multiple>
                   <option v-for="result in taskResults" :value="result">{{result.title}}</option>
                 </select>
               </div>
               <div>
                 <p>Current Dependencies:</p>
-                <select v-if="taskSearch == ''" v-model="depSelect" multiple>
+                <select v-if="taskSearch == ''" v-model="depSelect" class="auth-textbox" multiple>
                   <option v-for="dep in taskDeps" :value="dep">{{dep.title}}</option>
                 </select>
-                <select v-if="!taskSearch == ''" v-model="depSelect" multiple>
+                <select v-if="!taskSearch == ''" v-model="depSelect" class="auth-textbox" multiple>
                   <option v-for="result in depResults" :value="result">{{result.title}}</option>
                 </select>
               </div>
             </div>
             <br>
 
-            <div style="display: flex">
+            <div style="display: flex" class="task-options">
               <button class="material-button-large" @click="addDeps()">Add Dependencies</button><br>
               <button class="material-button-large" @click="removeDeps()">Remove Dependencies</button>
             </div>
-            <div style="display: flex">
+            <div style="display: flex" class="task-options">
               <button class="material-button-large" @click="saveTask()">Save</button><br>
               <button class="material-button-large" @click="$emit('close')">Close</button>
             </div>
@@ -198,5 +210,25 @@
   .material-button-large {
     background: $gray;
     color: white;
+  }
+
+  .tag-picker {
+    background: $gray;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: right;
+  }
+  .tag-toggle {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .task-options {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .auth-textbox {
+    width: 190px;
   }
 </style>
