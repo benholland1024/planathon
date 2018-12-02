@@ -5,7 +5,7 @@
         <!-- We use @click.stop on the next line to prevent showEditModal
         from being changed when clicking on the purple text -->
         <div class="popup-table purple-gradient" style="align: center" @click.stop>
-          <!--<h2>Edit Task</h2>-->
+          <h2>Edit Task</h2>
             <div style="display: flex" class="task-options">
               <div>
                 <p>Title:</p>
@@ -69,11 +69,12 @@
             <br>
 
             <div style="display: flex" class="task-options">
-              <button class="material-button-large" @click="addDeps()">Add Dependencies</button><br>
+              <button class="material-button-large" @click="addDeps()">Add Dependencies</button>
               <button class="material-button-large" @click="removeDeps()">Remove Dependencies</button>
             </div>
+            <br>
             <div style="display: flex" class="task-options">
-              <button class="material-button-large" @click="saveTask()">Save</button><br>
+              <button class="material-button-large" @click="saveTask()">Save</button>
               <button class="material-button-large" @click="$emit('close')">Close</button>
             </div>
           </div>
