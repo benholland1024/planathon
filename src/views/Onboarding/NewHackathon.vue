@@ -22,6 +22,7 @@
 <script>
 import DatePicker from 'vue2-datepicker';
 import { tasks } from '../../../tasks.json';
+import { dateDiffInDays } from '@/utils.js';
 
 export default {
   data() {
@@ -54,6 +55,12 @@ export default {
       // Make sure the user is logged in
       if (!this.$parent.userId) {
         console.error("We couldn't find your userID! This shouldn't be possible.");
+        return;
+      }
+
+      
+      if (dateDiffInDays(this.today, this.date) < 30) {
+        this.$parent.messages.push("Your date must be at least 30 days away!");
         return;
       }
       
